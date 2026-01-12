@@ -1,0 +1,302 @@
+[
+  {
+    "id": "7c2f1b6a-4a6d-4b1a-9f2c-1c6b2a9d8f01",
+    "name": "Jack Sparrow",
+    "role": "Engineer",
+    "seniority": "Senior",
+    "salaryAnnual": 145000,
+    "stats": { "eng": 10, "product": 6, "design": 0, "growth": 0, "sales": 0, "ops": 5, "cs": 0 },
+    "perks": ["scales_systems", "debug_zen"],
+    "riskTags": ["burnout"]
+  },
+  {
+    "id": "1a8d0e2c-5a9b-4c8a-8c1f-1e3a0c9b4d02",
+    "name": "Natalie Portman",
+    "role": "Engineer",
+    "seniority": "Mid",
+    "salaryAnnual": 98000,
+    "stats": { "eng": 8, "product": 7, "design": 3, "growth": 0, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["fast_iteration"],
+    "riskTags": ["scope_creep"]
+  },
+  {
+    "id": "9b4c7c11-0c5b-4b9b-8c7a-3d2a1f0e5a03",
+    "name": "Sam Porter Bridges",
+    "role": "Engineer",
+    "seniority": "Junior",
+    "salaryAnnual": 62000,
+    "stats": { "eng": 6, "product": 4, "design": 0, "growth": 0, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["learns_fast"],
+    "riskTags": ["needs_mentoring"]
+  },
+  {
+    "id": "e2b8a3f6-2f3a-4f6c-9a2c-7a1d3b8c2d04",
+    "name": "Ingrid Sørensen",
+    "role": "Engineer",
+    "seniority": "Senior",
+    "salaryAnnual": 160000,
+    "stats": { "eng": 9, "product": 5, "design": 0, "growth": 0, "sales": 0, "ops": 8, "cs": 0 },
+    "perks": ["infra_whisperer"],
+    "riskTags": ["blunt_communicator"]
+  },
+  {
+    "id": "3f4a9d72-7c2f-4a18-8f1c-9b0d2a7c4e05",
+    "name": "Ronaldinho Gaúcho",
+    "role": "Engineer",
+    "seniority": "Mid",
+    "salaryAnnual": 105000,
+    "stats": { "eng": 8, "product": 5, "design": 0, "growth": 5, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["experiment_pipelines"],
+    "riskTags": ["over_optimizes"]
+  },
+  {
+    "id": "6d0a1c3e-1b2a-4d7c-9e4f-0a2b3c4d5e06",
+    "name": "Beatrix Kiddo",
+    "role": "Engineer",
+    "seniority": "Mid",
+    "salaryAnnual": 92000,
+    "stats": { "eng": 7, "product": 6, "design": 5, "growth": 0, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["polish_performance"],
+    "riskTags": ["perfectionist"]
+  },
+  {
+    "id": "a1c2e3f4-5b6c-4d7e-8f90-1a2b3c4d5e07",
+    "name": "Jhonny Silverhand",
+    "role": "Product",
+    "seniority": "Senior",
+    "salaryAnnual": 150000,
+    "stats": { "eng": 0, "product": 10, "design": 0, "growth": 0, "sales": 5, "ops": 7, "cs": 0 },
+    "perks": ["roadmap_clarity", "stakeholder_shield"],
+    "riskTags": ["big_bets"]
+  },
+  {
+    "id": "b2d3f4a5-6c7d-4e8f-9012-2b3c4d5e6f08",
+    "name": "Sofia Martínez",
+    "role": "Product",
+    "seniority": "Mid",
+    "salaryAnnual": 102000,
+    "stats": { "eng": 0, "product": 8, "design": 6, "growth": 0, "sales": 0, "ops": 0, "cs": 6 },
+    "perks": ["user_empathy"],
+    "riskTags": ["indecisive"]
+  },
+  {
+    "id": "c3e4f5a6-7d8e-4f90-a123-3c4d5e6f7a09",
+    "name": "Noah Johnson",
+    "role": "Product",
+    "seniority": "Junior",
+    "salaryAnnual": 68000,
+    "stats": { "eng": 0, "product": 6, "design": 0, "growth": 0, "sales": 0, "ops": 5, "cs": 0 },
+    "perks": ["scrappy_research"],
+    "riskTags": ["shallow_analytics"]
+  },
+  {
+    "id": "d4f5a6b7-8e90-4012-b234-4d5e6f7a8b10",
+    "name": "Amélie Dubois",
+    "role": "Product",
+    "seniority": "Senior",
+    "salaryAnnual": 140000,
+    "stats": { "eng": 0, "product": 9, "design": 0, "growth": 7, "sales": 6, "ops": 0, "cs": 0 },
+    "perks": ["market_fit_nose"],
+    "riskTags": ["impatient"]
+  },
+  {
+    "id": "e5a6b7c8-9012-4b34-c345-5e6f7a8b9c11",
+    "name": "Jonas Müller",
+    "role": "Product",
+    "seniority": "Mid",
+    "salaryAnnual": 95000,
+    "stats": { "eng": 5, "product": 7, "design": 0, "growth": 0, "sales": 0, "ops": 6, "cs": 0 },
+    "perks": ["process_builder"],
+    "riskTags": ["bureaucracy_drift"]
+  },
+  {
+    "id": "f6b7c8d9-0123-4c45-d456-6f7a8b9c0d12",
+    "name": "Chloe Bennett",
+    "role": "Designer",
+    "seniority": "Senior",
+    "salaryAnnual": 130000,
+    "stats": { "eng": 0, "product": 7, "design": 10, "growth": 5, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["conversion_ux", "brand_aura"],
+    "riskTags": ["ego_clashes"]
+  },
+  {
+    "id": "07c8d9e0-1234-4d56-e567-7a8b9c0d1e13",
+    "name": "Jin Kazama",
+    "role": "Designer",
+    "seniority": "Mid",
+    "salaryAnnual": 90000,
+    "stats": { "eng": 0, "product": 6, "design": 8, "growth": 0, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["rapid_prototyping"],
+    "riskTags": ["inconsistent_systems"]
+  },
+  {
+    "id": "18d9e0f1-2345-4e67-f678-8b9c0d1e2f14",
+    "name": "Aisha Khan",
+    "role": "Designer",
+    "seniority": "Junior",
+    "salaryAnnual": 58000,
+    "stats": { "eng": 0, "product": 5, "design": 6, "growth": 0, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["fresh_ideas"],
+    "riskTags": ["needs_direction"]
+  },
+  {
+    "id": "29e0f1a2-3456-4f78-a789-9c0d1e2f3a15",
+    "name": "Mateusz Nowak",
+    "role": "Designer",
+    "seniority": "Mid",
+    "salaryAnnual": 96000,
+    "stats": { "eng": 6, "product": 6, "design": 7, "growth": 0, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["design_ops"],
+    "riskTags": ["slow_decisions"]
+  },
+  {
+    "id": "3af1a2b3-4567-4089-b890-0d1e2f3a4b16",
+    "name": "Priya Desai",
+    "role": "Growth",
+    "seniority": "Senior",
+    "salaryAnnual": 155000,
+    "stats": { "eng": 0, "product": 6, "design": 0, "growth": 10, "sales": 0, "ops": 0, "cs": 0 },
+    "perks": ["cac_slayer", "channel_mastery"],
+    "riskTags": ["risky_experiments"]
+  },
+  {
+    "id": "4b02b3c4-5678-4190-c901-1e2f3a4b5c17",
+    "name": "Ethan Brooks",
+    "role": "Growth",
+    "seniority": "Mid",
+    "salaryAnnual": 110000,
+    "stats": { "eng": 0, "product": 0, "design": 5, "growth": 8, "sales": 0, "ops": 4, "cs": 0 },
+    "perks": ["paid_performance"],
+    "riskTags": ["attribution_blindness"]
+  },
+  {
+    "id": "5c13c4d5-6789-4a01-d012-2f3a4b5c6d18",
+    "name": "Camila Alvarez",
+    "role": "Growth",
+    "seniority": "Junior",
+    "salaryAnnual": 60000,
+    "stats": { "eng": 0, "product": 0, "design": 0, "growth": 6, "sales": 0, "ops": 0, "cs": 5 },
+    "perks": ["content_engine"],
+    "riskTags": ["inexperience"]
+  },
+  {
+    "id": "6d24d5e6-7890-4b12-e123-3a4b5c6d7e19",
+    "name": "Jack Thompson",
+    "role": "Growth",
+    "seniority": "Mid",
+    "salaryAnnual": 88000,
+    "stats": { "eng": 0, "product": 5, "design": 0, "growth": 7, "sales": 4, "ops": 0, "cs": 0 },
+    "perks": ["brand_storyteller"],
+    "riskTags": ["vanity_metrics"]
+  },
+  {
+    "id": "7e35e6f7-8901-4c23-f234-4b5c6d7e8f20",
+    "name": "Yara Haddad",
+    "role": "Growth",
+    "seniority": "Senior",
+    "salaryAnnual": 145000,
+    "stats": { "eng": 0, "product": 7, "design": 0, "growth": 9, "sales": 0, "ops": 6, "cs": 0 },
+    "perks": ["lifecycle_wizard"],
+    "riskTags": ["burnout"]
+  },
+  {
+    "id": "8f46f708-9012-4d34-a345-5c6d7e8f9a21",
+    "name": "Victoria Park",
+    "role": "Sales",
+    "seniority": "Senior",
+    "salaryAnnual": 165000,
+    "stats": { "eng": 0, "product": 6, "design": 0, "growth": 0, "sales": 10, "ops": 0, "cs": 0 },
+    "perks": ["enterprise_closer", "pipeline_machine"],
+    "riskTags": ["commission_drama"]
+  },
+  {
+    "id": "9a570819-0123-4e45-b456-6d7e8f9a0b22",
+    "name": "Diego Fernández",
+    "role": "Sales",
+    "seniority": "Mid",
+    "salaryAnnual": 115000,
+    "stats": { "eng": 0, "product": 0, "design": 0, "growth": 0, "sales": 8, "ops": 0, "cs": 6 },
+    "perks": ["outbound_grinder"],
+    "riskTags": ["burns_leads"]
+  },
+  {
+    "id": "ab68192a-1234-4f56-c567-7e8f9a0b1c23",
+    "name": "Emily Carter",
+    "role": "Sales",
+    "seniority": "Junior",
+    "salaryAnnual": 70000,
+    "stats": { "eng": 0, "product": 0, "design": 0, "growth": 0, "sales": 6, "ops": 0, "cs": 6 },
+    "perks": ["friendly_demos"],
+    "riskTags": ["weak_negotiation"]
+  },
+  {
+    "id": "bc792a3b-2345-4067-d678-8f9a0b1c2d24",
+    "name": "Antoine Lefèvre",
+    "role": "Sales",
+    "seniority": "Senior",
+    "salaryAnnual": 150000,
+    "stats": { "eng": 0, "product": 5, "design": 0, "growth": 0, "sales": 9, "ops": 6, "cs": 0 },
+    "perks": ["partnership_hunter"],
+    "riskTags": ["overpromises"]
+  },
+  {
+    "id": "cd8a3b4c-3456-4178-e789-9a0b1c2d3e25",
+    "name": "Fatima El-Sayed",
+    "role": "Sales",
+    "seniority": "Mid",
+    "salaryAnnual": 108000,
+    "stats": { "eng": 0, "product": 4, "design": 0, "growth": 6, "sales": 7, "ops": 0, "cs": 0 },
+    "perks": ["conversion_scripts"],
+    "riskTags": ["tunnel_vision"]
+  },
+  {
+    "id": "de9b4c5d-4567-4289-f890-0b1c2d3e4f26",
+    "name": "Samuel Wright",
+    "role": "Ops",
+    "seniority": "Senior",
+    "salaryAnnual": 155000,
+    "stats": { "eng": 0, "product": 6, "design": 0, "growth": 0, "sales": 0, "ops": 10, "cs": 6 },
+    "perks": ["runway_extender", "crisis_control"],
+    "riskTags": ["over_controlling"]
+  },
+  {
+    "id": "efac5d6e-5678-4390-a901-1c2d3e4f5a27",
+    "name": "Linh Nguyen",
+    "role": "Ops",
+    "seniority": "Mid",
+    "salaryAnnual": 98000,
+    "stats": { "eng": 0, "product": 0, "design": 0, "growth": 0, "sales": 0, "ops": 8, "cs": 7 },
+    "perks": ["hiring_machine"],
+    "riskTags": ["process_overload"]
+  },
+  {
+    "id": "f0bd6e7f-6789-4a01-b012-2d3e4f5a6b28",
+    "name": "Grace Williams",
+    "role": "CustomerSuccess",
+    "seniority": "Senior",
+    "salaryAnnual": 120000,
+    "stats": { "eng": 0, "product": 7, "design": 0, "growth": 0, "sales": 5, "ops": 0, "cs": 10 },
+    "perks": ["churn_killer"],
+    "riskTags": ["under_sells"]
+  },
+  {
+    "id": "01ce7f80-7890-4b12-c123-3e4f5a6b7c29",
+    "name": "Miguel Costa",
+    "role": "CustomerSuccess",
+    "seniority": "Mid",
+    "salaryAnnual": 85000,
+    "stats": { "eng": 0, "product": 6, "design": 0, "growth": 0, "sales": 0, "ops": 0, "cs": 8 },
+    "perks": ["onboarding_wizard"],
+    "riskTags": ["emotional_drain"]
+  },
+  {
+    "id": "12df8091-8901-4c23-d234-4f5a6b7c8d30",
+    "name": "Keira O'Brien",
+    "role": "Finance",
+    "seniority": "Mid",
+    "salaryAnnual": 110000,
+    "stats": { "eng": 0, "product": 4, "design": 0, "growth": 0, "sales": 4, "ops": 8, "cs": 0 },
+    "perks": ["pricing_analyst"],
+    "riskTags": ["too_cautious"]
+  }
+]
