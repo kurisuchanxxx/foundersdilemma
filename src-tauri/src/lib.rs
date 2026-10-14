@@ -7,9 +7,9 @@
 use std::fs;
 use std::path::Path;
 
-/// Game, decision and export files are small; anything larger is not ours.
+/// Game, decision, report and export files are small; anything larger is not ours.
 const MAX_FILE_BYTES: u64 = 50 * 1024 * 1024;
-const ALLOWED_EXTENSIONS: [&str; 3] = ["json", "csv", "txt"];
+const ALLOWED_EXTENSIONS: [&str; 4] = ["json", "csv", "txt", "html"];
 
 fn check_extension(path: &Path) -> Result<(), String> {
     let ext = path

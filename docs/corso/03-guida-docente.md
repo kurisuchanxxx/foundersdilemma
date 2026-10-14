@@ -62,6 +62,10 @@ Il ciclo funziona anche a distanza, con scadenze tra un incontro e l'altro.
 
 *Impostazioni e salvataggio > Esportazione dati per i docenti*: tre file CSV (storico di tutti i team e round, decisioni, classifica) che si aprono con Excel, Numbers o Google Sheets. Con *Risultati finali > Stampa / PDF* ottenete il debriefing finale da allegare ai materiali del corso.
 
+**Report del team.** In *Risultati finali* ogni team ha il pulsante *Report del team*, e durante la partita lo stesso report si scarica da *Report dei round*. È una pagina HTML autonoma, stampabile in PDF, con numeri, grafici, decisioni round per round, finanziamenti, dilemmi, segnalazioni del mentor e le domande del post-mortem: la base del report finale dei team.
+
+**Tour guidato.** Alla prima partita in solitario, e alla prima apertura di una copia del team in modalità Classe, parte un tour di due minuti sulle schermate principali. Si salta con un clic e si rivede dalla pagina *Impara*.
+
 ## 4. Condurre il debriefing
 
 Il debriefing è il momento in cui si impara davvero. Una struttura in tre passi che funziona:

@@ -7,6 +7,7 @@ import { Badge, Callout, Card, InfoTip, Logo } from "../components/ui";
 import { useActiveCompany, useGame } from "../hooks";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
+import { downloadTeamReport } from "../report/teamReport";
 import { StandingsTable } from "./Leaderboard";
 
 export function Results() {
@@ -152,6 +153,8 @@ export function Results() {
 
 function Journey({ c, rank }: { c: Company; rank: number }) {
   const f = useFmt();
+  const game = useGame();
+  const lang = useStore((s) => s.lang);
   const pmfRound = c.history.find((h) => h.pmf >= PMF_THRESHOLD)?.round;
   const firstRaise = c.fundingHistory.find((x) => x.instrument !== "loan");
   const last = c.history[c.history.length - 1];
@@ -176,6 +179,10 @@ function Journey({ c, rank }: { c: Company; rank: number }) {
           </div>
         </div>
         {c.status === "exited" ? <Badge tone="good">exit</Badge> : c.status === "bankrupt" ? <Badge tone="bad">{f.tx("bankrupt", "fallita")}</Badge> : null}
+        <button className="btn sm" onClick={() => void downloadTeamReport(game, c, lang)} aria-label={`${f.tx("Team report", "Report del team")}: ${c.name}`}>
+          <Icon name="FileText" size={14} />
+          {f.tx("Team report", "Report del team")}
+        </button>
       </div>
       <div className="kv">
         {items.map(([k, v]) => (

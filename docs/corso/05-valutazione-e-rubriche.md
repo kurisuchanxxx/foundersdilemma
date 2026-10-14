@@ -54,6 +54,8 @@ Punteggio = (somma dei punti pesati) / 12 × 10.
 
 ### Struttura richiesta
 
+Partite dal **Report del team** che il gioco genera (pulsante in *Risultati finali*): contiene già numeri, grafici e decisioni round per round, così il report si concentra sull'analisi.
+
 1. **Sintesi** (mezza pagina): la storia dell'azienda in cinque righe e il risultato finale.
 2. **Strategia**: settore, team fondatore, modello di business e come sono cambiati.
 3. **Tre decisioni chiave**: contesto, alternative, scelta, esito, cosa rifareste. Usate i dati dei report dei round e, se il docente li fornisce, i CSV.

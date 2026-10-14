@@ -90,6 +90,18 @@ for (let r = 0; r < 12; r++) {
 await page.locator(".sidebar nav").getByRole("button", { name: "Risultati finali" }).click();
 await page.waitForTimeout(500);
 await shot("14-results");
+
+// the printable team report: download it and open it as a standalone page
+const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: /Report del team/ }).first().click()]);
+const reportPath = `${out}/team-report.html`;
+await download.saveAs(reportPath);
+const reportPage = await browser.newPage({ viewport: { width: 1100, height: 900 } });
+reportPage.on("pageerror", (e) => errors.push(`report pageerror: ${e.message}`));
+await reportPage.goto(`file://${fs.realpathSync(reportPath)}`);
+await reportPage.waitForSelector("text=Post-mortem");
+await reportPage.screenshot({ path: `${out}/16-team-report.png`, fullPage: true });
+await reportPage.close();
+
 await page.locator(".sidebar nav").getByRole("button", { name: "Cruscotto" }).click();
 await page.waitForTimeout(300);
 await shot("15-dashboard-end");

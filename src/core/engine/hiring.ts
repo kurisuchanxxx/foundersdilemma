@@ -1,6 +1,6 @@
 import { ACCEPT_THRESHOLD, EXPECTED_EQUITY, PROFESSIONAL_CANDIDATES, ROLE_LABEL, generateCandidate, professionalCandidate } from "../data/candidates";
 import type { Rng } from "../rng";
-import { fill, lt, moneyShort, type LText } from "../text";
+import { fill, lt, type LText, moneyL, decL } from "../text";
 import type { Candidate, Company, Employee, GameState, HiringOffer, HiringResult } from "../types";
 import { grantOptions } from "./captable";
 import type { SimCtx } from "./context";
@@ -59,8 +59,8 @@ export function evaluateOffer(state: GameState, c: Company, cand: Candidate, off
   }
   const score = wSal * salary + wEq * equity + 0.12 * stage + 0.15 * reputation + 0.18 * fit - penalties + noise;
 
-  if (salary < 0.4) reasons.push({ text: fill(lt("The salary is below my expectations ({a}/year).", "Lo stipendio è sotto le mie aspettative ({a}/anno)."), { a: moneyShort(ask) }), weight: (0.4 - salary) * wSal + 0.05 });
-  if (prefs.equityAppetite > 0.55 && equity < 0.35) reasons.push({ text: fill(lt("I expected meaningful equity (around {e}%).", "Mi aspettavo una quota significativa (circa {e}%)."), { e: (expected * 100).toFixed(1) }), weight: 0.06 * prefs.equityAppetite });
+  if (salary < 0.4) reasons.push({ text: fill(lt("The salary is below my expectations ({a}/year).", "Lo stipendio è sotto le mie aspettative ({a}/anno)."), { a: moneyL(ask) }), weight: (0.4 - salary) * wSal + 0.05 });
+  if (prefs.equityAppetite > 0.55 && equity < 0.35) reasons.push({ text: fill(lt("I expected meaningful equity (around {e}%).", "Mi aspettavo una quota significativa (circa {e}%)."), { e: decL(expected * 100, 1) }), weight: 0.06 * prefs.equityAppetite });
   if (stage < 0.6) {
     reasons.push({
       text: stageRisk > prefs.riskTolerance
@@ -151,7 +151,7 @@ export function resolveHiring(state: GameState, ctxs: SimCtx[], round: number, r
           candidateName: cand.name,
           outcome: "counter",
           reason: fill(lt("{n} asks for {s}/year and {e}% equity. Accept the counter-offer next round.", "{n} chiede {s}/anno e {e}% di equity. Puoi accettare la controproposta nel prossimo round."), {
-            n: cand.name, s: moneyShort(salary), e: (equityPct * 100).toFixed(2),
+            n: cand.name, s: moneyL(salary), e: decL(equityPct * 100, 2),
           }),
           salary,
           equityPct,
@@ -205,8 +205,8 @@ function hire(state: GameState, x: SimCtx, cand: Candidate, offer: HiringOffer, 
     reason: fill(lt("{n} joined as {r} ({s}/year{e}).", "{n} è entrato come {r} ({s}/anno{e})."), {
       n: cand.name,
       r: ROLE_LABEL[cand.role],
-      s: moneyShort(offer.salary),
-      e: offer.equityPct > 0 ? ` + ${(offer.equityPct * 100).toFixed(2)}%` : "",
+      s: moneyL(offer.salary),
+      e: offer.equityPct > 0 ? fill(lt(" + {x}%", " + {x}%"), { x: decL(offer.equityPct * 100, 2) }) : "",
     }),
     salary: offer.salary,
     equityPct: offer.equityPct,
