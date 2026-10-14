@@ -433,7 +433,7 @@ function OfferModal({ c, cand, onClose }: { c: Company; cand: Candidate; onClose
           max={Math.max(1, Math.ceil(exp * 400 * 10) / 10)}
           step={0.05}
           onChange={(v) => setEquity(Math.round(v * 100) / 10_000)}
-          format={(v) => `${v.toFixed(2)}%`}
+          format={(v) => `${f.num(v, 2)}%`}
           concept="vesting"
           hint={`${f.tx("Typical for this profile and stage", "Tipico per questo profilo e fase")}: ${f.pct(exp, 2)}`}
         />

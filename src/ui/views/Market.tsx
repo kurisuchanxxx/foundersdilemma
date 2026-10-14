@@ -42,7 +42,7 @@ export function Market() {
           <Stat label={f.tx("Your market share", "La tua quota di mercato")} value={sectorCustomers > 0 ? f.pct(c.customers / sectorCustomers) : "—"} sub={f.tx("of in-game customers", "dei clienti in gioco")} />
         </Card>
         <Card>
-          <Stat label={f.tx("Competition", "Concorrenza")} concept="competition" value={`×${competitionFactor(game, c).toFixed(2)}`} sub={`${rivals.length} ${f.tx("teams", "team")} + ${game.markets[c.sector].npcCompetitors} ${f.tx("others", "altri")}`} />
+          <Stat label={f.tx("Competition", "Concorrenza")} concept="competition" value={`×${f.num(competitionFactor(game, c), 2)}`} sub={`${rivals.length} ${f.tx("teams", "team")} + ${game.markets[c.sector].npcCompetitors} ${f.tx("others", "altri")}`} />
         </Card>
       </div>
 
@@ -82,7 +82,7 @@ export function Market() {
               <Stat label={f.tx("Gross margin", "Margine lordo")} concept="grossMargin" value={f.pct(s.grossMargin + mods.gm)} />
               <Stat label="CAC" concept="cac" value={f.money(c.cac)} />
               <Stat label="LTV" concept="ltv" value={f.money(c.ltv)} />
-              <Stat label="LTV / CAC" value={c.cac > 0 ? `${(c.ltv / c.cac).toFixed(1)}×` : "—"} tone={c.cac > 0 ? (c.ltv / c.cac >= 3 ? "good" : c.ltv / c.cac < 1 ? "bad" : "warn") : undefined} />
+              <Stat label="LTV / CAC" value={c.cac > 0 ? `${f.num(c.ltv / c.cac, 1)}×` : "—"} tone={c.cac > 0 ? (c.ltv / c.cac >= 3 ? "good" : c.ltv / c.cac < 1 ? "bad" : "warn") : undefined} />
               <Stat label={f.tx("CAC payback", "Payback del CAC")} concept="cacPayback" value={payback > 0 ? `${f.num(payback, 1)} ${f.tx("months", "mesi")}` : "—"} />
               <Stat label={f.tx("Monthly churn", "Churn mensile")} concept="churn" value={f.pct(c.churn, 1)} sub={`${f.tx("sector typical", "tipico del settore")} ${f.pct(s.baseChurn, 1)}`} />
               <Stat label={f.tx("Brand", "Brand")} concept="brand" value={f.pct(c.brand)} />
@@ -182,7 +182,7 @@ export function describeEffect(f: ReturnType<typeof useFmt>, key: string, v: num
     case "hiringBar":
       return v >= 0 ? f.tx("candidates harder to convince", "candidati più difficili da convincere") : f.tx("candidates easier to convince", "candidati più facili da convincere");
     case "debtRate":
-      return `${f.tx("interest rates", "tassi di interesse")} +${(v * 100).toFixed(1)} pt`;
+      return `${f.tx("interest rates", "tassi di interesse")} +${f.num(v * 100, 1)} pt`;
     case "morale":
       return `morale ${v >= 0 ? "+" : ""}${v}`;
     case "stress":

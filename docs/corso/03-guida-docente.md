@@ -1,0 +1,91 @@
+# Guida per il docente
+
+## 1. Prima del corso (circa 3 ore, una tantum)
+
+1. **Installa il gioco** (vedi il [README](../../README.md#installazione)) oppure apri `FoundersDilemma-web.html` in un browser.
+2. **Gioca una partita di prova** in *Solo contro bot*, complessità *Standard*: bastano 40-60 minuti con *Simula fino alla fine* per vedere tutte le schermate e il debriefing finale.
+3. **Leggi** il [piano delle sessioni](02-piano-sessioni.md) e il capitolo sul [modello di simulazione](06-modello-di-simulazione.md) almeno nelle parti su PMF, mercato e finanza.
+4. **Prepara la distribuzione**: carica su Moodle (o sulla piattaforma dell'ateneo) gli installer e il file web, con il [manuale dello studente](04-manuale-studente.md).
+5. **Scegli il seed** della classe e annotalo: con lo stesso seed potrai rigiocare o confrontare le edizioni.
+
+## 2. Creare la partita della classe
+
+*Nuova partita* sulla schermata iniziale, poi:
+
+| Impostazione | Consiglio |
+|---|---|
+| Modalità | **Classe (file)** se ogni team ha un portatile; **Hot-seat** se c'è un solo computer |
+| Team umani e bot | 4-8 team; aggiungete 1-2 bot se i team sono meno di 5, così il mercato è vivo |
+| Nome della sessione | es. *Startup Venturing 2026 - Classe A* (compare nei file e nei report) |
+| Seed | Lasciate quello proposto o sceglietene uno memorabile |
+| Round e durata | 10 round, *4 trimestri, poi semestri* (circa 4 anni) |
+| Complessità | **Standard**; **Essenziale** per una prima sessione breve o per la triennale; **Avanzata** per i corsi di finanza (aggiunge il simulatore del waterfall di uscita) |
+| Difficoltà | **Standard** (un round di salvataggio punitivo, poi fallimento). *Indulgente* concede fino a 3 salvataggi; *Realistica* nessuno |
+| Come si decide il vincitore | **Ricchezza dei fondatori** (consigliato: rende visibile il costo della diluizione), oppure valutazione, oppure criterio bilanciato |
+| Tempo per round | 30' o 45' |
+| PIN del docente | Consigliato in Hot-seat, così gli studenti non aprono la console |
+
+Poi configurate i team: nome, settore, fondatori, quote e vesting. In aula conviene farlo fare ai team stessi (in Hot-seat a turno, in modalità Classe sul vostro computer mentre il team detta le scelte, oppure raccogliendole prima con un modulo).
+
+## 3. Condurre un round
+
+### Modalità Classe (un portatile per team, senza rete)
+
+Il vostro computer conserva la copia *ufficiale* della partita. Il ciclo di ogni round:
+
+1. **Console docente > Esporta file di partita per i team.** Ottenete un file `NomeSessione_roundN.fdgame.json`: caricatelo su Moodle o in una cartella condivisa.
+2. **I team** aprono il gioco, scelgono *Partecipa a una classe*, aprono il file, selezionano il proprio team, decidono e premono **Blocca ed esporta il file delle decisioni**. Vi consegnano un file `Team_roundN.fddecision.json` (pochi kB).
+3. **Console docente > Importa i file delle decisioni**: selezionateli tutti insieme. Il riquadro conferma ogni team importato e segnala i file sbagliati (altra partita, round già passato).
+4. **Avanza il round.** Se manca qualche team, il gioco chiede conferma: chi non ha consegnato gioca con la bozza o con le impostazioni del round precedente.
+5. **Esporta di nuovo il file di partita** e condividetelo. I team lo importano da *Impostazioni e salvataggio > Importa la partita aggiornata dal docente* e vedono subito il report del round.
+
+Il ciclo funziona anche a distanza, con scadenze tra un incontro e l'altro.
+
+### Modalità Hot-seat (un computer, eventualmente il proiettore)
+
+- Selezionate il team dal riquadro in alto a sinistra: appare la schermata *Passa il computer a ...*, i dati restano nascosti finché il team non preme *Siamo ...: mostra la nostra azienda*.
+- Quando il team ha inviato le decisioni, passate al successivo. Con tutti i team pronti, *Avanza il round* nella barra in alto.
+- Con il PIN, la console docente resta bloccata per gli studenti.
+
+### Strumenti della console docente
+
+| Strumento | Uso in aula |
+|---|---|
+| **Timer del round** (15', 10', 20', 30') | Il conto alla rovescia compare nella barra in alto per tutti |
+| **Team pronti** | Chi ha già inviato le decisioni |
+| **Evento a sorpresa** | Iniettate uno shock (titolo, settori colpiti, effetti su domanda, CAC, churn, valutazioni, clima degli investitori...). Effettivo da subito e visibile nelle news di tutti |
+| **Vista proiettore** | Classifica e notizie a tutto schermo, senza dati riservati |
+| **Tabella dei team** | Cassa, runway, MRR, PMF e valutazione di tutti i team: utile per il debriefing, da non proiettare durante il round |
+| **Spunti per la discussione** | Domande adattate alla fase della partita e agli eventi in corso |
+
+### Esportazioni per la valutazione
+
+*Impostazioni e salvataggio > Esportazione dati per i docenti*: tre file CSV (storico di tutti i team e round, decisioni, classifica) che si aprono con Excel, Numbers o Google Sheets. Con *Risultati finali > Stampa / PDF* ottenete il debriefing finale da allegare ai materiali del corso.
+
+## 4. Condurre il debriefing
+
+Il debriefing è il momento in cui si impara davvero. Una struttura in tre passi che funziona:
+
+1. **Cosa è successo?** Proiettate classifica e notizie. Chiedete a due team con risultati opposti di descrivere le proprie decisioni.
+2. **Perché?** Collegate i risultati a un concetto: *il vostro CAC è salito perché il settore ha superato gli early adopter e il vostro PMF era sotto 55: questo è il chasm*. Aprite la scheda corrispondente in *Impara*.
+3. **E nella realtà?** Un caso reale o una domanda: *quale startup conoscete che ha scalato prima del PMF?*
+
+Evitate di premiare solo il primo in classifica: valorizzate le decisioni ben argomentate anche quando l'esito è stato sfortunato (la simulazione contiene incertezza di proposito).
+
+## 5. Problemi frequenti
+
+| Problema | Soluzione |
+|---|---|
+| macOS: *impossibile aprire l'app perché lo sviluppatore non può essere verificato* | Clic destro sull'app > Apri > Apri. Su macOS 15+: Impostazioni di Sistema > Privacy e sicurezza > Apri comunque |
+| Windows: avviso di SmartScreen | *Ulteriori informazioni* > *Esegui comunque* |
+| Computer dell'ateneo senza permessi di installazione | Usate `FoundersDilemma-web.html` in Chrome, Edge, Firefox o Safari |
+| Un team ha inviato il file sbagliato | La console lo segnala (*appartiene a un'altra partita* o *è per il round N*); il team riesporta dal proprio gioco |
+| Un team non ha consegnato | Avanzate comunque: giocherà con le impostazioni del round precedente. Annotatelo per la valutazione |
+| Un team ha sbagliato una decisione per errore | Prima di avanzare potete reimportare un nuovo file del team: sostituisce il precedente |
+| Volete tornare indietro di un round | Ripartite dal file di partita del round precedente (conservate sempre i file esportati) o da una copia salvata in *Impostazioni e salvataggio* |
+| Un team è fallito presto | Resta in partita come osservatore: chiedetegli un post-mortem anticipato e di fare da *board advisor* per un altro team |
+| Il computer del docente si guasta | Ogni file di partita esportato è un backup completo: apritelo da un altro computer con *Apri file di partita* |
+
+## 6. Dati e privacy
+
+Il gioco non usa account e non invia nulla in rete. I salvataggi sono nel database locale dell'app (o del browser) di ciascun computer; i file di partita contengono solo i nomi dei team e, se inseriti, i nomi degli studenti. Per la ricerca didattica sui CSV esportati seguite le regole dell'ateneo (consenso informato, anonimizzazione).

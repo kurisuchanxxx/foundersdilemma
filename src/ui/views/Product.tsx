@@ -67,7 +67,7 @@ export function Product() {
                   <span>{s.mvpEffort} {f.tx("points", "punti")}</span>
                   <span>{f.tx("Your capacity", "La tua capacità")}</span>
                   <span>
-                    {cap.devPower.toFixed(1)} {f.tx("points/month", "punti/mese")}
+                    {f.num(cap.devPower, 1)} {f.tx("points/month", "punti/mese")}
                   </span>
                   <span>{f.tx("Waitlist", "Lista d'attesa")}</span>
                   <span>{f.compact(c.waitlist)}</span>
@@ -87,9 +87,9 @@ export function Product() {
           <Card title={f.tx("Development capacity", "Capacità di sviluppo")} icon="Code2">
             <div className="kv">
               <span>{f.tx("Team (founders + employees)", "Team (fondatori + dipendenti)")}</span>
-              <span>{(cap.devPower - cap.contractorPower).toFixed(1)}</span>
+              <span>{f.num(cap.devPower - cap.contractorPower, 1)}</span>
               <span>{f.tx("Contractors (R&D budget)", "Contractor (budget R&S)")}</span>
-              <span>{cap.contractorPower.toFixed(1)}</span>
+              <span>{f.num(cap.contractorPower, 1)}</span>
               <span>{f.tx("Coordination efficiency", "Efficienza di coordinamento")}</span>
               <span>{f.pct(cap.coordination)}</span>
             </div>
