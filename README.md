@@ -40,7 +40,7 @@ Le versioni pronte si scaricano dalla pagina **Releases** del repository:
 
 | Sistema | File | Note al primo avvio |
 |---|---|---|
-| macOS 11 o successivo | `Founder's Dilemma_x.y.z_universal.dmg` | L'app non è firmata da un Apple Developer ID: apri il file, trascina l'app in Applicazioni, poi clic destro sull'app > **Apri** > **Apri**. Su macOS 15 o successivo: Impostazioni di Sistema > Privacy e sicurezza > **Apri comunque**. |
+| macOS 11 o successivo | `Founder’s Dilemma_x.y.z_universal.dmg` | L'app non è firmata da un Apple Developer ID: apri il file, trascina l'app in Applicazioni, poi clic destro sull'app > **Apri** > **Apri**. Su macOS 15 o successivo: Impostazioni di Sistema > Privacy e sicurezza > **Apri comunque**. |
 | Windows 10/11 | `..._x64-setup.exe` (consigliato) oppure `.msi` | SmartScreen può mostrare un avviso: **Ulteriori informazioni** > **Esegui comunque**. Il programma d'installazione usa WebView2, già presente su Windows 11. |
 | Linux | `.AppImage` o `.deb` | |
 | Qualsiasi browser | `FoundersDilemma-web.html` | Un unico file che si apre con un doppio clic, anche offline. Comodo da caricare su Moodle o su una cartella condivisa. |
