@@ -1,0 +1,4005 @@
+[
+ {
+  "id": "cand_001",
+  "name": "Sarah Chen",
+  "role": "Engineer",
+  "seniority": "Senior",
+  "askSalary": 92500,
+  "stats": {
+   "eng": 10,
+   "product": 6,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 5,
+   "cs": 0
+  },
+  "perks": [
+   "scales_systems",
+   "debug_zen"
+  ],
+  "riskTags": [
+   "burnout"
+  ],
+  "cv": {
+   "age": 32,
+   "education": {
+    "university": "Stanford University",
+    "degree": "PhD",
+    "field": "Computer Science",
+    "graduated": 2018
+   },
+   "experiences": [
+    {
+     "company": "DeepMind",
+     "role": "Applied ML Researcher",
+     "yearsWorked": 3.0,
+     "description": "Led reinforcement learning research for AlphaGo successor",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Google Brain",
+     "role": "Research Engineer",
+     "yearsWorked": 2.5,
+     "description": "TensorFlow core contributor, distributed training systems",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "python",
+     "level": 5
+    },
+    {
+     "name": "tensorflow",
+     "level": 5
+    },
+    {
+     "name": "pytorch",
+     "level": 4
+    },
+    {
+     "name": "machinelearning",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Published 8 papers in top ML conferences (NeurIPS, ICML)",
+    "Ex-DeepMind researcher - deep RL expertise",
+    "Scaled training to 1000+ GPUs"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "ex_deepmind",
+    "effect": "productivityBoost",
+    "magnitude": 0.3,
+    "description": "+30% productivity on AI/ML products",
+    "sectors": [
+     "aiinfra",
+     "deeptech",
+     "healthtech"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 9,
+   "equityAppetite": 0.21,
+   "riskTolerance": 0.44,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "deeptech"
+   ]
+  }
+ },
+ {
+  "id": "cand_002",
+  "name": "Marcus Thompson",
+  "role": "Engineer",
+  "seniority": "Staff",
+  "askSalary": 117500,
+  "stats": {
+   "eng": 10,
+   "product": 8,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 9,
+   "cs": 0
+  },
+  "perks": [
+   "infra_whisperer",
+   "zero_downtime"
+  ],
+  "riskTags": [
+   "expensive"
+  ],
+  "cv": {
+   "age": 38,
+   "education": {
+    "university": "MIT",
+    "degree": "MS",
+    "field": "Distributed Systems",
+    "graduated": 2010
+   },
+   "experiences": [
+    {
+     "company": "Stripe",
+     "role": "Staff Engineer",
+     "yearsWorked": 5.0,
+     "description": "Built payments infrastructure processing $100B+/year",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Amazon",
+     "role": "Senior SDE",
+     "yearsWorked": 4.0,
+     "description": "DynamoDB team - managed petabyte-scale databases",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "golang",
+     "level": 5
+    },
+    {
+     "name": "aws",
+     "level": 5
+    },
+    {
+     "name": "kubernetes",
+     "level": 5
+    },
+    {
+     "name": "postgresql",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Scaled Stripe to handle Black Friday with 99.999% uptime",
+    "Open source contributor: Kubernetes (2k+ commits)",
+    "Speaker at KubeCon, Strange Loop"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "oss_maintainer",
+    "effect": "codeQuality",
+    "magnitude": 0.25,
+    "description": "+25% code quality, -20% tech debt accrual",
+    "sectors": []
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.59,
+   "riskTolerance": 0.21,
+   "preferredSectors": [
+    "aiinfra",
+    "ecommerce",
+    "fintech"
+   ]
+  }
+ },
+ {
+  "id": "cand_003",
+  "name": "Elena Rodriguez",
+  "role": "Product",
+  "seniority": "Senior",
+  "askSalary": 84000,
+  "stats": {
+   "eng": 0,
+   "product": 10,
+   "design": 7,
+   "growth": 8,
+   "sales": 6,
+   "ops": 0,
+   "cs": 7
+  },
+  "perks": [
+   "market_fit_nose",
+   "user_empathy"
+  ],
+  "riskTags": [
+   "opinionated"
+  ],
+  "cv": {
+   "age": 34,
+   "education": {
+    "university": "INSEAD",
+    "degree": "MBA",
+    "field": "Product Management",
+    "graduated": 2015
+   },
+   "experiences": [
+    {
+     "company": "Airbnb",
+     "role": "Senior PM",
+     "yearsWorked": 4.0,
+     "description": "Led Experiences product from 0 to $1B revenue",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Uber",
+     "role": "PM",
+     "yearsWorked": 3.0,
+     "description": "Uber Eats launch in LATAM - 10M+ users",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "productmanagement",
+     "level": 5
+    },
+    {
+     "name": "userresearch",
+     "level": 4
+    },
+    {
+     "name": "analytics",
+     "level": 5
+    },
+    {
+     "name": "figma",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Took product from PMF to $1B revenue in 3 years",
+    "Ran 200+ A/B tests, increased conversion 40%",
+    "Managed cross-functional team of 25+"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.38,
+   "riskTolerance": 0.4,
+   "preferredSectors": [
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_004",
+  "name": "Raj Patel",
+  "role": "Engineer",
+  "seniority": "Mid",
+  "askSalary": 59000,
+  "stats": {
+   "eng": 8,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 6,
+   "cs": 0
+  },
+  "perks": [
+   "fast_iteration",
+   "full_stack"
+  ],
+  "riskTags": [
+   "scope_creep"
+  ],
+  "cv": {
+   "age": 28,
+   "education": {
+    "university": "University of Waterloo",
+    "degree": "BS",
+    "field": "Computer Engineering",
+    "graduated": 2019
+   },
+   "experiences": [
+    {
+     "company": "Shopify",
+     "role": "Full-Stack Engineer",
+     "yearsWorked": 3.5,
+     "description": "Built merchant analytics dashboard used by 2M+ stores",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Wealthsimple",
+     "role": "Junior Engineer",
+     "yearsWorked": 1.5,
+     "description": "Mobile app development for fintech",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "react",
+     "level": 4
+    },
+    {
+     "name": "typescript",
+     "level": 4
+    },
+    {
+     "name": "ruby",
+     "level": 3
+    },
+    {
+     "name": "postgresql",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Shipped 40+ features in 18 months",
+    "Reduced API latency by 60%",
+    "Hackathon winner (internal)"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.63,
+   "riskTolerance": 0.27,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "ecommerce"
+   ]
+  }
+ },
+ {
+  "id": "cand_005",
+  "name": "Amélie Dubois",
+  "role": "Designer",
+  "seniority": "Senior",
+  "askSalary": 75500,
+  "stats": {
+   "eng": 0,
+   "product": 7,
+   "design": 10,
+   "growth": 6,
+   "sales": 0,
+   "ops": 0,
+   "cs": 5
+  },
+  "perks": [
+   "conversion_ux",
+   "brand_aura"
+  ],
+  "riskTags": [
+   "perfectionist"
+  ],
+  "cv": {
+   "age": 31,
+   "education": {
+    "university": "Royal College of Art",
+    "degree": "MA",
+    "field": "Design Products",
+    "graduated": 2017
+   },
+   "experiences": [
+    {
+     "company": "Figma",
+     "role": "Senior Product Designer",
+     "yearsWorked": 3.0,
+     "description": "Led design system adoption, 500k+ designers use it",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Dropbox",
+     "role": "Product Designer",
+     "yearsWorked": 2.5,
+     "description": "Redesigned core UX, increased engagement 35%",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "figma",
+     "level": 5
+    },
+    {
+     "name": "userresearch",
+     "level": 4
+    },
+    {
+     "name": "sketch",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Created design system used by 500k+ designers",
+    "Won Webby Award for UX excellence",
+    "Increased conversion rate by 35% through redesign"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "brand_master",
+    "effect": "brandBuilding",
+    "magnitude": 0.2,
+    "description": "+20% brand perception and user trust",
+    "sectors": [
+     "consumer",
+     "ecommerce"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.66,
+   "riskTolerance": 0.2,
+   "preferredSectors": [
+    "consumer",
+    "ecommerce"
+   ]
+  }
+ },
+ {
+  "id": "cand_006",
+  "name": "Jake Morrison",
+  "role": "Growth",
+  "seniority": "Senior",
+  "askSalary": 80000,
+  "stats": {
+   "eng": 0,
+   "product": 6,
+   "design": 0,
+   "growth": 10,
+   "sales": 7,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "cac_slayer",
+   "channel_mastery"
+  ],
+  "riskTags": [
+   "risky_experiments"
+  ],
+  "cv": {
+   "age": 33,
+   "education": {
+    "university": "UC Berkeley",
+    "degree": "BS",
+    "field": "Economics",
+    "graduated": 2014
+   },
+   "experiences": [
+    {
+     "company": "Notion",
+     "role": "Head of Growth",
+     "yearsWorked": 2.5,
+     "description": "Scaled from 1M to 20M users in 2 years",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Dropbox",
+     "role": "Growth PM",
+     "yearsWorked": 3.0,
+     "description": "Built viral referral program (50% of signups)",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "analytics",
+     "level": 5
+    },
+    {
+     "name": "seo",
+     "level": 4
+    },
+    {
+     "name": "paidads",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "20x user growth in 2 years at Notion",
+    "Reduced CAC by 70% through organic channels",
+    "Built viral loop with k-factor of 1.5"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "viral_growth_master",
+    "effect": "cacReduction",
+    "magnitude": 0.35,
+    "description": "-35% CAC through viral mechanics",
+    "sectors": [
+     "consumer",
+     "marketplace"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.49,
+   "riskTolerance": 0.55,
+   "preferredSectors": [
+    "consumer",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_007",
+  "name": "Yuki Tanaka",
+  "role": "Engineer",
+  "seniority": "Junior",
+  "askSalary": 40000,
+  "stats": {
+   "eng": 6,
+   "product": 4,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "learns_fast",
+   "humble"
+  ],
+  "riskTags": [
+   "needs_mentoring"
+  ],
+  "cv": {
+   "age": 24,
+   "education": {
+    "university": "University of Tokyo",
+    "degree": "BS",
+    "field": "Computer Science",
+    "graduated": 2022
+   },
+   "experiences": [
+    {
+     "company": "Mercari",
+     "role": "Software Engineer",
+     "yearsWorked": 1.5,
+     "description": "Mobile backend development for marketplace app",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "golang",
+     "level": 3
+    },
+    {
+     "name": "python",
+     "level": 3
+    },
+    {
+     "name": "docker",
+     "level": 2
+    }
+   ],
+   "achievements": [
+    "Top performer in new grad cohort",
+    "Completed 15 features in first year",
+    "Active open source contributor (100+ PRs)"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.35,
+   "riskTolerance": 0.31,
+   "preferredSectors": [
+    "consumer",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_008",
+  "name": "Priya Sharma",
+  "role": "Sales",
+  "seniority": "Senior",
+  "askSalary": 84000,
+  "stats": {
+   "eng": 0,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 10,
+   "ops": 6,
+   "cs": 7
+  },
+  "perks": [
+   "enterprise_closer",
+   "pipeline_machine"
+  ],
+  "riskTags": [
+   "commission_drama"
+  ],
+  "cv": {
+   "age": 36,
+   "education": {
+    "university": "Wharton School",
+    "degree": "MBA",
+    "field": "Marketing",
+    "graduated": 2012
+   },
+   "experiences": [
+    {
+     "company": "Salesforce",
+     "role": "Enterprise AE",
+     "yearsWorked": 5.0,
+     "description": "Closed $20M+ in ARR, President's Club 3x",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Oracle",
+     "role": "Senior Sales Rep",
+     "yearsWorked": 3.0,
+     "description": "Enterprise sales for cloud products",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 5
+    },
+    {
+     "name": "enterprisesales",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Closed $20M+ ARR at Salesforce",
+    "President's Club 3 years running",
+    "Average deal size: $500k"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 8,
+   "equityAppetite": 0.56,
+   "riskTolerance": 0.31,
+   "preferredSectors": [
+    "saas"
+   ]
+  }
+ },
+ {
+  "id": "cand_009",
+  "name": "Alex Kim",
+  "role": "Product",
+  "seniority": "Mid",
+  "askSalary": 61000,
+  "stats": {
+   "eng": 5,
+   "product": 8,
+   "design": 6,
+   "growth": 5,
+   "sales": 0,
+   "ops": 0,
+   "cs": 6
+  },
+  "perks": [
+   "user_empathy",
+   "data_driven"
+  ],
+  "riskTags": [
+   "indecisive"
+  ],
+  "cv": {
+   "age": 29,
+   "education": {
+    "university": "Carnegie Mellon",
+    "degree": "BS",
+    "field": "HCI",
+    "graduated": 2018
+   },
+   "experiences": [
+    {
+     "company": "Spotify",
+     "role": "Associate PM",
+     "yearsWorked": 3.0,
+     "description": "Worked on podcast discovery features",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Microsoft",
+     "role": "PM Intern",
+     "yearsWorked": 0.5,
+     "description": "Teams product - chat features",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "productmanagement",
+     "level": 4
+    },
+    {
+     "name": "analytics",
+     "level": 4
+    },
+    {
+     "name": "userresearch",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Launched podcast discovery - 5M+ users",
+    "Ran 50+ experiments, 20% success rate",
+    "Improved retention by 12%"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.44,
+   "riskTolerance": 0.71,
+   "preferredSectors": [
+    "consumer"
+   ]
+  }
+ },
+ {
+  "id": "cand_010",
+  "name": "Omar Hassan",
+  "role": "Engineer",
+  "seniority": "Senior",
+  "askSalary": 88000,
+  "stats": {
+   "eng": 9,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 8,
+   "cs": 0
+  },
+  "perks": [
+   "scales_systems",
+   "security_expert"
+  ],
+  "riskTags": [
+   "blunt_communicator"
+  ],
+  "cv": {
+   "age": 35,
+   "education": {
+    "university": "Georgia Tech",
+    "degree": "MS",
+    "field": "Cybersecurity",
+    "graduated": 2014
+   },
+   "experiences": [
+    {
+     "company": "Coinbase",
+     "role": "Senior Security Engineer",
+     "yearsWorked": 4.0,
+     "description": "Built security infrastructure protecting $100B+ in assets",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Facebook",
+     "role": "Software Engineer",
+     "yearsWorked": 3.0,
+     "description": "Infrastructure security team",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "python",
+     "level": 5
+    },
+    {
+     "name": "rust",
+     "level": 4
+    },
+    {
+     "name": "aws",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Protected $100B+ in crypto assets",
+    "Zero security breaches during tenure",
+    "Built fraud detection system (99.9% accuracy)"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "crypto_veteran",
+    "effect": "avoidPitfalls",
+    "magnitude": 0.15,
+    "description": "Prevents security breaches and fraud (-15% risk events)",
+    "sectors": [
+     "fintech"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.03,
+   "riskTolerance": 0.34,
+   "preferredSectors": [
+    "aiinfra",
+    "fintech"
+   ]
+  }
+ },
+ {
+  "id": "cand_011",
+  "name": "Isabella Rossi",
+  "role": "Designer",
+  "seniority": "Mid",
+  "askSalary": 50500,
+  "stats": {
+   "eng": 0,
+   "product": 6,
+   "design": 8,
+   "growth": 5,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "rapid_prototyping",
+   "design_ops"
+  ],
+  "riskTags": [
+   "inconsistent_systems"
+  ],
+  "cv": {
+   "age": 27,
+   "education": {
+    "university": "Parsons School of Design",
+    "degree": "BFA",
+    "field": "Communication Design",
+    "graduated": 2019
+   },
+   "experiences": [
+    {
+     "company": "Webflow",
+     "role": "Product Designer",
+     "yearsWorked": 2.5,
+     "description": "Designed no-code builder UI components",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Adobe",
+     "role": "Design Intern",
+     "yearsWorked": 0.5,
+     "description": "XD team - prototyping tools",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "figma",
+     "level": 4
+    },
+    {
+     "name": "sketch",
+     "level": 3
+    },
+    {
+     "name": "userresearch",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Designed 100+ components for Webflow",
+    "Reduced design-to-dev handoff time by 40%",
+    "Contributed to open source design system"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.54,
+   "riskTolerance": 0.74,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_012",
+  "name": "Chen Wei",
+  "role": "Engineer",
+  "seniority": "Staff",
+  "askSalary": 122000,
+  "stats": {
+   "eng": 10,
+   "product": 7,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 9,
+   "cs": 0
+  },
+  "perks": [
+   "architect",
+   "mentor"
+  ],
+  "riskTags": [
+   "expensive",
+   "over_engineers"
+  ],
+  "cv": {
+   "age": 42,
+   "education": {
+    "university": "Tsinghua University",
+    "degree": "PhD",
+    "field": "Distributed Systems",
+    "graduated": 2008
+   },
+   "experiences": [
+    {
+     "company": "ByteDance",
+     "role": "Principal Engineer",
+     "yearsWorked": 6.0,
+     "description": "Led TikTok recommendation engine scaling to 1B+ users",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Alibaba",
+     "role": "Staff Engineer",
+     "yearsWorked": 5.0,
+     "description": "Core infrastructure for Taobao",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "golang",
+     "level": 5
+    },
+    {
+     "name": "machinelearning",
+     "level": 4
+    },
+    {
+     "name": "kubernetes",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Scaled recommendation engine to 1B+ users",
+    "Reduced infrastructure costs by 50%",
+    "Mentored 20+ engineers to senior level"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "bytedance_scale",
+    "effect": "productivityBoost",
+    "magnitude": 0.4,
+    "description": "+40% productivity on viral consumer products",
+    "sectors": [
+     "consumer",
+     "marketplace"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.54,
+   "riskTolerance": 0.36,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_013",
+  "name": "Sofia Martinez",
+  "role": "Growth",
+  "seniority": "Mid",
+  "askSalary": 54500,
+  "stats": {
+   "eng": 0,
+   "product": 5,
+   "design": 4,
+   "growth": 8,
+   "sales": 5,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "paid_performance",
+   "content_engine"
+  ],
+  "riskTags": [
+   "attribution_blindness"
+  ],
+  "cv": {
+   "age": 28,
+   "education": {
+    "university": "NYU Stern",
+    "degree": "BS",
+    "field": "Marketing",
+    "graduated": 2018
+   },
+   "experiences": [
+    {
+     "company": "Calm",
+     "role": "Growth Marketing Manager",
+     "yearsWorked": 3.0,
+     "description": "Managed $10M ad budget, acquired 2M+ users",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Headspace",
+     "role": "Performance Marketer",
+     "yearsWorked": 1.5,
+     "description": "Paid acquisition across Facebook, Google",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "paidads",
+     "level": 4
+    },
+    {
+     "name": "analytics",
+     "level": 4
+    },
+    {
+     "name": "contentmarketing",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Acquired 2M+ users at Calm",
+    "Reduced CAC by 30% YoY",
+    "Managed $10M annual ad budget"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.42,
+   "riskTolerance": 0.65,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_014",
+  "name": "Liam O'Connor",
+  "role": "Sales",
+  "seniority": "Mid",
+  "askSalary": 56500,
+  "stats": {
+   "eng": 0,
+   "product": 4,
+   "design": 0,
+   "growth": 5,
+   "sales": 8,
+   "ops": 0,
+   "cs": 6
+  },
+  "perks": [
+   "outbound_grinder",
+   "friendly_demos"
+  ],
+  "riskTags": [
+   "burns_leads"
+  ],
+  "cv": {
+   "age": 30,
+   "education": {
+    "university": "Trinity College Dublin",
+    "degree": "BA",
+    "field": "Business",
+    "graduated": 2016
+   },
+   "experiences": [
+    {
+     "company": "HubSpot",
+     "role": "Mid-Market AE",
+     "yearsWorked": 3.5,
+     "description": "Closed $2M+ ARR, 110% quota attainment",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Zendesk",
+     "role": "SDR",
+     "yearsWorked": 1.5,
+     "description": "Top SDR 2 quarters running",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 4
+    },
+    {
+     "name": "hubspot",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "110% quota attainment at HubSpot",
+    "Closed $2M+ in ARR",
+    "Average deal size: $30k"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.59,
+   "riskTolerance": 0.59,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_015",
+  "name": "Fatima Al-Rashid",
+  "role": "Ops",
+  "seniority": "Senior",
+  "askSalary": 77500,
+  "stats": {
+   "eng": 0,
+   "product": 6,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 10,
+   "cs": 7
+  },
+  "perks": [
+   "runway_extender",
+   "crisis_control"
+  ],
+  "riskTags": [
+   "over_controlling"
+  ],
+  "cv": {
+   "age": 37,
+   "education": {
+    "university": "London Business School",
+    "degree": "MBA",
+    "field": "Operations",
+    "graduated": 2012
+   },
+   "experiences": [
+    {
+     "company": "Revolut",
+     "role": "Head of Operations",
+     "yearsWorked": 4.0,
+     "description": "Scaled ops team from 50 to 500 during hypergrowth",
+     "isKeyExperience": true
+    },
+    {
+     "company": "McKinsey",
+     "role": "Consultant",
+     "yearsWorked": 3.0,
+     "description": "Operations practice - fintech clients",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "projectmanagement",
+     "level": 5
+    },
+    {
+     "name": "hiring",
+     "level": 4
+    },
+    {
+     "name": "finance",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Scaled ops team 10x during hypergrowth",
+    "Extended runway by 6 months through cost optimization",
+    "Built hiring machine: 100+ hires/year"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "mckinsey_ops",
+    "effect": "productivityBoost",
+    "magnitude": 0.2,
+    "description": "+20% operational efficiency, extends runway",
+    "sectors": []
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.68,
+   "riskTolerance": 0.25,
+   "preferredSectors": [
+    "fintech"
+   ]
+  }
+ },
+ {
+  "id": "cand_016",
+  "name": "Diego Silva",
+  "role": "Engineer",
+  "seniority": "Mid",
+  "askSalary": 56500,
+  "stats": {
+   "eng": 8,
+   "product": 6,
+   "design": 5,
+   "growth": 0,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "full_stack",
+   "polish_performance"
+  ],
+  "riskTags": [
+   "perfectionist"
+  ],
+  "cv": {
+   "age": 29,
+   "education": {
+    "university": "Universidade de São Paulo",
+    "degree": "BS",
+    "field": "Software Engineering",
+    "graduated": 2017
+   },
+   "experiences": [
+    {
+     "company": "Nubank",
+     "role": "Full-Stack Engineer",
+     "yearsWorked": 4.0,
+     "description": "Built credit card product used by 50M+ customers",
+     "isKeyExperience": true
+    },
+    {
+     "company": "iFood",
+     "role": "Junior Engineer",
+     "yearsWorked": 1.5,
+     "description": "Mobile backend for food delivery",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "react",
+     "level": 4
+    },
+    {
+     "name": "typescript",
+     "level": 4
+    },
+    {
+     "name": "aws",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Built features used by 50M+ customers",
+    "Reduced API latency by 50%",
+    "Shipped 30+ features in 2 years"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "fintech_survivor",
+    "effect": "avoidPitfalls",
+    "magnitude": 0.12,
+    "description": "Knows fintech pitfalls - prevents regulatory issues",
+    "sectors": [
+     "fintech"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.37,
+   "riskTolerance": 0.71,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "fintech"
+   ]
+  }
+ },
+ {
+  "id": "cand_017",
+  "name": "Emma Johansson",
+  "role": "CustomerSuccess",
+  "seniority": "Senior",
+  "askSalary": 69500,
+  "stats": {
+   "eng": 0,
+   "product": 7,
+   "design": 0,
+   "growth": 0,
+   "sales": 6,
+   "ops": 5,
+   "cs": 10
+  },
+  "perks": [
+   "churn_killer",
+   "expansion_engine"
+  ],
+  "riskTags": [
+   "under_sells"
+  ],
+  "cv": {
+   "age": 33,
+   "education": {
+    "university": "Stockholm School of Economics",
+    "degree": "BS",
+    "field": "Business Administration",
+    "graduated": 2013
+   },
+   "experiences": [
+    {
+     "company": "Intercom",
+     "role": "Senior CSM",
+     "yearsWorked": 4.0,
+     "description": "Managed portfolio of $5M ARR, 95% retention",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Zendesk",
+     "role": "CSM",
+     "yearsWorked": 2.5,
+     "description": "Mid-market customer success",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 4
+    },
+    {
+     "name": "analytics",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "95% retention on $5M portfolio",
+    "Drove 30% expansion revenue",
+    "NPS score: 75+ consistently"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "churn_wizard",
+    "effect": "churnReduction",
+    "magnitude": 0.4,
+    "description": "-40% churn rate through proactive CS",
+    "sectors": []
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 9,
+   "equityAppetite": 0.57,
+   "riskTolerance": 0.49,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_018",
+  "name": "Kenji Nakamura",
+  "role": "Product",
+  "seniority": "Staff",
+  "askSalary": 109000,
+  "stats": {
+   "eng": 6,
+   "product": 10,
+   "design": 8,
+   "growth": 7,
+   "sales": 5,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "vision_setter",
+   "stakeholder_shield"
+  ],
+  "riskTags": [
+   "big_bets",
+   "expensive"
+  ],
+  "cv": {
+   "age": 40,
+   "education": {
+    "university": "Kyoto University",
+    "degree": "MS",
+    "field": "HCI",
+    "graduated": 2008
+   },
+   "experiences": [
+    {
+     "company": "Line",
+     "role": "VP of Product",
+     "yearsWorked": 5.0,
+     "description": "Led product strategy for 200M+ user messaging app",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Sony",
+     "role": "Senior PM",
+     "yearsWorked": 4.0,
+     "description": "PlayStation Network product management",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "productmanagement",
+     "level": 5
+    },
+    {
+     "name": "userresearch",
+     "level": 5
+    },
+    {
+     "name": "analytics",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Led product for 200M+ users at Line",
+    "Launched 5+ successful products",
+    "Managed team of 30+ PMs"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "consumer_scale_master",
+    "effect": "productivityBoost",
+    "magnitude": 0.35,
+    "description": "+35% PMF speed for consumer products",
+    "sectors": [
+     "consumer",
+     "ecommerce",
+     "marketplace"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.73,
+   "riskTolerance": 0.34,
+   "preferredSectors": [
+    "consumer",
+    "ecommerce",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_019",
+  "name": "Aisha Okonkwo",
+  "role": "Engineer",
+  "seniority": "Junior",
+  "askSalary": 35500,
+  "stats": {
+   "eng": 6,
+   "product": 3,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "learns_fast",
+   "hungry"
+  ],
+  "riskTags": [
+   "needs_mentoring",
+   "inexperience"
+  ],
+  "cv": {
+   "age": 23,
+   "education": {
+    "university": "University of Lagos",
+    "degree": "BS",
+    "field": "Computer Science",
+    "graduated": 2023
+   },
+   "experiences": [
+    {
+     "company": "Flutterwave",
+     "role": "Junior Software Engineer",
+     "yearsWorked": 1.0,
+     "description": "Backend development for payment APIs",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "python",
+     "level": 3
+    },
+    {
+     "name": "javascript",
+     "level": 3
+    },
+    {
+     "name": "postgresql",
+     "level": 2
+    }
+   ],
+   "achievements": [
+    "Top new grad in cohort",
+    "Shipped 10 features in first 6 months",
+    "Contributed to open source payment libraries"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.88,
+   "riskTolerance": 0.7,
+   "preferredSectors": [
+    "aiinfra",
+    "fintech"
+   ]
+  }
+ },
+ {
+  "id": "cand_020",
+  "name": "Lucas Müller",
+  "role": "Growth",
+  "seniority": "Junior",
+  "askSalary": 33500,
+  "stats": {
+   "eng": 0,
+   "product": 3,
+   "design": 0,
+   "growth": 6,
+   "sales": 4,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "content_engine",
+   "scrappy"
+  ],
+  "riskTags": [
+   "inexperience"
+  ],
+  "cv": {
+   "age": 25,
+   "education": {
+    "university": "Humboldt University",
+    "degree": "BA",
+    "field": "Marketing",
+    "graduated": 2021
+   },
+   "experiences": [
+    {
+     "company": "N26",
+     "role": "Growth Associate",
+     "yearsWorked": 2.0,
+     "description": "Content marketing and SEO for European markets",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "seo",
+     "level": 3
+    },
+    {
+     "name": "contentmarketing",
+     "level": 3
+    },
+    {
+     "name": "analytics",
+     "level": 2
+    }
+   ],
+   "achievements": [
+    "Grew organic traffic by 80% in 1 year",
+    "Published 50+ SEO-optimized articles",
+    "Ranked #1 for 10+ target keywords"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.28,
+   "riskTolerance": 0.87,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_021",
+  "name": "Ananya Kapoor",
+  "role": "Engineer",
+  "seniority": "Principal",
+  "askSalary": 147000,
+  "stats": {
+   "eng": 10,
+   "product": 9,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 10,
+   "cs": 0
+  },
+  "perks": [
+   "architect",
+   "thought_leader",
+   "infra_whisperer"
+  ],
+  "riskTags": [
+   "expensive",
+   "over_engineers"
+  ],
+  "cv": {
+   "age": 45,
+   "education": {
+    "university": "IIT Delhi",
+    "degree": "PhD",
+    "field": "Computer Architecture",
+    "graduated": 2005
+   },
+   "experiences": [
+    {
+     "company": "Netflix",
+     "role": "Principal Engineer",
+     "yearsWorked": 7.0,
+     "description": "Architected streaming infrastructure serving 200M+ subscribers",
+     "isKeyExperience": true
+    },
+    {
+     "company": "LinkedIn",
+     "role": "Staff Engineer",
+     "yearsWorked": 5.0,
+     "description": "Built recommendation systems at scale",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "java",
+     "level": 5
+    },
+    {
+     "name": "python",
+     "level": 5
+    },
+    {
+     "name": "systemdesign",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Architected Netflix streaming for 200M+ users",
+    "Published book on distributed systems",
+    "Speaker at QCon, OSDI conferences"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "netflix_scale",
+    "effect": "productivityBoost",
+    "magnitude": 0.5,
+    "description": "+50% productivity on streaming/video products",
+    "sectors": [
+     "consumer",
+     "aiinfra",
+     "saas"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 9,
+   "equityAppetite": 0.41,
+   "riskTolerance": 0.35,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "saas"
+   ]
+  }
+ },
+ {
+  "id": "cand_022",
+  "name": "Tyler Brooks",
+  "role": "Sales",
+  "seniority": "Junior",
+  "askSalary": 31500,
+  "stats": {
+   "eng": 0,
+   "product": 3,
+   "design": 0,
+   "growth": 4,
+   "sales": 6,
+   "ops": 0,
+   "cs": 5
+  },
+  "perks": [
+   "hunter",
+   "eager"
+  ],
+  "riskTags": [
+   "inexperience",
+   "needs_coaching"
+  ],
+  "cv": {
+   "age": 24,
+   "education": {
+    "university": "University of Michigan",
+    "degree": "BA",
+    "field": "Communications",
+    "graduated": 2022
+   },
+   "experiences": [
+    {
+     "company": "Gong",
+     "role": "SDR",
+     "yearsWorked": 1.5,
+     "description": "Outbound sales development for SaaS",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 2
+    },
+    {
+     "name": "coldcalling",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "120% of SDR quota in Q3",
+    "Generated 50+ qualified leads/month",
+    "Promoted after 12 months"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.5,
+   "riskTolerance": 0.7,
+   "preferredSectors": [
+    "saas"
+   ]
+  }
+ },
+ {
+  "id": "cand_023",
+  "name": "Nina Petrova",
+  "role": "Designer",
+  "seniority": "Staff",
+  "askSalary": 101000,
+  "stats": {
+   "eng": 0,
+   "product": 8,
+   "design": 10,
+   "growth": 7,
+   "sales": 0,
+   "ops": 0,
+   "cs": 6
+  },
+  "perks": [
+   "design_systems",
+   "brand_aura",
+   "conversion_ux"
+  ],
+  "riskTags": [
+   "expensive",
+   "opinionated"
+  ],
+  "cv": {
+   "age": 39,
+   "education": {
+    "university": "Central Saint Martins",
+    "degree": "MA",
+    "field": "Graphic Design",
+    "graduated": 2010
+   },
+   "experiences": [
+    {
+     "company": "Stripe",
+     "role": "Design Lead",
+     "yearsWorked": 5.0,
+     "description": "Led design system used by millions of developers",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Apple",
+     "role": "Senior Designer",
+     "yearsWorked": 4.0,
+     "description": "HIG team - Human Interface Guidelines",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "figma",
+     "level": 5
+    },
+    {
+     "name": "systemsthinking",
+     "level": 5
+    },
+    {
+     "name": "brandstrategy",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Created Stripe design system used by millions",
+    "Led rebrand increasing trust by 40%",
+    "Spoke at Config, Design Systems conference"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "stripe_design",
+    "effect": "brandBuilding",
+    "magnitude": 0.35,
+    "description": "+35% brand trust and developer adoption",
+    "sectors": [
+     "fintech",
+     "saas"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 12,
+   "equityAppetite": 0.06,
+   "riskTolerance": 0.23,
+   "preferredSectors": [
+    "consumer",
+    "fintech",
+    "saas"
+   ]
+  }
+ },
+ {
+  "id": "cand_024",
+  "name": "Mateo Fernández",
+  "role": "Engineer",
+  "seniority": "Mid",
+  "askSalary": 54500,
+  "stats": {
+   "eng": 8,
+   "product": 4,
+   "design": 4,
+   "growth": 0,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "mobile_specialist",
+   "fast_iteration"
+  ],
+  "riskTags": [
+   "platform_bias"
+  ],
+  "cv": {
+   "age": 27,
+   "education": {
+    "university": "Universidad de Buenos Aires",
+    "degree": "BS",
+    "field": "Software Engineering",
+    "graduated": 2019
+   },
+   "experiences": [
+    {
+     "company": "Mercado Libre",
+     "role": "iOS Engineer",
+     "yearsWorked": 3.0,
+     "description": "Mobile app for Latin America's largest marketplace",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Rappi",
+     "role": "Mobile Engineer",
+     "yearsWorked": 1.5,
+     "description": "React Native development for delivery app",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "swift",
+     "level": 4
+    },
+    {
+     "name": "reactnative",
+     "level": 3
+    },
+    {
+     "name": "ios",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Built features used by 50M+ LATAM users",
+    "Reduced app crash rate by 70%",
+    "Shipped 25+ features in 2 years"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.59,
+   "riskTolerance": 0.88,
+   "preferredSectors": [
+    "consumer",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_025",
+  "name": "Hannah Cohen",
+  "role": "Product",
+  "seniority": "Junior",
+  "askSalary": 40000,
+  "stats": {
+   "eng": 3,
+   "product": 6,
+   "design": 5,
+   "growth": 4,
+   "sales": 0,
+   "ops": 0,
+   "cs": 4
+  },
+  "perks": [
+   "user_empathy",
+   "learns_fast"
+  ],
+  "riskTags": [
+   "needs_mentoring"
+  ],
+  "cv": {
+   "age": 26,
+   "education": {
+    "university": "Cornell University",
+    "degree": "BS",
+    "field": "Information Science",
+    "graduated": 2020
+   },
+   "experiences": [
+    {
+     "company": "Asana",
+     "role": "Associate PM",
+     "yearsWorked": 2.5,
+     "description": "Worked on project timeline features",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "productmanagement",
+     "level": 3
+    },
+    {
+     "name": "userresearch",
+     "level": 3
+    },
+    {
+     "name": "analytics",
+     "level": 2
+    }
+   ],
+   "achievements": [
+    "Launched timeline feature to 1M+ users",
+    "Increased engagement by 15%",
+    "Led cross-functional team of 5"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.54,
+   "riskTolerance": 0.83,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_026",
+  "name": "Kwame Adebayor",
+  "role": "Growth",
+  "seniority": "Staff",
+  "askSalary": 105000,
+  "stats": {
+   "eng": 0,
+   "product": 7,
+   "design": 0,
+   "growth": 10,
+   "sales": 8,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "channel_mastery",
+   "cac_slayer",
+   "analytics_guru"
+  ],
+  "riskTags": [
+   "expensive",
+   "data_obsessed"
+  ],
+  "cv": {
+   "age": 38,
+   "education": {
+    "university": "Harvard Business School",
+    "degree": "MBA",
+    "field": "Marketing",
+    "graduated": 2012
+   },
+   "experiences": [
+    {
+     "company": "Slack",
+     "role": "VP Growth",
+     "yearsWorked": 4.0,
+     "description": "Scaled from 5M to 15M daily active users",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Facebook",
+     "role": "Growth PM",
+     "yearsWorked": 3.5,
+     "description": "Worked on user acquisition for Messenger",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "analytics",
+     "level": 5
+    },
+    {
+     "name": "experimentation",
+     "level": 5
+    },
+    {
+     "name": "seo",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "3x DAU growth at Slack in 4 years",
+    "Built growth team from 2 to 40 people",
+    "Reduced CAC by 60% through organic channels"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "viral_master",
+    "effect": "cacReduction",
+    "magnitude": 0.5,
+    "description": "-50% CAC through viral growth mechanics",
+    "sectors": [
+     "consumer",
+     "marketplace"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.58,
+   "riskTolerance": 0.27,
+   "preferredSectors": [
+    "consumer",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_027",
+  "name": "Ingrid Svensson",
+  "role": "Ops",
+  "seniority": "Mid",
+  "askSalary": 52500,
+  "stats": {
+   "eng": 0,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 8,
+   "cs": 6
+  },
+  "perks": [
+   "process_builder",
+   "hiring_machine"
+  ],
+  "riskTags": [
+   "rigid_processes"
+  ],
+  "cv": {
+   "age": 30,
+   "education": {
+    "university": "Stockholm School of Economics",
+    "degree": "BS",
+    "field": "Business",
+    "graduated": 2016
+   },
+   "experiences": [
+    {
+     "company": "Klarna",
+     "role": "Operations Manager",
+     "yearsWorked": 3.5,
+     "description": "Scaled ops team during European expansion",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Spotify",
+     "role": "Operations Associate",
+     "yearsWorked": 1.5,
+     "description": "Program management for product launches",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "projectmanagement",
+     "level": 4
+    },
+    {
+     "name": "hiring",
+     "level": 3
+    },
+    {
+     "name": "finance",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Built hiring process for 50+ hires/year",
+    "Improved ops efficiency by 30%",
+    "Managed 3 successful product launches"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.52,
+   "riskTolerance": 0.67,
+   "preferredSectors": [
+    "consumer"
+   ]
+  }
+ },
+ {
+  "id": "cand_028",
+  "name": "David Nguyen",
+  "role": "Engineer",
+  "seniority": "Senior",
+  "askSalary": 86000,
+  "stats": {
+   "eng": 9,
+   "product": 6,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 7,
+   "cs": 0
+  },
+  "perks": [
+   "frontend_guru",
+   "accessibility_champion"
+  ],
+  "riskTags": [
+   "tech_stack_snob"
+  ],
+  "cv": {
+   "age": 34,
+   "education": {
+    "university": "Georgia Tech",
+    "degree": "MS",
+    "field": "Computer Science",
+    "graduated": 2015
+   },
+   "experiences": [
+    {
+     "company": "Vercel",
+     "role": "Senior Frontend Engineer",
+     "yearsWorked": 3.0,
+     "description": "Built Next.js features used by millions of developers",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Shopify",
+     "role": "Frontend Engineer",
+     "yearsWorked": 3.5,
+     "description": "Merchant admin dashboard development",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "react",
+     "level": 5
+    },
+    {
+     "name": "typescript",
+     "level": 5
+    },
+    {
+     "name": "nextjs",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Core contributor to Next.js framework",
+    "Improved page load times by 40%",
+    "100% accessibility compliance on all features"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "nextjs_contributor",
+    "effect": "codeQuality",
+    "magnitude": 0.3,
+    "description": "+30% frontend velocity, modern stack",
+    "sectors": [
+     "saas",
+     "aiinfra"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 9,
+   "equityAppetite": 0.38,
+   "riskTolerance": 0.45,
+   "preferredSectors": [
+    "aiinfra",
+    "ecommerce",
+    "saas"
+   ]
+  }
+ },
+ {
+  "id": "cand_029",
+  "name": "Zara Ahmed",
+  "role": "CustomerSuccess",
+  "seniority": "Mid",
+  "askSalary": 48500,
+  "stats": {
+   "eng": 0,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 5,
+   "ops": 4,
+   "cs": 8
+  },
+  "perks": [
+   "churn_killer",
+   "expansion_upsell"
+  ],
+  "riskTags": [
+   "over_promises"
+  ],
+  "cv": {
+   "age": 28,
+   "education": {
+    "university": "University of Toronto",
+    "degree": "BA",
+    "field": "Psychology",
+    "graduated": 2018
+   },
+   "experiences": [
+    {
+     "company": "Mixpanel",
+     "role": "CSM",
+     "yearsWorked": 3.0,
+     "description": "Managed SMB customer portfolio of $2M ARR",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Segment",
+     "role": "Junior CSM",
+     "yearsWorked": 1.5,
+     "description": "Customer onboarding and success",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 3
+    },
+    {
+     "name": "analytics",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "90% retention on $2M portfolio",
+    "20% expansion revenue year over year",
+    "NPS score: 70+ consistently"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.46,
+   "riskTolerance": 0.46,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_030",
+  "name": "Pierre Dubois",
+  "role": "Sales",
+  "seniority": "Staff",
+  "askSalary": 115500,
+  "stats": {
+   "eng": 0,
+   "product": 6,
+   "design": 0,
+   "growth": 0,
+   "sales": 10,
+   "ops": 7,
+   "cs": 8
+  },
+  "perks": [
+   "enterprise_closer",
+   "pipeline_machine",
+   "global_network"
+  ],
+  "riskTags": [
+   "expensive",
+   "high_commission"
+  ],
+  "cv": {
+   "age": 42,
+   "education": {
+    "university": "HEC Paris",
+    "degree": "MBA",
+    "field": "Business",
+    "graduated": 2008
+   },
+   "experiences": [
+    {
+     "company": "SAP",
+     "role": "VP Sales EMEA",
+     "yearsWorked": 6.0,
+     "description": "Led $100M+ ARR sales organization",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Microsoft",
+     "role": "Enterprise AE",
+     "yearsWorked": 5.0,
+     "description": "Enterprise sales for Azure and Office 365",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 5
+    },
+    {
+     "name": "enterprisesales",
+     "level": 5
+    },
+    {
+     "name": "negotiation",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Built sales org from 5 to 50 people",
+    "Closed $100M+ in enterprise deals",
+    "Average deal size: $1M+"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "enterprise_legend",
+    "effect": "dealAcceleration",
+    "magnitude": 0.4,
+    "description": "+40% close rate on enterprise deals",
+    "sectors": [
+     "saas",
+     "aiinfra",
+     "healthtech",
+     "deeptech"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 8,
+   "equityAppetite": 0.66,
+   "riskTolerance": 0.27,
+   "preferredSectors": [
+    "aiinfra",
+    "deeptech",
+    "healthtech"
+   ]
+  }
+ },
+ {
+  "id": "cand_031",
+  "name": "Maya Patel",
+  "role": "Designer",
+  "seniority": "Junior",
+  "askSalary": 35500,
+  "stats": {
+   "eng": 0,
+   "product": 4,
+   "design": 6,
+   "growth": 3,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "rapid_prototyping",
+   "fresh_perspective"
+  ],
+  "riskTags": [
+   "inexperience",
+   "needs_feedback"
+  ],
+  "cv": {
+   "age": 24,
+   "education": {
+    "university": "Rhode Island School of Design",
+    "degree": "BFA",
+    "field": "Graphic Design",
+    "graduated": 2022
+   },
+   "experiences": [
+    {
+     "company": "Canva",
+     "role": "Product Designer",
+     "yearsWorked": 1.5,
+     "description": "Designed templates and UI components",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "figma",
+     "level": 3
+    },
+    {
+     "name": "illustrator",
+     "level": 4
+    },
+    {
+     "name": "userresearch",
+     "level": 2
+    }
+   ],
+   "achievements": [
+    "Designed 50+ templates used by 1M+ users",
+    "Won internal design hackathon",
+    "Improved template adoption by 25%"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.51,
+   "riskTolerance": 0.73,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_032",
+  "name": "Viktor Ivanov",
+  "role": "Engineer",
+  "seniority": "Staff",
+  "askSalary": 119500,
+  "stats": {
+   "eng": 10,
+   "product": 7,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 9,
+   "cs": 0
+  },
+  "perks": [
+   "infra_whisperer",
+   "zero_downtime",
+   "mentor"
+  ],
+  "riskTags": [
+   "expensive",
+   "perfectionist"
+  ],
+  "cv": {
+   "age": 39,
+   "education": {
+    "university": "Moscow State University",
+    "degree": "MS",
+    "field": "Applied Mathematics",
+    "graduated": 2010
+   },
+   "experiences": [
+    {
+     "company": "Yandex",
+     "role": "Staff Engineer",
+     "yearsWorked": 6.0,
+     "description": "Led infrastructure for search engine serving 100M+ users",
+     "isKeyExperience": true
+    },
+    {
+     "company": "JetBrains",
+     "role": "Senior Engineer",
+     "yearsWorked": 4.0,
+     "description": "IntelliJ IDEA performance optimization",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "java",
+     "level": 5
+    },
+    {
+     "name": "kotlin",
+     "level": 5
+    },
+    {
+     "name": "systemdesign",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Scaled Yandex search to 100M+ users",
+    "Reduced infrastructure costs by 40%",
+    "Mentored 15+ engineers to senior level"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "search_engine_expert",
+    "effect": "productivityBoost",
+    "magnitude": 0.35,
+    "description": "+35% productivity on search/recommendation systems",
+    "sectors": [
+     "marketplace",
+     "ecommerce",
+     "aiinfra"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.59,
+   "riskTolerance": 0.23,
+   "preferredSectors": [
+    "aiinfra",
+    "ecommerce",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_033",
+  "name": "Leila Hassan",
+  "role": "Product",
+  "seniority": "Senior",
+  "askSalary": 82000,
+  "stats": {
+   "eng": 0,
+   "product": 9,
+   "design": 7,
+   "growth": 7,
+   "sales": 6,
+   "ops": 0,
+   "cs": 6
+  },
+  "perks": [
+   "market_fit_nose",
+   "data_driven",
+   "user_empathy"
+  ],
+  "riskTags": [
+   "analysis_paralysis"
+  ],
+  "cv": {
+   "age": 33,
+   "education": {
+    "university": "American University of Beirut",
+    "degree": "MBA",
+    "field": "Product Management",
+    "graduated": 2016
+   },
+   "experiences": [
+    {
+     "company": "Careem",
+     "role": "Senior PM",
+     "yearsWorked": 3.5,
+     "description": "Led super app product strategy for MENA region",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Uber",
+     "role": "PM",
+     "yearsWorked": 2.5,
+     "description": "Ride-sharing product for Middle East",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "productmanagement",
+     "level": 5
+    },
+    {
+     "name": "analytics",
+     "level": 4
+    },
+    {
+     "name": "userresearch",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Launched super app features to 20M+ users",
+    "Increased engagement by 45% through product improvements",
+    "Led acquisition by Uber ($3.1B)"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.27,
+   "riskTolerance": 0.36,
+   "preferredSectors": [
+    "consumer",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_034",
+  "name": "Tomás García",
+  "role": "Growth",
+  "seniority": "Junior",
+  "askSalary": 31500,
+  "stats": {
+   "eng": 0,
+   "product": 3,
+   "design": 0,
+   "growth": 6,
+   "sales": 4,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "scrappy",
+   "content_engine"
+  ],
+  "riskTags": [
+   "inexperience"
+  ],
+  "cv": {
+   "age": 25,
+   "education": {
+    "university": "Universidad Nacional Autónoma de México",
+    "degree": "BA",
+    "field": "Marketing",
+    "graduated": 2021
+   },
+   "experiences": [
+    {
+     "company": "Kavak",
+     "role": "Growth Marketing Analyst",
+     "yearsWorked": 2.0,
+     "description": "Performance marketing for used car marketplace",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "paidads",
+     "level": 3
+    },
+    {
+     "name": "analytics",
+     "level": 3
+    },
+    {
+     "name": "seo",
+     "level": 2
+    }
+   ],
+   "achievements": [
+    "Managed $500k annual ad budget",
+    "Reduced CAC by 20% in first year",
+    "Grew organic traffic by 60%"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.18,
+   "riskTolerance": 0.74,
+   "preferredSectors": [
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_035",
+  "name": "Olivia Chang",
+  "role": "Engineer",
+  "seniority": "Mid",
+  "askSalary": 61000,
+  "stats": {
+   "eng": 8,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 6,
+   "cs": 0
+  },
+  "perks": [
+   "mobile_specialist",
+   "fast_iteration"
+  ],
+  "riskTags": [
+   "scope_creep"
+  ],
+  "cv": {
+   "age": 29,
+   "education": {
+    "university": "UC San Diego",
+    "degree": "BS",
+    "field": "Computer Science",
+    "graduated": 2017
+   },
+   "experiences": [
+    {
+     "company": "Snap",
+     "role": "Android Engineer",
+     "yearsWorked": 3.5,
+     "description": "Worked on camera and AR features for Snapchat",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Twitter",
+     "role": "Mobile Engineer",
+     "yearsWorked": 2.0,
+     "description": "Android app development",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "kotlin",
+     "level": 4
+    },
+    {
+     "name": "android",
+     "level": 4
+    },
+    {
+     "name": "java",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Built AR features used by 300M+ daily users",
+    "Reduced app size by 30%",
+    "Shipped 40+ features in 3 years"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.54,
+   "riskTolerance": 0.49,
+   "preferredSectors": [
+    "consumer"
+   ]
+  }
+ },
+ {
+  "id": "cand_036",
+  "name": "Sebastian Müller",
+  "role": "Ops",
+  "seniority": "Junior",
+  "askSalary": 29500,
+  "stats": {
+   "eng": 0,
+   "product": 3,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 6,
+   "cs": 4
+  },
+  "perks": [
+   "detail_oriented",
+   "learns_fast"
+  ],
+  "riskTags": [
+   "needs_guidance"
+  ],
+  "cv": {
+   "age": 24,
+   "education": {
+    "university": "Ludwig Maximilian University",
+    "degree": "BA",
+    "field": "Business Administration",
+    "graduated": 2022
+   },
+   "experiences": [
+    {
+     "company": "Delivery Hero",
+     "role": "Operations Analyst",
+     "yearsWorked": 1.5,
+     "description": "Operational analytics for food delivery",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "excel",
+     "level": 3
+    },
+    {
+     "name": "sql",
+     "level": 2
+    },
+    {
+     "name": "projectmanagement",
+     "level": 2
+    }
+   ],
+   "achievements": [
+    "Improved delivery times by 15% through process optimization",
+    "Built operational dashboards",
+    "Managed 3 cross-functional projects"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.81,
+   "riskTolerance": 0.82,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_037",
+  "name": "Ravi Kumar",
+  "role": "Engineer",
+  "seniority": "Senior",
+  "askSalary": 82000,
+  "stats": {
+   "eng": 9,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 8,
+   "cs": 0
+  },
+  "perks": [
+   "backend_specialist",
+   "scales_systems"
+  ],
+  "riskTags": [
+   "tech_debt_creator"
+  ],
+  "cv": {
+   "age": 32,
+   "education": {
+    "university": "IIT Bombay",
+    "degree": "BS",
+    "field": "Computer Science",
+    "graduated": 2014
+   },
+   "experiences": [
+    {
+     "company": "Google",
+     "role": "Senior SWE",
+     "yearsWorked": 5.0,
+     "description": "Backend systems for Google Maps",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Flipkart",
+     "role": "Software Engineer",
+     "yearsWorked": 3.0,
+     "description": "E-commerce platform development",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "java",
+     "level": 5
+    },
+    {
+     "name": "golang",
+     "level": 4
+    },
+    {
+     "name": "gcp",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Scaled Google Maps to handle 1B+ requests/day",
+    "Reduced API latency by 50%",
+    "Led team of 8 engineers"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "google_maps_veteran",
+    "effect": "productivityBoost",
+    "magnitude": 0.25,
+    "description": "+25% productivity on location-based products",
+    "sectors": [
+     "marketplace",
+     "consumer"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.25,
+   "riskTolerance": 0.69,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "ecommerce"
+   ]
+  }
+ },
+ {
+  "id": "cand_038",
+  "name": "Chiara Romano",
+  "role": "Designer",
+  "seniority": "Mid",
+  "askSalary": 52500,
+  "stats": {
+   "eng": 0,
+   "product": 6,
+   "design": 8,
+   "growth": 5,
+   "sales": 0,
+   "ops": 0,
+   "cs": 4
+  },
+  "perks": [
+   "conversion_ux",
+   "rapid_prototyping"
+  ],
+  "riskTags": [
+   "inconsistent_systems"
+  ],
+  "cv": {
+   "age": 28,
+   "education": {
+    "university": "Politecnico di Milano",
+    "degree": "MA",
+    "field": "Interaction Design",
+    "graduated": 2019
+   },
+   "experiences": [
+    {
+     "company": "Revolut",
+     "role": "Product Designer",
+     "yearsWorked": 3.0,
+     "description": "Designed banking features for European neobank",
+     "isKeyExperience": false
+    },
+    {
+     "company": "N26",
+     "role": "Junior Designer",
+     "yearsWorked": 1.5,
+     "description": "Mobile banking UX/UI",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "figma",
+     "level": 4
+    },
+    {
+     "name": "sketch",
+     "level": 3
+    },
+    {
+     "name": "userresearch",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Designed features used by 10M+ users",
+    "Increased conversion rate by 20%",
+    "Led design for 3 product launches"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.71,
+   "riskTolerance": 0.59,
+   "preferredSectors": [
+    "consumer",
+    "fintech"
+   ]
+  }
+ },
+ {
+  "id": "cand_039",
+  "name": "James Wilson",
+  "role": "Sales",
+  "seniority": "Mid",
+  "askSalary": 59000,
+  "stats": {
+   "eng": 0,
+   "product": 4,
+   "design": 0,
+   "growth": 5,
+   "sales": 8,
+   "ops": 0,
+   "cs": 6
+  },
+  "perks": [
+   "smb_hunter",
+   "demo_wizard"
+  ],
+  "riskTags": [
+   "impatient"
+  ],
+  "cv": {
+   "age": 31,
+   "education": {
+    "university": "University of Texas at Austin",
+    "degree": "BA",
+    "field": "Business",
+    "graduated": 2015
+   },
+   "experiences": [
+    {
+     "company": "Zoom",
+     "role": "SMB Account Executive",
+     "yearsWorked": 3.5,
+     "description": "SMB sales during COVID hypergrowth",
+     "isKeyExperience": false
+    },
+    {
+     "company": "DocuSign",
+     "role": "Inside Sales Rep",
+     "yearsWorked": 2.0,
+     "description": "Inbound sales for SMB segment",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 4
+    },
+    {
+     "name": "demoskills",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Closed $1.5M ARR at Zoom",
+    "115% quota attainment 3 years running",
+    "Average deal size: $15k"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.01,
+   "riskTolerance": 0.62,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_040",
+  "name": "Nadia El-Sayed",
+  "role": "CustomerSuccess",
+  "seniority": "Junior",
+  "askSalary": 29500,
+  "stats": {
+   "eng": 0,
+   "product": 3,
+   "design": 0,
+   "growth": 0,
+   "sales": 4,
+   "ops": 3,
+   "cs": 6
+  },
+  "perks": [
+   "empathy",
+   "eager"
+  ],
+  "riskTags": [
+   "inexperience"
+  ],
+  "cv": {
+   "age": 24,
+   "education": {
+    "university": "Cairo University",
+    "degree": "BA",
+    "field": "Communications",
+    "graduated": 2022
+   },
+   "experiences": [
+    {
+     "company": "Instabug",
+     "role": "Customer Success Associate",
+     "yearsWorked": 1.5,
+     "description": "Customer onboarding and support for developer tools",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 2
+    },
+    {
+     "name": "communication",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "85% customer retention rate",
+    "Onboarded 50+ customers",
+    "NPS score: 65+"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.55,
+   "riskTolerance": 1,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_041",
+  "name": "Erik Larsson",
+  "role": "Engineer",
+  "seniority": "Principal",
+  "askSalary": 151000,
+  "stats": {
+   "eng": 10,
+   "product": 9,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 10,
+   "cs": 0
+  },
+  "perks": [
+   "architect",
+   "thought_leader",
+   "security_expert"
+  ],
+  "riskTags": [
+   "expensive",
+   "over_engineers"
+  ],
+  "cv": {
+   "age": 46,
+   "education": {
+    "university": "KTH Royal Institute of Technology",
+    "degree": "PhD",
+    "field": "Computer Security",
+    "graduated": 2006
+   },
+   "experiences": [
+    {
+     "company": "Spotify",
+     "role": "Principal Engineer",
+     "yearsWorked": 8.0,
+     "description": "Led platform security for 400M+ users",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Ericsson",
+     "role": "Staff Engineer",
+     "yearsWorked": 6.0,
+     "description": "Telecom infrastructure security",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "python",
+     "level": 5
+    },
+    {
+     "name": "golang",
+     "level": 5
+    },
+    {
+     "name": "security",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Zero major security incidents at Spotify",
+    "Published 15+ security papers",
+    "Speaker at Black Hat, DEF CON"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "security_legend",
+    "effect": "avoidPitfalls",
+    "magnitude": 0.5,
+    "description": "Prevents security breaches and compliance issues",
+    "sectors": [
+     "fintech",
+     "healthtech",
+     "saas"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.28,
+   "riskTolerance": 0.59,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "fintech"
+   ]
+  }
+ },
+ {
+  "id": "cand_042",
+  "name": "Aria Johnson",
+  "role": "Product",
+  "seniority": "Mid",
+  "askSalary": 59000,
+  "stats": {
+   "eng": 4,
+   "product": 8,
+   "design": 6,
+   "growth": 5,
+   "sales": 0,
+   "ops": 0,
+   "cs": 5
+  },
+  "perks": [
+   "data_driven",
+   "user_empathy"
+  ],
+  "riskTags": [
+   "indecisive"
+  ],
+  "cv": {
+   "age": 28,
+   "education": {
+    "university": "University of Washington",
+    "degree": "BS",
+    "field": "Cognitive Science",
+    "graduated": 2019
+   },
+   "experiences": [
+    {
+     "company": "Atlassian",
+     "role": "Product Manager",
+     "yearsWorked": 3.0,
+     "description": "Jira features for dev teams",
+     "isKeyExperience": false
+    },
+    {
+     "company": "GitHub",
+     "role": "Associate PM",
+     "yearsWorked": 1.5,
+     "description": "Code review features",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "productmanagement",
+     "level": 4
+    },
+    {
+     "name": "analytics",
+     "level": 4
+    },
+    {
+     "name": "figma",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Launched features to 10M+ developers",
+    "Increased engagement by 18%",
+    "Led cross-functional team of 8"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.22,
+   "riskTolerance": 0.66,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_043",
+  "name": "Mohammed Al-Farsi",
+  "role": "Growth",
+  "seniority": "Mid",
+  "askSalary": 56500,
+  "stats": {
+   "eng": 0,
+   "product": 5,
+   "design": 0,
+   "growth": 8,
+   "sales": 6,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "paid_performance",
+   "analytics_guru"
+  ],
+  "riskTags": [
+   "attribution_blindness"
+  ],
+  "cv": {
+   "age": 30,
+   "education": {
+    "university": "American University in Dubai",
+    "degree": "BS",
+    "field": "Marketing",
+    "graduated": 2016
+   },
+   "experiences": [
+    {
+     "company": "Souq.com",
+     "role": "Growth Marketing Manager",
+     "yearsWorked": 3.5,
+     "description": "User acquisition for Middle East e-commerce",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Talabat",
+     "role": "Performance Marketer",
+     "yearsWorked": 2.0,
+     "description": "Paid acquisition for food delivery",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "paidads",
+     "level": 4
+    },
+    {
+     "name": "analytics",
+     "level": 4
+    },
+    {
+     "name": "seo",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Managed $5M annual ad budget",
+    "Reduced CAC by 25% YoY",
+    "Acquired 500k+ users"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.63,
+   "riskTolerance": 0.56,
+   "preferredSectors": [
+    "ecommerce"
+   ]
+  }
+ },
+ {
+  "id": "cand_044",
+  "name": "Luna Park",
+  "role": "Designer",
+  "seniority": "Senior",
+  "askSalary": 77500,
+  "stats": {
+   "eng": 0,
+   "product": 7,
+   "design": 10,
+   "growth": 6,
+   "sales": 0,
+   "ops": 0,
+   "cs": 5
+  },
+  "perks": [
+   "conversion_ux",
+   "brand_aura",
+   "design_systems"
+  ],
+  "riskTags": [
+   "perfectionist"
+  ],
+  "cv": {
+   "age": 35,
+   "education": {
+    "university": "Seoul National University",
+    "degree": "MA",
+    "field": "Design",
+    "graduated": 2015
+   },
+   "experiences": [
+    {
+     "company": "Coupang",
+     "role": "Senior Product Designer",
+     "yearsWorked": 4.0,
+     "description": "Led design for Korea's largest e-commerce platform",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Naver",
+     "role": "Product Designer",
+     "yearsWorked": 3.0,
+     "description": "Search and discovery UX",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "figma",
+     "level": 5
+    },
+    {
+     "name": "userresearch",
+     "level": 4
+    },
+    {
+     "name": "prototyping",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Redesigned checkout flow, +30% conversion",
+    "Created design system used by 50+ designers",
+    "Led mobile app redesign for 20M+ users"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "ecommerce_conversion_master",
+    "effect": "conversionBoost",
+    "magnitude": 0.3,
+    "description": "+30% conversion rate on e-commerce products",
+    "sectors": [
+     "ecommerce",
+     "marketplace"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.89,
+   "riskTolerance": 0.49,
+   "preferredSectors": [
+    "consumer",
+    "ecommerce",
+    "marketplace"
+   ]
+  }
+ },
+ {
+  "id": "cand_045",
+  "name": "André Santos",
+  "role": "Engineer",
+  "seniority": "Junior",
+  "askSalary": 38000,
+  "stats": {
+   "eng": 6,
+   "product": 4,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "learns_fast",
+   "full_stack"
+  ],
+  "riskTags": [
+   "needs_mentoring"
+  ],
+  "cv": {
+   "age": 25,
+   "education": {
+    "university": "Universidade de Lisboa",
+    "degree": "BS",
+    "field": "Computer Science",
+    "graduated": 2021
+   },
+   "experiences": [
+    {
+     "company": "Farfetch",
+     "role": "Software Engineer",
+     "yearsWorked": 2.0,
+     "description": "E-commerce platform development",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "javascript",
+     "level": 3
+    },
+    {
+     "name": "nodejs",
+     "level": 3
+    },
+    {
+     "name": "react",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Shipped 15 features in first year",
+    "Reduced page load time by 25%",
+    "Active open source contributor"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 4,
+   "equityAppetite": 0.73,
+   "riskTolerance": 0.69,
+   "preferredSectors": [
+    "ecommerce"
+   ]
+  }
+ },
+ {
+  "id": "cand_046",
+  "name": "Rachel Goldstein",
+  "role": "Ops",
+  "seniority": "Staff",
+  "askSalary": 96500,
+  "stats": {
+   "eng": 0,
+   "product": 7,
+   "design": 0,
+   "growth": 0,
+   "sales": 0,
+   "ops": 10,
+   "cs": 8
+  },
+  "perks": [
+   "runway_extender",
+   "crisis_control",
+   "hiring_machine"
+  ],
+  "riskTags": [
+   "expensive",
+   "over_controlling"
+  ],
+  "cv": {
+   "age": 40,
+   "education": {
+    "university": "Columbia Business School",
+    "degree": "MBA",
+    "field": "Operations",
+    "graduated": 2010
+   },
+   "experiences": [
+    {
+     "company": "WeWork",
+     "role": "VP Operations",
+     "yearsWorked": 5.0,
+     "description": "Scaled ops during hypergrowth to 500+ locations",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Deloitte",
+     "role": "Senior Consultant",
+     "yearsWorked": 4.0,
+     "description": "Operations consulting for tech startups",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "projectmanagement",
+     "level": 5
+    },
+    {
+     "name": "finance",
+     "level": 5
+    },
+    {
+     "name": "hiring",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Scaled ops team from 20 to 300",
+    "Extended runway by 9 months through efficiency",
+    "Built playbook for 500+ location launches"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "hypergrowth_ops",
+    "effect": "productivityBoost",
+    "magnitude": 0.3,
+    "description": "+30% operational efficiency during scaling",
+    "sectors": []
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 9,
+   "equityAppetite": 0.43,
+   "riskTolerance": 0.42,
+   "preferredSectors": []
+  }
+ },
+ {
+  "id": "cand_047",
+  "name": "Hiroshi Tanaka",
+  "role": "Sales",
+  "seniority": "Senior",
+  "askSalary": 88000,
+  "stats": {
+   "eng": 0,
+   "product": 5,
+   "design": 0,
+   "growth": 0,
+   "sales": 10,
+   "ops": 6,
+   "cs": 7
+  },
+  "perks": [
+   "enterprise_closer",
+   "asia_pacific_network"
+  ],
+  "riskTags": [
+   "commission_drama"
+  ],
+  "cv": {
+   "age": 37,
+   "education": {
+    "university": "Waseda University",
+    "degree": "MBA",
+    "field": "Business",
+    "graduated": 2013
+   },
+   "experiences": [
+    {
+     "company": "Rakuten",
+     "role": "Enterprise Sales Director",
+     "yearsWorked": 5.0,
+     "description": "Enterprise sales for APAC region",
+     "isKeyExperience": true
+    },
+    {
+     "company": "SoftBank",
+     "role": "Senior Account Executive",
+     "yearsWorked": 3.0,
+     "description": "Enterprise telecom sales",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 5
+    },
+    {
+     "name": "enterprisesales",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "Closed $30M+ in APAC enterprise deals",
+    "Built sales team from 3 to 25 people",
+    "Average deal size: $800k"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "apac_enterprise",
+    "effect": "dealAcceleration",
+    "magnitude": 0.35,
+    "description": "+35% close rate on APAC enterprise deals",
+    "sectors": [
+     "saas",
+     "deeptech"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 8,
+   "equityAppetite": 0.68,
+   "riskTolerance": 0.62,
+   "preferredSectors": [
+    "deeptech",
+    "fintech",
+    "saas"
+   ]
+  }
+ },
+ {
+  "id": "cand_048",
+  "name": "Sofia Andersson",
+  "role": "CustomerSuccess",
+  "seniority": "Staff",
+  "askSalary": 84000,
+  "stats": {
+   "eng": 0,
+   "product": 8,
+   "design": 0,
+   "growth": 0,
+   "sales": 7,
+   "ops": 6,
+   "cs": 10
+  },
+  "perks": [
+   "churn_killer",
+   "expansion_engine",
+   "cs_ops_builder"
+  ],
+  "riskTags": [
+   "expensive"
+  ],
+  "cv": {
+   "age": 38,
+   "education": {
+    "university": "Copenhagen Business School",
+    "degree": "MS",
+    "field": "Service Management",
+    "graduated": 2012
+   },
+   "experiences": [
+    {
+     "company": "Snowflake",
+     "role": "Director of Customer Success",
+     "yearsWorked": 4.0,
+     "description": "Led CS organization managing $50M+ ARR portfolio",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Datadog",
+     "role": "Senior CSM",
+     "yearsWorked": 3.5,
+     "description": "Enterprise customer success",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "salesforce",
+     "level": 5
+    },
+    {
+     "name": "analytics",
+     "level": 4
+    },
+    {
+     "name": "leadership",
+     "level": 5
+    }
+   ],
+   "achievements": [
+    "97% net retention on $50M portfolio",
+    "Built CS team from 5 to 40 people",
+    "Drove 40% expansion revenue"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "cs_excellence",
+    "effect": "churnReduction",
+    "magnitude": 0.5,
+    "description": "-50% churn rate through world-class CS",
+    "sectors": [
+     "saas",
+     "healthtech"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 3,
+   "equityAppetite": 0.53,
+   "riskTolerance": 0.31,
+   "preferredSectors": [
+    "healthtech",
+    "saas"
+   ]
+  }
+ },
+ {
+  "id": "cand_049",
+  "name": "Marcus Lee",
+  "role": "Engineer",
+  "seniority": "Mid",
+  "askSalary": 58000,
+  "stats": {
+   "eng": 8,
+   "product": 5,
+   "design": 4,
+   "growth": 0,
+   "sales": 0,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "full_stack",
+   "fast_iteration"
+  ],
+  "riskTags": [
+   "tech_debt_creator"
+  ],
+  "cv": {
+   "age": 28,
+   "education": {
+    "university": "National University of Singapore",
+    "degree": "BS",
+    "field": "Computer Science",
+    "graduated": 2018
+   },
+   "experiences": [
+    {
+     "company": "Grab",
+     "role": "Full-Stack Engineer",
+     "yearsWorked": 3.5,
+     "description": "Built features for super app in Southeast Asia",
+     "isKeyExperience": false
+    },
+    {
+     "company": "Sea Group",
+     "role": "Software Engineer",
+     "yearsWorked": 1.5,
+     "description": "E-commerce platform development",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "golang",
+     "level": 4
+    },
+    {
+     "name": "react",
+     "level": 4
+    },
+    {
+     "name": "postgresql",
+     "level": 3
+    }
+   ],
+   "achievements": [
+    "Built features for 30M+ users",
+    "Reduced API latency by 45%",
+    "Shipped 35+ features in 3 years"
+   ]
+  },
+  "hiddenBonuses": [],
+  "prefs": {
+   "minRunwayMonths": 6,
+   "equityAppetite": 0.36,
+   "riskTolerance": 0.88,
+   "preferredSectors": [
+    "aiinfra",
+    "consumer",
+    "ecommerce"
+   ]
+  }
+ },
+ {
+  "id": "cand_050",
+  "name": "Isabella Ferreira",
+  "role": "Product",
+  "seniority": "Staff",
+  "askSalary": 111500,
+  "stats": {
+   "eng": 6,
+   "product": 10,
+   "design": 8,
+   "growth": 7,
+   "sales": 6,
+   "ops": 0,
+   "cs": 0
+  },
+  "perks": [
+   "vision_setter",
+   "market_fit_nose",
+   "stakeholder_shield"
+  ],
+  "riskTags": [
+   "expensive",
+   "big_bets"
+  ],
+  "cv": {
+   "age": 41,
+   "education": {
+    "university": "Fundação Getulio Vargas",
+    "degree": "MBA",
+    "field": "Product Management",
+    "graduated": 2010
+   },
+   "experiences": [
+    {
+     "company": "iFood",
+     "role": "VP of Product",
+     "yearsWorked": 5.0,
+     "description": "Led product strategy for Latin America's largest food delivery",
+     "isKeyExperience": true
+    },
+    {
+     "company": "Nubank",
+     "role": "Senior PM",
+     "yearsWorked": 4.0,
+     "description": "Credit card product for 50M+ customers",
+     "isKeyExperience": false
+    }
+   ],
+   "skills": [
+    {
+     "name": "productmanagement",
+     "level": 5
+    },
+    {
+     "name": "analytics",
+     "level": 5
+    },
+    {
+     "name": "userresearch",
+     "level": 4
+    }
+   ],
+   "achievements": [
+    "Led product for 30M+ users",
+    "Launched 8 successful products",
+    "Managed team of 40+ PMs"
+   ]
+  },
+  "hiddenBonuses": [
+   {
+    "trigger": "latam_market_master",
+    "effect": "productivityBoost",
+    "magnitude": 0.4,
+    "description": "+40% PMF speed for LATAM markets",
+    "sectors": [
+     "marketplace",
+     "consumer",
+     "fintech"
+    ]
+   }
+  ],
+  "prefs": {
+   "minRunwayMonths": 9,
+   "equityAppetite": 0.53,
+   "riskTolerance": 0.53,
+   "preferredSectors": [
+    "consumer",
+    "fintech",
+    "marketplace"
+   ]
+  }
+ }
+]

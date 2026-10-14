@@ -1,0 +1,21 @@
+# dependencies and builds
+node_modules
+dist
+dist-single
+dist-ssr
+*.local
+coverage
+test-results
+playwright-report
+
+# Tauri / Rust
+src-tauri/target
+src-tauri/gen/schemas
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
+*.log
