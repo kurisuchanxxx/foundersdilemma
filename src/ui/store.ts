@@ -34,6 +34,7 @@ export type View =
   | "instructor"
   | "results";
 export type Theme = "auto" | "light" | "dark";
+export type DecisionTab = "core" | "product" | "people" | "growth" | "finance" | "dilemma" | "review";
 
 export interface SaveMeta {
   id: string;
@@ -70,6 +71,9 @@ interface StoreState {
   toasts: Toast[];
   timerEndsAt: number | null;
   learnTopic: string | null;
+  decisionsTab: DecisionTab;
+  /** Current step of the guided tour, or null when it is not running. */
+  tourStep: number | null;
 
   setLang: (l: Lang) => void;
   setTheme: (t: Theme) => void;
@@ -97,6 +101,9 @@ interface StoreState {
   dismissToast: (id: number) => void;
   setTimer: (endsAt: number | null) => void;
   openLearn: (topic: string | null) => void;
+  setDecisionsTab: (tab: DecisionTab) => void;
+  startTour: () => void;
+  setTourStep: (step: number | null) => void;
   saveAs: (name: string) => Promise<string>;
   persist: () => Promise<void>;
 }
@@ -191,6 +198,8 @@ export const useStore = create<StoreState>((set, get) => ({
   toasts: [],
   timerEndsAt: null,
   learnTopic: null,
+  decisionsTab: "core",
+  tourStep: null,
 
   setLang: (lang) => {
     prefSet("lang", lang);
@@ -202,7 +211,7 @@ export const useStore = create<StoreState>((set, get) => ({
   },
   goHome: () => {
     void get().persist();
-    set({ screen: "home", game: null, drafts: {}, saveId: null, activeCompanyId: null, revealedCompanyId: null, reportRound: null, classroomRole: null, timerEndsAt: null });
+    set({ screen: "home", game: null, drafts: {}, saveId: null, activeCompanyId: null, revealedCompanyId: null, reportRound: null, classroomRole: null, timerEndsAt: null, tourStep: null });
   },
   openSetup: () => set({ screen: "setup" }),
   openJoin: () => set({ screen: "join" }),
@@ -222,6 +231,8 @@ export const useStore = create<StoreState>((set, get) => ({
       reportRound: null,
       classroomRole: config.mode === "classroom" ? "host" : null,
       timerEndsAt: null,
+      decisionsTab: "core",
+      tourStep: config.mode === "solo" && !prefGet("tour-done") ? 0 : null,
     });
     void get().persist();
   },
@@ -239,6 +250,8 @@ export const useStore = create<StoreState>((set, get) => ({
       drafts: {},
       reportRound: null,
       classroomRole: role,
+      decisionsTab: "core",
+      tourStep: role === "team" && !state.finished && !prefGet("tour-done") ? 0 : null,
     });
   },
 
@@ -311,6 +324,7 @@ export const useStore = create<StoreState>((set, get) => ({
       revealedCompanyId: next.config.mode === "hotseat" && get().classroomRole !== "team" ? null : get().revealedCompanyId,
       view: next.finished ? "results" : get().view === "decisions" ? "dashboard" : get().view,
       timerEndsAt: null,
+      decisionsTab: "core",
     });
     void get().persist();
   },
@@ -345,6 +359,12 @@ export const useStore = create<StoreState>((set, get) => ({
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
   setTimer: (endsAt) => set({ timerEndsAt: endsAt }),
   openLearn: (topic) => set({ view: "learn", learnTopic: topic }),
+  setDecisionsTab: (decisionsTab) => set({ decisionsTab }),
+  startTour: () => set({ tourStep: 0, reportRound: null }),
+  setTourStep: (tourStep) => {
+    if (tourStep === null) prefSet("tour-done", "1");
+    set({ tourStep });
+  },
 
   saveAs: async (name) => {
     const { game, drafts, classroomRole } = get();

@@ -102,6 +102,7 @@ export function LearnContent() {
 
 export function Learn() {
   const f = useFmt();
+  const startTour = useStore((s) => s.startTour);
   return (
     <div className="stack">
       <div className="page-head">
@@ -109,6 +110,10 @@ export function Learn() {
           <h1>{f.tx("Learn", "Impara")}</h1>
           <p className="muted">{f.tx("The concepts behind every mechanic of the game, with references for the course.", "I concetti dietro ogni meccanica del gioco, con i riferimenti per il corso.")}</p>
         </div>
+        <button className="btn" onClick={startTour}>
+          <Icon name="Play" size={16} />
+          {f.tx("Replay the guided tour", "Rivedi il tour guidato")}
+        </button>
       </div>
       <LearnContent />
     </div>

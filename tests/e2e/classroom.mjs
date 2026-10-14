@@ -30,6 +30,12 @@ async function newPage(name) {
 }
 
 const btn = (page, name) => page.getByRole("button", { name }).first();
+// The guided tour starts for new solo games and team copies; these flows skip it.
+async function skipTour(page) {
+  const coach = page.locator(".coach");
+  await coach.waitFor({ timeout: 3000 }).catch(() => {});
+  if (await coach.count()) await coach.getByRole("button", { name: /Skip tour/ }).click();
+}
 const nav = (page, name) => page.locator(".sidebar nav").getByRole("button", { name }).click();
 
 async function download(page, trigger, file) {
@@ -50,6 +56,7 @@ async function teamRound(name, gameFile) {
   await upload(page, () => btn(page, /Open the game file/).click(), gameFile);
   await page.getByRole("button", { name: new RegExp(name) }).first().click();
   await page.waitForSelector("text=Dashboard");
+  await skipTour(page);
   await nav(page, "Decisions");
   await page.getByRole("tab", { name: /Review & submit/ }).click();
   const decisionFile = await download(page, () => btn(page, /Lock and export the decision file/).click());
@@ -146,6 +153,7 @@ try {
   await adv.locator("input.input").first().fill("Deep Waters");
   await btn(adv, /^Review/).click();
   await btn(adv, /Start the game/).click();
+  await skipTour(adv);
   await nav(adv, "Funding");
   await adv.waitForSelector("text=Exit waterfall simulator");
   await adv.getByRole("radio", { name: /2×/ }).click();

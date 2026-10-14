@@ -6,9 +6,9 @@ import { useFmt } from "../i18n";
 import { useStore } from "../store";
 import { Icon } from "./Icon";
 
-export function Card({ title, icon, action, children, className = "", onClick }: { title?: ReactNode; icon?: string; action?: ReactNode; children?: ReactNode; className?: string; onClick?: () => void }) {
+export function Card({ title, icon, action, children, className = "", onClick, tour }: { title?: ReactNode; icon?: string; action?: ReactNode; children?: ReactNode; className?: string; onClick?: () => void; tour?: string }) {
   return (
-    <div className={`card ${className}`} onClick={onClick}>
+    <div className={`card ${className}`} onClick={onClick} data-tour={tour}>
       {(title || action) && (
         <div className="card-head">
           <div className="card-title">

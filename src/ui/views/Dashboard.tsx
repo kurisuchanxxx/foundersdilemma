@@ -105,7 +105,7 @@ export function Dashboard() {
         <Card>
           <Stat label={f.tx("Health", "Salute")} icon="HeartPulse" value={health.grade} sub={`${health.score}/100`} tone={health.score >= 65 ? "good" : health.score >= 45 ? "warn" : "bad"} />
         </Card>
-        <Card>
+        <Card tour="pmf">
           <Stat label="Product-market fit" icon="Target" concept="pmf" value={`${Math.round(c.pmf.score)}`} sub={`${stageLabel(f, c.pmf.score)} · ${f.pct(seanEllisShare(c.pmf.score))} ${f.tx("very disappointed", "molto delusi")}`} />
         </Card>
       </div>
@@ -171,7 +171,7 @@ export function Dashboard() {
       )}
 
       <div className="grid cols-2">
-        <Card title={f.tx("Mentor", "Mentor")} icon="Lightbulb" action={report ? <span className="small faint">{f.L(roundLabel(game.config, report.round))}</span> : null}>
+        <Card tour="mentor" title={f.tx("Mentor", "Mentor")} icon="Lightbulb" action={report ? <span className="small faint">{f.L(roundLabel(game.config, report.round))}</span> : null}>
           {report && report.insights.length > 0 ? (
             <div className="col">
               {report.insights.map((i, k) => (

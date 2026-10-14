@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { allHumansSubmitted, roundLabel, type Company } from "../../core";
+import { Coach } from "../components/Coach";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { Icon } from "../components/Icon";
 import { Logo, Modal, Progress } from "../components/ui";
@@ -85,7 +86,7 @@ export function GameLayout() {
           {nav
             .filter((n) => n.show !== false)
             .map((n) => (
-              <button key={n.id} className={`nav-item ${view === n.id ? "active" : ""}`} onClick={() => setView(n.id)}>
+              <button key={n.id} className={`nav-item ${view === n.id ? "active" : ""}`} onClick={() => setView(n.id)} data-tour={`nav-${n.id}`}>
                 <Icon name={n.icon} size={16} />
                 {n.label}
                 {n.badge && <span className="badge warn">!</span>}
@@ -137,6 +138,7 @@ export function GameLayout() {
         </div>
       </main>
       {reportRound !== null && <RoundReportModal round={reportRound} />}
+      <Coach />
     </div>
   );
 }
@@ -214,7 +216,7 @@ function TopBar({ company, label, onAdvance, draftsPending }: { company: Company
       </div>
       {timerEndsAt && <TimerBadge endsAt={timerEndsAt} />}
       {showCompanyStats && company && company.status === "active" && (
-        <div className="row gap-16" style={{ marginRight: 8 }}>
+        <div className="row gap-16" style={{ marginRight: 8 }} data-tour="topbar-stats">
           <div className="stat">
             <div className="stat-label">{f.tx("Cash", "Cassa")}</div>
             <div className={`num ${company.cash < 0 ? "bad" : ""}`} style={{ fontWeight: 650 }}>

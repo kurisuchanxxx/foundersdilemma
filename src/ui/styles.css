@@ -1131,3 +1131,55 @@ table.table {
     color: #000;
   }
 }
+
+/* ---------- guided tour ---------- */
+.coach-spot {
+  position: fixed;
+  z-index: 60;
+  border-radius: 14px;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 9999px rgba(5, 10, 20, 0.45);
+  pointer-events: none;
+  transition: top 0.2s ease, left 0.2s ease, width 0.2s ease, height 0.2s ease;
+}
+.coach {
+  position: fixed;
+  z-index: 70;
+  right: max(20px, env(safe-area-inset-right, 0px));
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  width: min(380px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 16px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.coach-dots {
+  display: flex;
+  gap: 5px;
+}
+.coach-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-3);
+}
+.coach-dots span.on {
+  width: 18px;
+  background: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .coach-spot {
+    transition: none;
+  }
+}
+@media (max-width: 860px) {
+  .coach {
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}

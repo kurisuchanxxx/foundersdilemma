@@ -34,6 +34,17 @@ await shot("03-team");
 await click(/Riepilogo/);
 await click(/Inizia la partita/);
 await page.waitForSelector("text=Cruscotto");
+
+// the guided tour starts by itself in a first solo game: walk through every step
+await page.waitForSelector(".coach");
+await shot("04a-tour-start");
+for (let i = 0; i < 30 && (await page.locator(".coach").count()); i++) {
+  if (i === 5) await shot("04b-tour-budgets");
+  await page.locator(".coach").getByRole("button", { name: /Avanti|Inizia a giocare/ }).click();
+  await page.waitForTimeout(200);
+}
+if (await page.locator(".coach").count()) throw new Error("The guided tour did not end");
+await page.locator(".sidebar nav").getByRole("button", { name: "Cruscotto" }).click();
 await shot("04-dashboard");
 
 const views = [
