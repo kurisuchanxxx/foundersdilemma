@@ -39,12 +39,13 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 
 **Mini-lezione** (40'): build-measure-learn (Ries); MVP come esperimento, non come prodotto ridotto; il test di Sean Ellis (almeno il 40% di utenti molto delusi senza il prodotto); debito tecnico come prestito ad alto interesse.
 
-**Round 2 e 3.** In gioco: livello di discovery (nessuna, leggera, profonda), approccio allo sviluppo (veloce, bilanciato, qualità), lancio, gestione del debito tecnico.
+**Round 2 e 3.** In gioco: clienti obiettivo (nicchia, mercato ampio, premium), livello di discovery (nessuna, leggera, profonda), approccio allo sviluppo (veloce, bilanciato, qualità), lancio, gestione del debito tecnico.
 
 **Debriefing**
 - Lanciare ora o rifinire l'MVP? Cosa si perde e cosa si guadagna aspettando un round?
 - Confrontate due team: chi ha fatto più discovery ha un PMF più alto? Con quale costo in cassa?
 - Il primo dilemma: chi lo ha affrontato lo racconta alla classe.
+- Nicchia o mercato ampio? Chi ha scelto una testa di ponte sa descrivere il proprio cliente in una frase?
 
 **Spunto di confronto**: nelle simulazioni di bilanciamento i bot *lean* (discovery, lancio presto, spesa contenuta) raggiungono il PMF molto più spesso dei bot *blitz* (spesa alta da subito). Chiedete ai team perché.
 
@@ -54,7 +55,7 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 
 **Obiettivi**: fissare il prezzo rispetto alla disponibilità a pagare; scegliere il canale; leggere CAC, LTV, churn e payback; riconoscere il chasm.
 
-**Mini-lezione** (45'): pricing e disponibilità a pagare; canali (performance, brand e contenuti, partnership, vendita diretta) e loro effetti su CAC e churn; LTV/CAC almeno 3 come regola pratica; la curva di adozione di Rogers e il chasm di Moore. Nel gioco, quando la penetrazione del settore supera la quota degli early adopter, servono almeno 55 punti di PMF per evitare la penalità sul CAC.
+**Mini-lezione** (45'): pricing e disponibilità a pagare; modelli di prezzo (abbonamento, freemium, a consumo); canali (performance, brand e contenuti, partnership, vendita diretta) e loro effetti su CAC e churn; LTV/CAC almeno 3 come regola pratica; la curva di adozione di Rogers e il chasm di Moore. Nel gioco, quando la penetrazione del settore supera la quota degli early adopter, servono almeno 55 punti di PMF per evitare la penalità sul CAC.
 
 **Round 4 e 5** (fine del primo anno).
 
@@ -62,6 +63,8 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 - Avete il product-market fit? Quali numeri lo dimostrano (retention, % di Sean Ellis, LTV/CAC)?
 - È il momento di scalare il marketing, o più spesa riempirebbe solo un secchio bucato?
 - Più team nello stesso settore si dividono lo stesso mercato: come cambia la vostra strategia sapendolo?
+- I concorrenti esterni hanno fatto una mossa nel vostro settore (guerra dei prezzi, campagna, nuova versione)? Come avete risposto?
+- Coopetizione: una partnership con un altro team conviene di più con chi sta nel vostro settore o con chi ha clienti simili in un altro?
 
 **Attività breve** (15'): ogni team calcola a mano il payback del CAC con i propri numeri e lo confronta con quello mostrato nella pagina Mercato.
 
@@ -88,12 +91,13 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 
 **Mini-lezione** (45'): bandi, prestiti, crowdfunding, angel, VC; SAFE e conversione; pre-money e post-money; option pool shuffle; preferenza di liquidazione 1x non partecipante; seggi nel CdA (Feld e Mendelson). *Rich vs King* (Wasserman): i fondatori che cedono il controllo tendono a costruire aziende di maggior valore, quelli che lo mantengono ne possiedono una quota più grande.
 
-**Round 8 e 9.** In gioco: pitch agli investitori, term sheet con valutazione, quote e seggi; round di salvataggio con preferenza 2x per chi resta senza cassa.
+**Round 8 e 9.** In gioco: pitch agli investitori (che finanziano poche aziende per round: i team competono per gli stessi soldi), term sheet con valutazione, quote e seggi; round di salvataggio con preferenza 2x per chi resta senza cassa; offerte di acquisizione tra team.
 
 **Debriefing**
 - Bootstrapping, angel, acceleratore o bandi: cosa vi costa ciascuna opzione oltre al denaro?
 - Quanta parte dell'azienda volete possedere alla fine? Ricchi o re?
 - Guardate la cap table: quanto della valutazione arriverebbe davvero ai fondatori con le preferenze attuali?
+- Chi è rimasto fuori da un investitore perché un altro team aveva numeri migliori: cosa avreste dovuto mostrare?
 
 **Attività breve** (20'): un team proietta il proprio term sheet; la classe calcola la quota post-money dei fondatori e la confronta con la cap table del gioco.
 
@@ -109,6 +113,7 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 
 **Debriefing finale**
 - Se oggi riceveste un'offerta di acquisizione, a che prezzo vendereste? Perché?
+- Se c'è stata un'acquisizione tra team: a chi è convenuta di più, a chi ha comprato o a chi ha venduto?
 - Quale decisione prendereste diversamente, e cosa vi ha insegnato?
 - Dove il gioco semplifica troppo la realtà? (Ottimo spunto per valutare il pensiero critico.)
 

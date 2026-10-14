@@ -30,12 +30,13 @@ Ogni meccanica del gioco corrisponde a un concetto del corso, con la relativa sc
 |---|---|---|
 | Lean startup e customer discovery | MVP, interviste, smoke test, pivot | Ries, Blank |
 | Product-market fit | Punteggio PMF e test di Sean Ellis (40% molto delusi) | Ellis, Andreessen |
-| Diffusione dell'innovazione | Segmenti di Rogers, chasm alla maggioranza anticipatrice | Rogers, Moore |
-| Unit economics | CAC, LTV, churn, payback, margine lordo, elasticità del prezzo | |
-| Finanza della startup | Bandi, prestiti, crowdfunding, SAFE, round prezzati, option pool, waterfall | Feld e Mendelson |
+| Diffusione dell'innovazione | Segmenti di Rogers, chasm alla maggioranza anticipatrice, testa di ponte (nicchia, mercato ampio, premium) | Rogers, Moore |
+| Unit economics e prezzo | CAC, LTV, churn, payback, margine lordo, elasticità; abbonamento, freemium o a consumo | Ramanujam e Tacke |
+| Finanza della startup | Bandi, prestiti, crowdfunding, SAFE, round prezzati, option pool, waterfall; investitori con posti e capitale limitati, contesi tra i team | Feld e Mendelson |
 | Team e fondatori | Archetipi, divisione delle quote, vesting e cliff, aste per i talenti | Wasserman |
 | Il dilemma del fondatore | 16 dilemmi, controllo del CdA, classifica Ricco o Re | Wasserman |
-| Strategia ed etica | Eventi di mercato, reputazione, scelte con conseguenze differite | |
+| Strategia e concorrenza | Concorrenti esterni che reagiscono, partnership e acquisizioni tra team | Porter, Brandenburger e Nalebuff |
+| Etica | Eventi di mercato, reputazione, scelte con conseguenze differite | |
 
 ## Installazione
 

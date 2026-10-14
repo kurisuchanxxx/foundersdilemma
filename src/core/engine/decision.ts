@@ -69,6 +69,11 @@ export function defaultDecision(c: Company): Decision {
     loanRequest: null,
     acceptAcquisitionId: null,
     dilemmaChoice: null,
+    targetSegment: c.segment ?? "broad",
+    pricingModel: c.pricingModel ?? "subscription",
+    acquisitionBid: null,
+    partnershipProposals: [],
+    acceptPartnershipIds: [],
   };
 }
 
@@ -91,6 +96,11 @@ export function carryOverDecision(c: Company): Decision {
     loanRequest: null,
     acceptAcquisitionId: null,
     dilemmaChoice: null,
+    targetSegment: c.segment ?? base.targetSegment ?? "broad",
+    pricingModel: c.pricingModel ?? base.pricingModel ?? "subscription",
+    acquisitionBid: null,
+    partnershipProposals: [],
+    acceptPartnershipIds: [],
   };
 }
 
@@ -130,6 +140,18 @@ export function sanitizeDecision(state: GameState, c: Company, input: Decision):
   if (d.acceptAcquisitionId && !c.acquisitionOffers.some((o) => o.id === d.acceptAcquisitionId && o.validRound >= state.round)) d.acceptAcquisitionId = null;
   if (d.dilemmaChoice && !(c.dilemma && c.dilemma.options.some((o) => o.id === d.dilemmaChoice))) d.dilemmaChoice = null;
   if (c.product.launched) d.launchNow = false;
+  if (!["niche", "broad", "premium"].includes(d.targetSegment)) d.targetSegment = c.segment ?? "broad";
+  if (!["subscription", "freemium", "usage"].includes(d.pricingModel)) d.pricingModel = c.pricingModel ?? "subscription";
+  const others = state.companies.filter((o) => o.id !== c.id && o.status === "active");
+  if (d.acquisitionBid) {
+    const target = others.find((o) => o.id === d.acquisitionBid!.targetId);
+    const amount = finite(d.acquisitionBid.amount, 0);
+    d.acquisitionBid = target && amount > 0 ? { targetId: target.id, amount: Math.round(amount) } : null;
+  }
+  d.partnershipProposals = (d.partnershipProposals ?? [])
+    .filter((id) => others.some((o) => o.id === id) && !c.partnerships.some((p) => p.partnerId === id && p.untilRound >= state.round))
+    .slice(0, 1);
+  d.acceptPartnershipIds = (d.acceptPartnershipIds ?? []).filter((id) => c.partnershipOffers.some((o) => o.id === id && o.validRound >= state.round));
   return d;
 }
 

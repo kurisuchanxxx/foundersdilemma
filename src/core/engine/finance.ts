@@ -133,6 +133,10 @@ export function investorChecks(state: GameState, c: Company, inv: InvestorDef, f
     checks.push({ label: lt("Follow-on: at least 2 rounds after their last cheque", "Follow-on: almeno 2 round dopo l'ultimo investimento"), met: state.round - lastRound >= 2, hard: true });
   }
   if (inv.sectors) checks.push({ label: lt("Sector in the fund's thesis", "Settore nella tesi del fondo"), met: inv.sectors.includes(c.sector), hard: !!inv.strictSectors });
+  if (inv.capital !== undefined) {
+    const left = investorCapacity(state, inv, state.round).capitalLeft;
+    checks.push({ label: fill(lt("Capital left for new deals ({v})", "Capitale disponibile per nuovi investimenti ({v})"), { v: moneyL(Math.max(0, left)) }), met: left >= inv.checkMin, hard: true });
+  }
   return checks;
 }
 
@@ -156,18 +160,35 @@ function rejection(inv: InvestorDef, reason: LText, checks: RequirementCheck[], 
   return { investorId: inv.id, investorName: inv.name, outcome: "rejected", reason, amount: p.amount, valuation: p.valuation, fairValuation: fair, checks };
 }
 
+export interface PitchAssessment {
+  result: PitchResult;
+  /** The deal to close if the investor still has a slot and capital (null = no deal). */
+  close: Pitch | null;
+  /** How much the investor wants this deal: the best scores win limited slots. */
+  score: number;
+}
+
+/** Evaluates a pitch and closes the deal immediately (no competition with other teams). */
 export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, report: RoundReport, round: number, founderHours: number): PitchResult {
+  const a = assessPitch(state, c, p, rng, report, round, founderHours);
+  const inv = investorDef(p.investorId);
+  if (a.close && inv) closeDeal(state, c, inv, a.close, round, report);
+  return a.result;
+}
+
+export function assessPitch(state: GameState, c: Company, p: Pitch, rng: Rng, _report: RoundReport, round: number, founderHours: number): PitchAssessment {
+  const done = (result: PitchResult, close: Pitch | null = null, score = 0): PitchAssessment => ({ result, close, score });
   const inv = investorDef(p.investorId);
   if (!inv) {
-    return { investorId: p.investorId, investorName: "?", outcome: "rejected", reason: lt("Unknown investor.", "Investitore sconosciuto."), amount: p.amount, valuation: p.valuation, fairValuation: 0, checks: [] };
+    return done({ investorId: p.investorId, investorName: "?", outcome: "rejected", reason: lt("Unknown investor.", "Investitore sconosciuto."), amount: p.amount, valuation: p.valuation, fairValuation: 0, checks: [] });
   }
   const checks = investorChecks(state, c, inv, founderHours);
   const fair = fairValuation(state, c, inv);
   const unmet = checks.find((ch) => ch.hard && !ch.met);
   if (unmet) {
-    return rejection(inv, fill(lt("We can't invest yet. Missing requirement: {r}.", "Non possiamo ancora investire. Requisito mancante: {r}."), { r: unmet.label }), checks, fair, p);
+    return done(rejection(inv, fill(lt("We can't invest yet. Missing requirement: {r}.", "Non possiamo ancora investire. Requisito mancante: {r}."), { r: unmet.label }), checks, fair, p));
   }
-  if (inv.excluded.includes(c.sector)) return rejection(inv, lt("Not a sector we invest in.", "Non è un settore in cui investiamo."), checks, fair, p);
+  if (inv.excluded.includes(c.sector)) return done(rejection(inv, lt("Not a sector we invest in.", "Non è un settore in cui investiamo."), checks, fair, p));
 
   const mods = effectiveModifiers(state, c, c.sector, round);
   const mult = combinedMultipliers(activeFounders(c).map((f) => f.archetype));
@@ -180,11 +201,10 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
     const score = 0.25 + 0.35 * dims + 0.15 * teamStrength(c) + (founderHours >= 60 ? 0.08 : 0) + 0.1 * (c.reputation.investors / 100) + 0.2 * (mult.fundraising - 1) + noise;
     const fixed: Pitch = { investorId: inv.id, amount: inv.fixedTerms.amount, valuation: inv.fixedTerms.amount / inv.fixedTerms.equityPct - inv.fixedTerms.amount, instrument: "equity" };
     if (score >= 0.5) {
-      closeDeal(state, c, inv, fixed, round, report);
-      return { investorId: inv.id, investorName: inv.name, outcome: "closed", reason: lt("Welcome to the batch! Demo Day is in three months.", "Benvenuti nel batch! Il Demo Day è tra tre mesi."), amount: fixed.amount, valuation: fixed.valuation, fairValuation: fair, checks };
+      return done({ investorId: inv.id, investorName: inv.name, outcome: "closed", reason: lt("Welcome to the batch! Demo Day is in three months.", "Benvenuti nel batch! Il Demo Day è tra tre mesi."), amount: fixed.amount, valuation: fixed.valuation, fairValuation: fair, checks }, fixed, score);
     }
     c.flags.acceleratorUsed = true;
-    return rejection(inv, lt("Not selected this time: the committee wants more evidence of customer learning.", "Non selezionati questa volta: il comitato vuole più prove di apprendimento dai clienti."), checks, fair, p);
+    return done(rejection(inv, lt("Not selected this time: the committee wants more evidence of customer learning.", "Non selezionati questa volta: il comitato vuole più prove di apprendimento dai clienti."), checks, fair, p));
   }
 
   const ask = p.instrument === "safe" ? p.valuation - p.amount : p.valuation;
@@ -195,13 +215,12 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
   if (inv.type === "crowdfunding") {
     const community = Math.min(1, c.customers / 2_000);
     const score = 0.3 + 0.25 * community + 0.2 * (c.reputation.media / 100) + 0.15 * c.brand + 0.15 * (c.reputation.customers / 100) - 0.4 * Math.max(0, askRatio - 1.3) + (mods.climate - 1) * 0.2 + noise;
-    if (!amountInRange(inv, p.amount)) return rejection(inv, lt("The campaign target is outside the platform limits.", "L'obiettivo della campagna è fuori dai limiti della piattaforma."), checks, fair, p);
+    if (!amountInRange(inv, p.amount)) return done(rejection(inv, lt("The campaign target is outside the platform limits.", "L'obiettivo della campagna è fuori dai limiti della piattaforma."), checks, fair, p));
     if (score >= 0.5) {
-      closeDeal(state, c, inv, p, round, report);
-      return { investorId: inv.id, investorName: inv.name, outcome: "closed", reason: lt("Campaign funded! Hundreds of new shareholders believe in you.", "Campagna finanziata! Centinaia di nuovi soci credono in te."), amount: p.amount, valuation: p.valuation, fairValuation: fair, checks };
+      return done({ investorId: inv.id, investorName: inv.name, outcome: "closed", reason: lt("Campaign funded! Hundreds of new shareholders believe in you.", "Campagna finanziata! Centinaia di nuovi soci credono in te."), amount: p.amount, valuation: p.valuation, fairValuation: fair, checks }, p, score);
     }
     const reached = Math.round(clamp(score / 0.5, 0.1, 0.95) * 100);
-    return rejection(inv, fill(lt("The campaign reached only {p}% of its target and was cancelled (all-or-nothing).", "La campagna ha raggiunto solo il {p}% dell'obiettivo ed è stata annullata (tutto o niente)."), { p: reached }), checks, fair, p);
+    return done(rejection(inv, fill(lt("The campaign reached only {p}% of its target and was cancelled (all-or-nothing).", "La campagna ha raggiunto solo il {p}% dell'obiettivo ed è stata annullata (tutto o niente)."), { p: reached }), checks, fair, p));
   }
 
   const sectorFit = inv.sectors ? (inv.sectors.includes(c.sector) ? 0.12 : -0.05) : 0;
@@ -224,11 +243,10 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
     noise;
 
   if (dilution > 0.4) {
-    return rejection(inv, lt("Selling that much of the company would demotivate the founders. Ask for less money or a higher valuation.", "Cedere così tanto dell'azienda demotiverebbe i fondatori. Chiedi meno soldi o una valutazione più alta."), checks, fair, p);
+    return done(rejection(inv, lt("Selling that much of the company would demotivate the founders. Ask for less money or a higher valuation.", "Cedere così tanto dell'azienda demotiverebbe i fondatori. Chiedi meno soldi o una valutazione più alta."), checks, fair, p));
   }
   if (interest >= 0.55 && askRatio <= 1.15 && rangePenalty === 0) {
-    closeDeal(state, c, inv, p, round, report);
-    return { investorId: inv.id, investorName: inv.name, outcome: "closed", reason: lt("Deal! The money is in your account.", "Affare fatto! I soldi sono sul tuo conto."), amount: p.amount, valuation: p.valuation, fairValuation: fair, checks };
+    return done({ investorId: inv.id, investorName: inv.name, outcome: "closed", reason: lt("Deal! The money is in your account.", "Affare fatto! I soldi sono sul tuo conto."), amount: p.amount, valuation: p.valuation, fairValuation: fair, checks }, p, interest);
   }
   if (interest >= 0.4) {
     const valuation = Math.round(Math.min(ask, fair * rng.range(0.9, 1.0)) / 10_000) * 10_000;
@@ -250,7 +268,7 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
         { a: moneyL(amount), v: moneyL(tsValuation), t: p.instrument === "safe" ? "cap" : "pre-money" },
       ),
     });
-    return {
+    return done({
       investorId: inv.id,
       investorName: inv.name,
       outcome: "termSheet",
@@ -262,7 +280,7 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
       valuation: tsValuation,
       fairValuation: fair,
       checks,
-    };
+    });
   }
   let reason: LText;
   if (rangePenalty > 0) reason = fill(lt("Your ask is outside our usual cheque size ({a}-{b}).", "La tua richiesta è fuori dal nostro ticket abituale ({a}-{b})."), { a: moneyL(inv.checkMin), b: moneyL(inv.checkMax) });
@@ -271,7 +289,74 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
   else if (mods.climate < 0.85) reason = lt("The market is tough right now: we are only doing follow-ons on our portfolio.", "Il mercato è difficile in questo momento: facciamo solo follow-on sul nostro portafoglio.");
   else if (sectorFit < 0) reason = lt("Interesting, but outside our investment thesis.", "Interessante, ma fuori dalla nostra tesi di investimento.");
   else reason = lt("We'll pass for now. Keep us posted on your traction.", "Per ora passiamo. Teneteci aggiornati sulla trazione.");
-  return rejection(inv, reason, checks, fair, p);
+  return done(rejection(inv, reason, checks, fair, p));
+}
+
+// ---------------------------------------------------------------------------------------
+// Limited capital: investors back a few startups per round, and pitches compete for them
+// ---------------------------------------------------------------------------------------
+
+export function investorCapacity(state: GameState, inv: InvestorDef, round: number): { capitalLeft: number; slotsLeft: number } {
+  const book = state.investorBook?.[inv.id];
+  const committed = book?.committed ?? 0;
+  const dealsNow = book ? book.deals.filter((d) => d.round === round).length : 0;
+  return { capitalLeft: (inv.capital ?? Infinity) - committed, slotsLeft: (inv.dealsPerRound ?? Infinity) - dealsNow };
+}
+
+function recordDeal(state: GameState, inv: InvestorDef, companyId: string, amount: number, round: number): void {
+  if (!state.investorBook) state.investorBook = {};
+  const book = (state.investorBook[inv.id] ??= { committed: 0, deals: [] });
+  book.committed += amount;
+  book.deals.push({ round, companyId });
+}
+
+export interface PitchCandidate {
+  c: Company;
+  report: RoundReport;
+  assessment: PitchAssessment;
+  order: number;
+}
+
+/**
+ * Closes the deals investors want, best first, while they have slots and capital this
+ * round. Pitches that lose the competition are told who got the money.
+ */
+export function allocateDeals(state: GameState, candidates: PitchCandidate[], round: number): void {
+  const byInvestor = new Map<string, PitchCandidate[]>();
+  for (const k of candidates) {
+    if (!k.assessment.close) continue;
+    const list = byInvestor.get(k.assessment.result.investorId) ?? [];
+    list.push(k);
+    byInvestor.set(k.assessment.result.investorId, list);
+  }
+  for (const [invId, list] of byInvestor) {
+    const inv = investorDef(invId);
+    if (!inv) continue;
+    list.sort((a, b) => b.assessment.score - a.assessment.score || a.order - b.order);
+    const winners: string[] = [];
+    for (const k of list) {
+      const deal = k.assessment.close!;
+      const cap = investorCapacity(state, inv, round);
+      if (cap.slotsLeft >= 1 && deal.amount <= cap.capitalLeft) {
+        closeDeal(state, k.c, inv, deal, round, k.report);
+        recordDeal(state, inv, k.c.id, deal.amount, round);
+        winners.push(k.c.name);
+        continue;
+      }
+      const r = k.assessment.result;
+      r.outcome = "rejected";
+      r.reason =
+        cap.slotsLeft < 1
+          ? fill(
+              lt("We liked your pitch, but this round we invested in {w} and back only {n} startup(s) per round. Try again next round.", "Il pitch ci è piaciuto, ma questo round abbiamo investito in {w} e sosteniamo solo {n} startup per round. Riprovate il prossimo round."),
+              { w: winners.join(", "), n: inv.dealsPerRound ?? 1 },
+            )
+          : cap.capitalLeft >= inv.checkMin
+            ? fill(lt("We liked your pitch, but we only have {a} left to invest: ask for less.", "Il pitch ci è piaciuto, ma ci restano solo {a} da investire: chiedete meno."), { a: moneyL(cap.capitalLeft) })
+            : lt("Our fund has no capital left for new investments.", "Il nostro fondo non ha più capitale per nuovi investimenti.");
+      if (inv.type === "accelerator") k.c.flags.acceleratorUsed = false;
+    }
+  }
 }
 
 /** Closes a financing deal (equity, SAFE or crowd) and applies perks. */
@@ -351,6 +436,12 @@ export function acceptTermSheet(state: GameState, c: Company, tsId: string, roun
   if (!ts || ts.validRound < round) return;
   const inv = investorDef(ts.investorId);
   if (!inv) return;
+  if (investorCapacity(state, inv, round).capitalLeft < ts.amount) {
+    report.lines.push({ kind: "finance", text: fill(lt("{n} has no capital left: the term sheet lapsed.", "{n} non ha più capitale: il term sheet è decaduto."), { n: inv.name }) });
+    c.termSheets = c.termSheets.filter((t) => t.id !== tsId);
+    return;
+  }
+  recordDeal(state, inv, c.id, ts.amount, round);
   closeDeal(state, c, inv, { investorId: inv.id, amount: ts.amount, valuation: ts.valuation, instrument: ts.instrument }, round, report, {
     poolTopUp: ts.poolTopUp,
     liquidationPref: ts.liquidationPref,

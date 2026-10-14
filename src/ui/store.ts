@@ -15,7 +15,7 @@ import {
   type GameState,
   type Lang,
 } from "../core";
-import { STATE_VERSION } from "../core/engine/setup";
+import { STATE_VERSION, migrateState } from "../core/engine/setup";
 import { kvDelete, kvGet, kvSet, prefGet, prefSet } from "../platform/storage";
 
 export type Screen = "home" | "setup" | "game" | "join";
@@ -34,7 +34,7 @@ export type View =
   | "instructor"
   | "results";
 export type Theme = "auto" | "light" | "dark";
-export type DecisionTab = "core" | "product" | "people" | "growth" | "finance" | "dilemma" | "review";
+export type DecisionTab = "core" | "product" | "people" | "growth" | "finance" | "teams" | "dilemma" | "review";
 
 export interface SaveMeta {
   id: string;
@@ -174,7 +174,7 @@ export function parseGame(raw: string): GameState | null {
     const obj = JSON.parse(raw);
     const state = (obj && obj.kind === "founders-dilemma-game" ? obj.state : obj) as GameState;
     if (!state || !Array.isArray(state.companies) || !state.config || typeof state.round !== "number") return null;
-    if (state.version !== STATE_VERSION) console.warn("Loading a game saved with a different version", state.version);
+    if (state.version !== STATE_VERSION) migrateState(state);
     return state;
   } catch {
     return null;

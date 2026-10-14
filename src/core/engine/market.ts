@@ -2,6 +2,7 @@ import { GTM_INFO, type SectorDef } from "../data/sectors";
 import { lt, type LText } from "../text";
 import type { Company, GameState, SectorId } from "../types";
 import type { SimCtx } from "./context";
+import { strategyEffects } from "./strategy";
 import { clamp, clamp01 } from "./util";
 
 // ---------------------------------------------------------------------------------------
@@ -88,12 +89,13 @@ export function quote(state: GameState, x: SimCtx, price: number): MarketQuote {
   let wtp = s.refPrice * (0.6 + 0.8 * (0.5 * c.product.quality + (0.5 * c.pmf.score) / 100)) * (1 + 0.1 * c.brand) * x.mods.wtp * seg.wtp;
   if (c.flags.openSource) wtp *= 0.85;
   if (coldStart) wtp *= 0.85;
-  const priceFactor = priceConversion(wtp, price, s.elasticity) * (1 + x.cap.traits.conversion);
+  const fx = strategyEffects(c);
+  const priceFactor = priceConversion(wtp, price, s.elasticity * fx.elasticity) * (1 + x.cap.traits.conversion);
 
   const chasmPenalty = (segment === "earlyMajority" || segment === "lateMajority") && c.pmf.score < CHASM_PMF;
   const pmfCac = 1.3 - (0.5 * c.pmf.score) / 100;
   let cac =
-    (s.baseCac * seg.cac * (chasmPenalty ? 1.5 : 1) * s.gtmFit[x.d.gtm] * competitionFactor(state, c) * pmfCac * (1 - 0.25 * c.brand) *
+    (s.baseCac * seg.cac * (chasmPenalty ? fx.chasm : 1) * s.gtmFit[x.d.gtm] * competitionFactor(state, c) * pmfCac * (1 - 0.25 * c.brand) *
       (1 - (0.1 * c.reputation.media) / 100) * x.mods.cac * (1 + x.cap.traits.cac)) /
     (x.cap.marketingEff * priceFactor * scale);
   cac = Math.max(s.baseCac * 0.05, cac);
@@ -134,38 +136,42 @@ export function marketMonth(state: GameState, sector: SectorDef, ctxs: SimCtx[])
   const demandMod = ctxs[0].mods.demand;
   const tam = effectiveTam(sector, demandMod);
   const remaining = Math.max(0, tam - sectorCustomers(state, sector.id));
-  const pen = clamp01(1 - remaining / Math.max(1, tam));
 
   const plans = ctxs.map((x) => {
     const c = x.c;
     const q = quote(state, x, x.d.price);
+    // The target segment limits the part of the sector the company can reach.
+    const fx = strategyEffects(c);
+    const myTam = tam * fx.tam;
+    const myRemaining = Math.min(remaining, Math.max(0, myTam - c.customers));
+    const myPen = clamp01(1 - myRemaining / Math.max(1, myTam));
     // Spending beyond what the growth team can execute is much less effective.
     const execCap = 10_000 + x.cap.stats.growth * 6_000 + x.cap.stats.design * 1_000;
     const M = Math.min(x.d.marketingBudget, execCap) + 0.3 * Math.max(0, x.d.marketingBudget - execCap);
-    const satSpend = tam * 0.001 * sector.baseCac * (1 + c.brand);
+    const satSpend = myTam * 0.001 * sector.baseCac * (1 + c.brand);
     const saturation = 1 / (1 + M / Math.max(1, satSpend));
     x.marketingSpent += x.d.marketingBudget;
 
     if (!c.product.launched) {
       // Pre-launch marketing builds a waitlist (cheaper sign-ups, no revenue yet).
-      const signups = (M / (q.cac * 0.3)) * saturation + c.brand * c.brand * tam * 0.0001;
+      const signups = (M / (q.cac * 0.3)) * saturation + c.brand * c.brand * myTam * 0.0001;
       return { x, q, paid: 0, outbound: 0, organic: 0, inbound: 0, waitlist: signups * x.mods.demand, desired: 0 };
     }
-    const dep = sector.salesDependence;
+    const dep = clamp(sector.salesDependence + fx.salesDep, 0, 0.95);
     const coverage = dep > 0 ? 1 - dep + dep * Math.min(1, x.cap.salesPts / (10 * dep)) : 1;
     const paid = (M / q.cac) * saturation * coverage;
     const salesPts = x.cap.salesPts <= 12 ? x.cap.salesPts : 12 + Math.sqrt(x.cap.salesPts - 12) * 3.5;
     const outbound =
       sector.dealsPerSalesPoint > 0
-        ? salesPts * sector.dealsPerSalesPoint * (x.d.gtm === "salesLed" ? 1.6 : 0.6) * Math.sqrt(Math.min(q.priceFactor, 1.5)) * (0.6 + (0.8 * c.pmf.score) / 100) * x.mods.sales * (1 - pen)
+        ? salesPts * sector.dealsPerSalesPoint * fx.outbound * (x.d.gtm === "salesLed" ? 1.6 : 0.6) * Math.sqrt(Math.min(q.priceFactor, 1.5)) * (0.6 + (0.8 * c.pmf.score) / 100) * x.mods.sales * (1 - myPen)
         : 0;
     const npsFactor = clamp(0.5 + c.nps / 100, 0.2, 1.5);
     const pmfFactor = Math.min(1.6, Math.pow(Math.max(0.05, c.pmf.score / 60), 1.5));
     const organic =
-      c.customers * sector.virality * pmfFactor * npsFactor * x.mods.organic * (1 + 0.5 * (q.scale - 1)) * (c.flags.openSource ? 1.6 : 1) * (1 - pen) * (1 - pen);
-    const inbound = c.brand * c.brand * tam * 0.00015 * Math.min(1.5, q.priceFactor) * (1 - pen);
+      c.customers * sector.virality * pmfFactor * npsFactor * x.mods.organic * (1 + 0.5 * (q.scale - 1)) * (c.flags.openSource ? 1.6 : 1) * (1 - myPen) * (1 - myPen);
+    const inbound = c.brand * c.brand * myTam * 0.00015 * Math.min(1.5, q.priceFactor) * (1 - myPen);
     const desired = (paid + outbound + organic + inbound) * x.mods.demand;
-    return { x, q, paid, outbound, organic, inbound, waitlist: 0, desired: Math.min(desired, remaining * 0.04) };
+    return { x, q, paid, outbound, organic, inbound, waitlist: 0, desired: Math.min(desired, myRemaining * 0.04) };
   });
 
   const totalDesired = plans.reduce((s, p) => s + p.desired, 0);

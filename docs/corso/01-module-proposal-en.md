@@ -27,7 +27,7 @@ The game makes **testable** what lectures leave abstract: the search for product
 1. **Learning by doing.** Experiential learning (Kolb, 1984) alternates concrete experience, reflection, conceptualisation and experimentation. The round cycle (decide, observe, discuss, revise the strategy) follows the same sequence.
 2. **Evidence from entrepreneurship education.** Research on simulations and serious games in entrepreneurship education (Fox, Pittaway and Uzuegbunam, 2018) reports gains in motivation, understanding of interdependencies and entrepreneurial self-efficacy, provided the game comes with a structured debrief. The module is built around that debrief.
 3. **Mistakes at zero cost.** Failing, over-diluting or losing board control in a simulation costs part of a grade, not a life's savings. Assessment rewards learning from mistakes: decision memos and the post-mortem weigh more than the ranking.
-4. **A bridge between theory and tools.** Every mechanic maps to a course model and links to the in-game glossary (56 concepts with formulas and references).
+4. **A bridge between theory and tools.** Every mechanic maps to a course model and links to the in-game glossary (61 concepts with formulas and references).
 5. **Sustainable for the university.** No licences, no servers, no personal data collected. The code is open and auditable; the engine is documented and reproducible (same seed, same events), which also supports comparisons across classes and teaching research.
 
 ### 3. Learning outcomes (Dublin descriptors)

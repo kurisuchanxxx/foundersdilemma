@@ -28,7 +28,7 @@ Il gioco rende **sperimentabili** concetti che nelle lezioni frontali restano as
 1. **Imparare facendo.** L'apprendimento esperienziale (Kolb, 1984) alterna esperienza concreta, riflessione, concettualizzazione e sperimentazione. Il ciclo del round (decidere, osservare i risultati, discutere, rivedere la strategia) segue esattamente questa sequenza.
 2. **Evidenza nella didattica dell'imprenditorialità.** La letteratura sulle simulazioni e i serious game in entrepreneurship education (Fox, Pittaway e Uzuegbunam, 2018) mostra benefici su motivazione, comprensione delle interdipendenze e autoefficacia imprenditoriale, purché il gioco sia accompagnato da un debriefing strutturato. Il modulo è costruito attorno a questo debriefing.
 3. **Errori a costo zero.** Fallire, diluirsi troppo o perdere il controllo del CdA in una simulazione costa un voto parziale, non i risparmi di una vita. Il gioco premia l'apprendimento dall'errore (decision memo e post-mortem valgono più del piazzamento).
-4. **Ponte tra teoria e strumenti.** Ogni meccanica corrisponde a un modello del corso e rimanda alla scheda di glossario integrata nell'app (56 concetti, con formule e riferimenti).
+4. **Ponte tra teoria e strumenti.** Ogni meccanica corrisponde a un modello del corso e rimanda alla scheda di glossario integrata nell'app (61 concetti, con formule e riferimenti).
 5. **Sostenibile per l'ateneo.** Nessun costo di licenza, nessun server da gestire, nessun dato personale raccolto. Il codice è aperto e verificabile; il motore è documentato e riproducibile (stesso seed, stessi eventi), quindi adatto anche a confronti tra classi e a progetti di ricerca didattica.
 
 ### 3. Obiettivi formativi e risultati di apprendimento attesi

@@ -1,3 +1,4 @@
+import { strategyEffects } from "./strategy";
 import type { Company, Features, GameConfig, GameState, Modifier, ModifierEffects, SectorId } from "../types";
 
 export function clamp(v: number, min: number, max: number): number {
@@ -65,6 +66,7 @@ export function effectiveModifiers(state: GameState, company: Company | null, se
   };
   state.globalModifiers.forEach(apply);
   company?.modifiers.forEach(apply);
+  if (company?.segment) apply({ id: "strategy", source: { en: "", it: "" }, fromRound: null, untilRound: Infinity, sectors: null, effects: strategyEffects(company).mods });
   return out;
 }
 

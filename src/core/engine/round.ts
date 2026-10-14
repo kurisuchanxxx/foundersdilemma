@@ -11,13 +11,16 @@ import { generateDilemma, resolveDilemma, resolvePendingRisks } from "./dilemmas
 import { averageReputation } from "./effects";
 import { applyCustomEvent, fireCompanyEvent, generateOutlook, scheduleCompanyEvents } from "./events";
 import { acceptAcquisition, generateAcquisitionOffers } from "./exit";
-import { acceptTermSheet, evaluatePitch, financeMonth, handleInsolvency, monthlyExpenses, payPendingGrants, processGrantApplication, processLoanRequest } from "./finance";
+import { acceptPartnerships, completeTeamAcquisition, sendAcquisitionBid, sendPartnershipProposals } from "./deals";
+import { acceptTermSheet, allocateDeals, assessPitch, financeMonth, type PitchCandidate, handleInsolvency, monthlyExpenses, payPendingGrants, processGrantApplication, processLoanRequest } from "./finance";
 import { refreshCandidates, resolveHiring } from "./hiring";
 import { mentorInsights } from "./insights";
 import { brandAndSentiment, convertWaitlist, marketMonth, quote } from "./market";
 import { fireEmployee, resignEmployee } from "./people";
 import { maybeLaunch, productMonth } from "./product";
 import { monthsInRound } from "./periods";
+import { rivalMoves } from "./rivals";
+import { applyStrategySwitch } from "./strategy";
 import { computeCapacities, moraleTarget, resignationChance, stressTarget } from "./team";
 import { updateValuation } from "./valuation";
 import { clamp, clamp01, effectiveModifiers, featuresFor, headcount } from "./util";
@@ -238,8 +241,9 @@ function newDecisionPhase(state: GameState, round: number): void {
   for (const id of Object.keys(state.markets) as SectorId[]) {
     const m = state.markets[id];
     m.hype = clamp(m.hype + rng.normal(0, 0.04), 0.8, 1.25);
-    if (rng.chance(0.15)) m.npcCompetitors += 1;
   }
+  state.outlook.push(...rivalMoves(state, round, createRng(state.config.seed, round, "rivals")));
+  for (const c of state.companies) c.partnershipOffers = (c.partnershipOffers ?? []).filter((o) => o.validRound >= round);
   const features = featuresFor(state.config);
   for (const c of state.companies) {
     if (c.status !== "active") continue;
@@ -262,10 +266,19 @@ export function advanceRound(state: GameState): void {
   prepareBots(state);
 
   const ctxs: SimCtx[] = [];
+  const reports = new Map<string, RoundReport>();
   for (const c of state.companies) {
     if (c.status !== "active") continue;
     const report = newReport(round, c.id);
     state.reports.push(report);
+    reports.set(c.id, report);
+  }
+  const reportOf = (id: string) => reports.get(id);
+  const pitchCandidates: PitchCandidate[] = [];
+  const followUps: Array<() => void> = [];
+  for (const c of state.companies) {
+    if (c.status !== "active") continue;
+    const report = reports.get(c.id)!;
     const d = sanitizeDecision(state, c, c.decision ?? carryOverDecision(c));
     if (!c.submitted && !c.isBot) report.lines.push({ kind: "info", text: lt("No decision submitted: last round's settings were applied.", "Nessuna decisione inviata: sono state applicate le impostazioni del round precedente.") });
     c.decision = d;
@@ -273,9 +286,13 @@ export function advanceRound(state: GameState): void {
     const rng = createRng(state.config.seed, round, "company", c.id);
     const x = buildCtx(state, c, d, rng, report, features, false);
 
-    if (d.acceptAcquisitionId && acceptAcquisition(state, c, d.acceptAcquisitionId, round, report)) {
-      c.lastDecision = d;
-      continue;
+    if (d.acceptAcquisitionId) {
+      const offer = c.acquisitionOffers.find((o) => o.id === d.acceptAcquisitionId && o.validRound >= round);
+      const sold = offer?.kind === "team" ? completeTeamAcquisition(state, c, offer, round, reportOf) : acceptAcquisition(state, c, d.acceptAcquisitionId, round, report);
+      if (sold) {
+        c.lastDecision = d;
+        continue;
+      }
     }
     if (c.dilemma) {
       const res = resolveDilemma(state, c, d.dilemmaChoice, round, rng, report);
@@ -284,6 +301,7 @@ export function advanceRound(state: GameState): void {
         continue;
       }
     }
+    applyStrategySwitch(c, d, report);
     resolvePendingRisks(state, c, round, rng, report);
     x.oneOffCosts = oneOffCosts(c, d);
     for (const id of d.fires) fireEmployee(state, c, id, state.month, report, "fired");
@@ -294,7 +312,9 @@ export function advanceRound(state: GameState): void {
     for (const id of d.acceptTermSheetIds) acceptTermSheet(state, c, id, round, report);
     for (const p of d.pitches) {
       x.distraction += 0.1;
-      report.pitchResults.push(evaluatePitch(state, c, p, rng, report, round, d.founderHours));
+      const assessment = assessPitch(state, c, p, rng, report, round, d.founderHours);
+      report.pitchResults.push(assessment.result);
+      pitchCandidates.push({ c, report, assessment, order: pitchCandidates.length });
     }
     c.termSheets = c.termSheets.filter((t) => t.validRound > round);
     processGrantApplication(state, x, round);
@@ -302,7 +322,17 @@ export function advanceRound(state: GameState): void {
     c.price = d.price;
     if (c.product.launched) c.mrr = c.customers * c.price;
     ctxs.push(x);
+    // proposals to other teams go out after every company has acted on last round's ones
+    followUps.push(() => {
+      if (c.status !== "active") return;
+      acceptPartnerships(state, c, d, round, reportOf);
+      sendPartnershipProposals(state, c, d, round, reportOf);
+      sendAcquisitionBid(state, c, d, round, reportOf);
+    });
   }
+  // investors with limited slots and capital pick the best deals among all teams
+  allocateDeals(state, pitchCandidates, round);
+  for (const f of followUps) f();
 
   resolveHiring(state, ctxs, round, (x) => projectedRunway(state, x, round), createRng(state.config.seed, round, "hiring"));
 
@@ -405,6 +435,7 @@ export function previewDecision(state: GameState, companyId: string, decision: D
   const c = s.companies.find((x) => x.id === companyId);
   if (!c || c.status !== "active") return null;
   const d = sanitizeDecision(s, c, decision);
+  applyStrategySwitch(c, d, null);
   const rng = createPreviewRng();
   const features = featuresFor(s.config);
   const report = newReport(s.round, c.id);

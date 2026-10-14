@@ -8,6 +8,7 @@ import {
   featuresFor,
   foundersOwnership,
   foundersVoting,
+  investorCapacity,
   investorChecks,
   safeImpliedPct,
   totalShares,
@@ -157,7 +158,12 @@ export function Funding() {
           {f.tx(
             "Investors judge your last round's numbers, the market climate and your ask. Hard requirements must be met; asking for a valuation far above what they consider fair gets you rejected or a counter term sheet.",
             "Gli investitori giudicano i numeri dell'ultimo round, il clima di mercato e la tua richiesta. I requisiti obbligatori vanno soddisfatti; chiedere una valutazione molto sopra quella che ritengono equa porta a un rifiuto o a un term sheet alternativo.",
-          )}
+          )}{" "}
+          {f.tx(
+            "Each investor backs only a few companies per round and has a limited budget: if other teams pitch the same investor, the strongest pitch wins.",
+            "Ogni investitore sostiene poche aziende per round e ha un budget limitato: se altri team fanno pitch allo stesso investitore, vince il pitch più forte.",
+          )}{" "}
+          <InfoTip concept="investorCapacity" />
         </p>
         <div className="grid cols-2">
           {INVESTORS.map((inv) => {
@@ -190,6 +196,15 @@ export function Funding() {
                     <>
                       <span>{f.tx("Focus", "Focus")}</span>
                       <span>{inv.sectors.map((s) => f.L(SECTORS[s].name)).join(", ")}</span>
+                    </>
+                  )}
+                  {(inv.dealsPerRound || inv.capital) && (
+                    <>
+                      <span>{f.tx("Availability", "Disponibilità")}</span>
+                      <span>
+                        {inv.dealsPerRound ? f.tx(`${inv.dealsPerRound} new deal${inv.dealsPerRound > 1 ? "s" : ""} per round`, `${inv.dealsPerRound} ${inv.dealsPerRound > 1 ? "nuovi investimenti" : "nuovo investimento"} per round`) : ""}
+                        {inv.capital ? ` · ${f.money(Math.max(0, investorCapacity(game, inv, game.round).capitalLeft))} ${f.tx("left", "ancora da investire")}` : ""}
+                      </span>
                     </>
                   )}
                   <span>{f.tx("Terms", "Condizioni")}</span>

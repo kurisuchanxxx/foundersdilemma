@@ -6,10 +6,11 @@ import { createCapTable } from "./captable";
 import { defaultDecision } from "./decision";
 import { initialCandidates } from "./hiring";
 import { pmfScore } from "./product";
+import { initialRivals } from "./rivals";
 import { nextId } from "./util";
 import { updateValuation } from "./valuation";
 
-export const STATE_VERSION = 2;
+export const STATE_VERSION = 3;
 
 export function defaultConfig(): GameConfig {
   return {
@@ -143,6 +144,8 @@ function createCompany(state: GameState, setup: CompanySetup): Company {
     termSheets: [],
     counterOffers: [],
     acquisitionOffers: [],
+    partnershipOffers: [],
+    partnerships: [],
     pendingGrants: [],
     pendingRisks: [],
     valuation: 0,
@@ -166,6 +169,8 @@ function createCompany(state: GameState, setup: CompanySetup): Company {
       salaryCutUntil: null,
       salaryCutPct: 0,
     },
+    segment: "broad",
+    pricingModel: "subscription",
   };
   c.fitPotential = Math.round(createRng(state.config.seed, "fit", c.id).range(0.72, 1.08) * 100) / 100;
   c.price = defaultDecision(c).price;
@@ -181,7 +186,7 @@ export function createGame(config: GameConfig, setups: CompanySetup[], botCount 
   const cfg: GameConfig = { ...config, seed, totalRounds: Math.max(4, Math.min(16, Math.round(config.totalRounds))) };
   const rng = createRng(seed, "setup");
   const markets = {} as Record<SectorId, SectorMarketState>;
-  for (const id of SECTOR_IDS) markets[id] = { npcCompetitors: SECTORS[id].npcCompetitors, hype: 1 };
+  for (const id of SECTOR_IDS) markets[id] = { npcCompetitors: SECTORS[id].npcCompetitors, hype: 1, rivals: initialRivals(seed, id) };
   const state: GameState = {
     version: STATE_VERSION,
     id: `game_${seed}_${Date.now().toString(36)}`,
@@ -197,6 +202,7 @@ export function createGame(config: GameConfig, setups: CompanySetup[], botCount 
     events: [],
     candidates: [],
     candidateSeq: 0,
+    investorBook: {},
     usedCandidateIds: [],
     reports: [],
     firsts: { pmf: null, profitable: null },
@@ -206,5 +212,33 @@ export function createGame(config: GameConfig, setups: CompanySetup[], botCount 
   for (const s of all) state.companies.push(createCompany(state, s));
   for (const c of state.companies) updateValuation(state, c, 1);
   state.candidates = initialCandidates(state, rng);
+  return state;
+}
+
+/**
+ * Brings a game saved by an older version up to date (new fields get their defaults), so
+ * classroom files and saves keep working after an update.
+ */
+export function migrateState(state: GameState): GameState {
+  for (const id of SECTOR_IDS) {
+    const m = state.markets[id] ?? (state.markets[id] = { npcCompetitors: SECTORS[id].npcCompetitors, hype: 1, rivals: [] });
+    if (!m.rivals) m.rivals = initialRivals(state.config.seed, id);
+  }
+  if (!state.investorBook) state.investorBook = {};
+  for (const c of state.companies) {
+    if (!c.segment) c.segment = "broad";
+    if (!c.pricingModel) c.pricingModel = "subscription";
+    if (!c.partnershipOffers) c.partnershipOffers = [];
+    if (!c.partnerships) c.partnerships = [];
+    for (const d of [c.decision, c.lastDecision]) {
+      if (!d) continue;
+      d.targetSegment ??= c.segment;
+      d.pricingModel ??= c.pricingModel;
+      d.acquisitionBid ??= null;
+      d.partnershipProposals ??= [];
+      d.acceptPartnershipIds ??= [];
+    }
+  }
+  state.version = STATE_VERSION;
   return state;
 }

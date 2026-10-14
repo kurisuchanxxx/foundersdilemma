@@ -23,6 +23,9 @@ export type TechDebtAction = "ship" | "maintain" | "paydown";
 export type FounderHours = 40 | 50 | 60 | 80;
 export type ReputationAction = "none" | "pr" | "conference" | "community";
 export type BotStyle = "lean" | "steady" | "blitz";
+/** Which customers the company targets inside its sector (Moore's beachhead vs the broad market). */
+export type TargetSegment = "niche" | "broad" | "premium";
+export type PricingModel = "subscription" | "freemium" | "usage";
 
 export type Role =
   | "Engineer"
@@ -504,6 +507,15 @@ export interface Decision {
   // Exit & dilemmas
   acceptAcquisitionId: string | null;
   dilemmaChoice: string | null;
+  // Strategy
+  targetSegment: TargetSegment;
+  pricingModel: PricingModel;
+  // Other teams
+  /** Offer to buy another company (paid in cash if the target accepts next round). */
+  acquisitionBid: { targetId: string; amount: number } | null;
+  /** Companies the team proposes a partnership to (at most one per round). */
+  partnershipProposals: string[];
+  acceptPartnershipIds: string[];
 }
 
 // ---------------------------------------------------------------------------------------
@@ -513,10 +525,28 @@ export interface Decision {
 export interface AcquisitionOffer {
   id: string;
   acquirer: string;
-  kind: "acquihire" | "strategic" | "financial";
+  kind: "acquihire" | "strategic" | "financial" | "team";
   value: number;
   validRound: number;
   premium: number;
+  /** Set when the bidder is another company of the game. */
+  fromCompanyId?: string;
+}
+
+export interface PartnershipOffer {
+  id: string;
+  fromCompanyId: string;
+  fromName: string;
+  validRound: number;
+}
+
+export interface Partnership {
+  id: string;
+  partnerId: string;
+  partnerName: string;
+  startRound: number;
+  untilRound: number;
+  sameSector: boolean;
 }
 
 export interface Payout {
@@ -722,6 +752,8 @@ export interface Company {
   termSheets: TermSheet[];
   counterOffers: CounterOffer[];
   acquisitionOffers: AcquisitionOffer[];
+  partnershipOffers: PartnershipOffer[];
+  partnerships: Partnership[];
   pendingGrants: PendingGrant[];
   pendingRisks: PendingRisk[];
 
@@ -732,11 +764,26 @@ export interface Company {
   monthly: MonthPoint[];
   achievements: Achievement[];
   flags: CompanyFlags;
+  // strategy in force
+  segment: TargetSegment;
+  pricingModel: PricingModel;
+}
+
+export interface Rival {
+  id: string;
+  name: string;
+  /** 0-1: how strong and aggressive the competitor is. */
+  strength: number;
+  active: boolean;
+  lastMove: LText | null;
+  lastMoveRound: number | null;
 }
 
 export interface SectorMarketState {
   npcCompetitors: number;
   hype: number;
+  /** Named competitors outside the game that react to the market. */
+  rivals: Rival[];
 }
 
 export interface GameState {
@@ -757,6 +804,8 @@ export interface GameState {
   events: GameEvent[];
   candidates: Candidate[];
   candidateSeq: number;
+  /** Capital and deals committed by each investor during the game (limited capacity). */
+  investorBook: Record<string, { committed: number; deals: Array<{ round: number; companyId: string }> }>;
   /** Ids of every candidate that ever entered the job market. */
   usedCandidateIds: string[];
   reports: RoundReport[];

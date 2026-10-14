@@ -258,6 +258,21 @@ export const GLOSSARY: GlossaryEntry[] = [
     refs: ["G. Moore, Crossing the Chasm (1991)"],
   },
   {
+    id: "beachhead",
+    term: lt("Beachhead market", "Mercato testa di ponte"),
+    category: "market",
+    short: lt("Win a narrow segment first, then expand from there.", "Prima conquista un segmento ristretto, poi espanditi da lì."),
+    body: lt(
+      "Moore suggests crossing the chasm by dominating one niche with an urgent problem: customers talk to each other, references are credible and the product can be complete for them. Going broad too early spreads a small team over needs that are too different. Premium customers pay much more, but expect quality and need salespeople.",
+      "Moore suggerisce di superare il chasm dominando una nicchia con un problema urgente: i clienti si parlano, le referenze sono credibili e il prodotto può essere completo per loro. Andare sul mercato ampio troppo presto disperde un piccolo team su bisogni troppo diversi. I clienti premium pagano molto di più, ma pretendono qualità e richiedono venditori.",
+    ),
+    inGame: lt(
+      "Niche: about 30% of the sector is reachable, PMF learning +30%, CAC -15%, churn -10%, a softer chasm. Broad: the whole market. Premium: 40% of the market, willingness to pay up to +100% with high quality, churn -25%, CAC +50% and more need for salespeople. Changing target after launch costs 12% of customers and some PMF.",
+      "Nicchia: è raggiungibile circa il 30% del settore, apprendimento del PMF +30%, CAC -15%, churn -10%, chasm più morbido. Ampio: tutto il mercato. Premium: 40% del mercato, disponibilità a pagare fino a +100% con qualità alta, churn -25%, CAC +50% e più bisogno di venditori. Cambiare obiettivo dopo il lancio costa il 12% dei clienti e un po' di PMF.",
+    ),
+    refs: ["G. Moore, Crossing the Chasm (1991)", "B. Aulet, Disciplined Entrepreneurship (2013)"],
+  },
+  {
     id: "competition",
     term: lt("Competition", "Concorrenza"),
     category: "market",
@@ -266,7 +281,22 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Every competitor bids for the same attention. In winner-takes-most markets, the leader's scale lowers its costs further.",
       "Ogni concorrente compete per la stessa attenzione. Nei mercati 'winner-takes-most', la scala del leader ne riduce ulteriormente i costi.",
     ),
-    inGame: lt("Teams in the same sector share the same market: their customers count towards the same TAM and each rival raises your CAC.", "I team dello stesso settore condividono lo stesso mercato: i loro clienti contano sullo stesso TAM e ogni rivale alza il tuo CAC."),
+    inGame: lt("Teams in the same sector share the same market: their customers count towards the same TAM and each rival, in the game or outside it, raises your CAC.", "I team dello stesso settore condividono lo stesso mercato: i loro clienti contano sullo stesso TAM e ogni rivale, in gioco o esterno, alza il tuo CAC."),
+  },
+  {
+    id: "competitorMoves",
+    term: lt("Competitors' moves", "Le mosse dei concorrenti"),
+    category: "market",
+    short: lt("The market is not still: rivals cut prices, raise money, launch and fail.", "Il mercato non sta fermo: i concorrenti tagliano i prezzi, raccolgono capitali, lanciano e falliscono."),
+    body: lt(
+      "A strategy that ignores competitors' reactions works only on paper. A dominant player attracts price wars and ad blitzes; a well-funded rival raises salaries for everyone; a competitor that fails frees customers.",
+      "Una strategia che ignora le reazioni dei concorrenti funziona solo sulla carta. Chi domina attira guerre dei prezzi e campagne aggressive; un rivale ben finanziato fa salire gli stipendi per tutti; un concorrente che fallisce libera clienti.",
+    ),
+    inGame: lt(
+      "Each sector has named competitors outside the game, with a strength that changes. Their moves appear in the news at the start of the round and change CAC, willingness to pay, churn or salaries in that sector for one or two rounds. When a team holds more than 40% of the sector, rivals react more often.",
+      "Ogni settore ha concorrenti con un nome, esterni alla partita, con una forza che cambia nel tempo. Le loro mosse compaiono nelle news a inizio round e cambiano CAC, disponibilità a pagare, churn o stipendi del settore per uno o due round. Quando un team supera il 40% del settore, i rivali reagiscono più spesso.",
+    ),
+    refs: ["M. Porter, Competitive Strategy (1980)"],
   },
   {
     id: "pricing",
@@ -278,6 +308,21 @@ export const GLOSSARY: GlossaryEntry[] = [
       "La disponibilità a pagare cresce con qualità, fit e brand del prodotto. L'elasticità al prezzo varia per settore: i consumatori sono molto più sensibili delle aziende.",
     ),
     inGame: lt("Pricing above the estimated willingness to pay reduces conversions and raises churn.", "Un prezzo sopra la disponibilità a pagare stimata riduce le conversioni e aumenta il churn."),
+  },
+  {
+    id: "pricingModel",
+    term: lt("Pricing model", "Modello di prezzo"),
+    category: "market",
+    short: lt("Not only how much you charge, but how: subscription, freemium or usage.", "Non solo quanto fai pagare, ma come: abbonamento, freemium o a consumo."),
+    body: lt(
+      "Freemium turns the product into a marketing channel: free users spread it and a few percent convert, but serving them costs money. Usage-based pricing lowers the barrier to start and grows with the customer, at the price of less predictable revenue.",
+      "Il freemium trasforma il prodotto in un canale di marketing: gli utenti gratuiti lo diffondono e una piccola percentuale si converte, ma servirli costa. Il prezzo a consumo abbassa la barriera d'ingresso e cresce con il cliente, al prezzo di ricavi meno prevedibili.",
+    ),
+    inGame: lt(
+      "Freemium: CAC -30%, word of mouth +60%, willingness to pay -15%, churn +10%, gross margin -7 pt. Usage: price sensitivity -40%, churn -15%, willingness to pay -10%, gross margin -2 pt. Changing model after launch costs 5% of customers.",
+      "Freemium: CAC -30%, passaparola +60%, disponibilità a pagare -15%, churn +10%, margine lordo -7 pt. A consumo: sensibilità al prezzo -40%, churn -15%, disponibilità a pagare -10%, margine lordo -2 pt. Cambiare modello dopo il lancio costa il 5% dei clienti.",
+    ),
+    refs: ["M. Ramanujam, G. Tacke, Monetizing Innovation (2016)", "C. Anderson, Free (2009)"],
   },
   {
     id: "gtm",
@@ -439,6 +484,20 @@ export const GLOSSARY: GlossaryEntry[] = [
     inGame: lt("Global events change investor interest and valuation multiples.", "Gli eventi globali cambiano l'interesse degli investitori e i multipli di valutazione."),
   },
   {
+    id: "investorCapacity",
+    term: lt("Investor capacity (dry powder)", "Capacità degli investitori (dry powder)"),
+    category: "finance",
+    short: lt("Investors have limited money and time: they pick the best deals.", "Gli investitori hanno soldi e tempo limitati: scelgono gli affari migliori."),
+    body: lt(
+      "A fund invests the capital raised from its LPs over a few years and a partner can follow only a few companies. When many startups pitch at once, investors compare them and back only the most convincing ones.",
+      "Un fondo investe in pochi anni il capitale raccolto dai suoi LP e un partner può seguire solo poche aziende. Quando molte startup fanno pitch insieme, gli investitori le confrontano e sostengono solo le più convincenti.",
+    ),
+    inGame: lt(
+      "Each investor can close a limited number of new deals per round and has a total budget for the game. If several teams pitch the same investor, the strongest pitch wins; the others are told who got the money.",
+      "Ogni investitore può chiudere un numero limitato di nuovi investimenti per round e ha un budget totale per la partita. Se più team fanno pitch allo stesso investitore vince il pitch più forte; gli altri vengono informati di chi ha ottenuto i soldi.",
+    ),
+  },
+  {
     id: "debtVsEquity",
     term: lt("Debt vs equity", "Debito contro equity"),
     category: "finance",
@@ -468,7 +527,21 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "finance",
     short: lt("Selling the company (or listing it): when shareholders get paid.", "La vendita dell'azienda (o la quotazione): quando i soci incassano."),
     body: lt("Acqui-hires buy the team, strategic acquirers pay for synergies, financial buyers for cash flows.", "Gli acqui-hire comprano il team, gli acquirenti strategici pagano le sinergie, quelli finanziari i flussi di cassa."),
-    inGame: lt("Acquisition offers can arrive from round 3; accepting ends the game for your company.", "Le offerte di acquisizione possono arrivare dal round 3; accettarne una chiude il gioco per la tua azienda."),
+    inGame: lt("Acquisition offers can arrive from round 3, also from other teams; accepting ends the game for your company.", "Le offerte di acquisizione possono arrivare dal round 3, anche da altri team; accettarne una chiude il gioco per la tua azienda."),
+  },
+  {
+    id: "startupMna",
+    term: lt("Acquisitions between startups", "Acquisizioni tra startup"),
+    category: "finance",
+    short: lt("Buying a weaker rival to grow faster or to hire its team.", "Comprare un rivale più debole per crescere più in fretta o per prenderne il team."),
+    body: lt(
+      "Consolidation is common when money is scarce: a funded startup buys customers and people from one that is running out of runway. Paying in cash reduces the buyer's runway; integration costs morale.",
+      "Il consolidamento è frequente quando i capitali scarseggiano: una startup finanziata compra clienti e persone da una che sta finendo la runway. Pagare in contanti riduce la runway di chi compra; l'integrazione costa morale.",
+    ),
+    inGame: lt(
+      "A team can make a cash offer to another team; the target decides next round in Finance & exit. If it accepts, its shareholders are paid through the waterfall and its game ends. The buyer gets 85% of the customers (same sector), the team and the best product quality.",
+      "Un team può fare un'offerta in contanti a un altro team; chi la riceve decide nel round successivo in Finanza ed exit. Se accetta, i suoi soci vengono pagati secondo il waterfall e la sua partita finisce. Chi compra ottiene l'85% dei clienti (stesso settore), il team e la qualità di prodotto migliore.",
+    ),
   },
   {
     id: "cashVsRevenue",
@@ -566,6 +639,21 @@ export const GLOSSARY: GlossaryEntry[] = [
     short: lt("Borrowing someone else's distribution.", "Usare la distribuzione di qualcun altro."),
     body: lt("Partners bring pre-qualified customers who churn less, but you depend on them.", "I partner portano clienti già qualificati che abbandonano meno, ma diventi dipendente da loro."),
     inGame: lt("Partnership channel lowers churn; some events and investors bring distribution deals.", "Il canale partnership riduce il churn; alcuni eventi e investitori portano accordi di distribuzione."),
+  },
+  {
+    id: "coopetition",
+    term: lt("Coopetition", "Coopetizione"),
+    category: "strategy",
+    short: lt("Cooperating with companies you also compete with.", "Cooperare con aziende con cui si è anche in concorrenza."),
+    body: lt(
+      "Startups in the same space can share costs, integrate products or market together while competing for customers. Complementary companies (different markets, same customers) are the easiest partners.",
+      "Startup dello stesso spazio possono condividere costi, integrare i prodotti o fare marketing insieme pur competendo per i clienti. Le aziende complementari (mercati diversi, stessi clienti) sono i partner più semplici.",
+    ),
+    inGame: lt(
+      "In the Other teams tab you can propose a partnership to another team, which answers next round. It lasts three rounds and gives both companies: same sector, CAC -8% and churn -5%; different sectors, CAC -12% and word of mouth +15%. At most two at a time.",
+      "Nella scheda Altri team potete proporre una partnership a un altro team, che risponde nel round successivo. Dura tre round e dà a entrambe le aziende: stesso settore, CAC -8% e churn -5%; settori diversi, CAC -12% e passaparola +15%. Al massimo due alla volta.",
+    ),
+    refs: ["A. Brandenburger, B. Nalebuff, Co-opetition (1996)"],
   },
   {
     id: "socialProof",
