@@ -1,10 +1,15 @@
 name: Desktop apps (macOS, Windows, Linux)
 
 # Push a tag such as v2.0.0 to build the installers and attach them to a draft release.
-# Run it manually (Actions > Desktop apps > Run workflow) to get the installers as artifacts only.
+# Pushes that change the desktop shell, or a manual run (Actions > Desktop apps > Run workflow),
+# build the installers as downloadable artifacts only.
 on:
   push:
     tags: ["v*"]
+    branches: ["**"]
+    paths:
+      - "src-tauri/**"
+      - ".github/workflows/desktop.yml"
   workflow_dispatch:
 
 jobs:
