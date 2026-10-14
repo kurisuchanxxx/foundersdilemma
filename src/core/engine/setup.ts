@@ -34,7 +34,8 @@ export const LOGOS = [
   "Bike", "Package", "Leaf", "Sun", "Moon", "Star", "Globe", "Compass", "Feather", "Gem", "Puzzle", "Bot",
 ];
 
-export const COLORS = ["#0A84FF", "#30D158", "#FF9F0A", "#FF375F", "#BF5AF2", "#64D2FF", "#FFD60A", "#FF6B35", "#5E5CE6", "#32D4A4"];
+/** Validated categorical palette (see dataviz palette): identity colors for companies. */
+export const COLORS = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767", "#5e5ce6", "#64748b"];
 
 const BOT_NAMES: Record<SectorId, Array<[string, string]>> = {
   saas: [["Brightloop", "LoopDesk"], ["Tessera Labs", "Tessera CRM"], ["Kairos Software", "Kairos HR"]],
