@@ -1,0 +1,757 @@
+import { useDeferredValue, useMemo, useState } from "react";
+import {
+  APPROACH,
+  DISCOVERY,
+  GRANTS,
+  GTM_INFO,
+  HOURS_INFO,
+  LENDERS,
+  REPUTATION_ACTIONS,
+  SECTORS,
+  computeCapacities,
+  effectiveModifiers,
+  featuresFor,
+  founderPayout,
+  grantChecks,
+  investorDef,
+  loanLimit,
+  monthsInRound,
+  oneOffCosts,
+  previewDecision,
+  roundLabel,
+  waterfall,
+  type Company,
+  type Decision,
+  type DevApproach,
+  type DiscoveryLevel,
+  type FounderHours,
+  type GtmChannel,
+  type PreviewResult,
+  type ReputationAction,
+  type TechDebtAction,
+} from "../../core";
+import { Icon } from "../components/Icon";
+import { Badge, Callout, Card, InfoTip, OptionCard, Progress, Segmented, SliderField, Stat, Tabs, Toggle } from "../components/ui";
+import { useActiveCompany, useGame, useDraft } from "../hooks";
+import { useFmt, type Fmt } from "../i18n";
+import { exportDecisionFile } from "../classroom";
+import { useStore } from "../store";
+
+type Tab = "core" | "product" | "people" | "growth" | "finance" | "dilemma" | "review";
+
+export function Decisions() {
+  const f = useFmt();
+  const game = useGame();
+  const c = useActiveCompany();
+  const draft = useDraft(c);
+  const update = useStore((s) => s.updateDraft);
+  const [tab, setTab] = useState<Tab>("core");
+  const deferred = useDeferredValue(draft);
+  const preview = useMemo(() => (c && deferred && c.status === "active" ? previewDecision(game, c.id, deferred) : null), [game, c, deferred]);
+  if (!c || !draft) return null;
+  if (game.finished || c.status !== "active") {
+    return (
+      <div className="stack">
+        <Callout tone="info">{f.tx("No decisions to take: this company is no longer active.", "Nessuna decisione da prendere: questa azienda non è più attiva.")}</Callout>
+        {!game.finished && game.config.mode === "solo" && (
+          <button className="btn primary" onClick={() => useStore.getState().fastForward()}>
+            <Icon name="FastForward" size={16} />
+            {f.tx("Simulate the remaining rounds and see the results", "Simula i round rimanenti e guarda i risultati")}
+          </button>
+        )}
+      </div>
+    );
+  }
+  const locked = c.submitted;
+  const set = (patch: Partial<Decision>) => update(c.id, patch);
+  const features = featuresFor(game.config);
+  const months = monthsInRound(game.config, game.round);
+
+  const tabs: Array<{ id: Tab; label: string; icon: string; dot?: boolean }> = [
+    { id: "core", label: f.tx("Budget & price", "Budget e prezzo"), icon: "Wallet" },
+    { id: "product", label: f.tx("Product", "Prodotto"), icon: "Target" },
+    { id: "people", label: f.tx("Founders & team", "Fondatori e team"), icon: "Users" },
+    { id: "growth", label: f.tx("Reputation", "Reputazione"), icon: "Megaphone" },
+    { id: "finance", label: f.tx("Finance & exit", "Finanza ed exit"), icon: "HandCoins", dot: c.termSheets.length + c.acquisitionOffers.length > 0 },
+  ];
+  if (c.dilemma) tabs.push({ id: "dilemma", label: f.tx("Dilemma", "Dilemma"), icon: "Scale", dot: !draft.dilemmaChoice });
+  tabs.push({ id: "review", label: f.tx("Review & submit", "Riepilogo e invio"), icon: "ListChecks" });
+
+  return (
+    <div className="stack">
+      <div className="page-head">
+        <div>
+          <h1>{f.tx("Decisions", "Decisioni")}</h1>
+          <p className="muted">
+            {f.L(roundLabel(game.config, game.round))} · {months} {f.tx("months will be simulated", "mesi verranno simulati")}
+          </p>
+        </div>
+        {locked && <SubmittedBanner c={c} />}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(250px, 300px)", gap: 16, alignItems: "start" }} className="decisions-grid">
+        <div style={{ minWidth: 0 }}>
+          <Tabs value={tab} tabs={tabs} onChange={setTab} />
+          <fieldset disabled={locked} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
+            {tab === "core" && <CoreTab c={c} d={draft} set={set} preview={preview} />}
+            {tab === "product" && <ProductTab c={c} d={draft} set={set} techDebt={features.techDebt} />}
+            {tab === "people" && <PeopleTab c={c} d={draft} set={set} />}
+            {tab === "growth" && <GrowthTab d={draft} set={set} />}
+            {tab === "finance" && <FinanceTab c={c} d={draft} set={set} />}
+            {tab === "dilemma" && c.dilemma && <DilemmaTab c={c} d={draft} set={set} />}
+          </fieldset>
+          {tab === "review" && <ReviewTab c={c} d={draft} preview={preview} onEdit={setTab} />}
+          {tab !== "review" && (
+            <div className="row mt-16" style={{ justifyContent: "flex-end" }}>
+              <button className="btn" onClick={() => setTab(tabs[Math.min(tabs.length - 1, tabs.findIndex((t) => t.id === tab) + 1)].id)}>
+                {f.tx("Next", "Avanti")}
+                <Icon name="ChevronRight" size={16} />
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="sticky-side">
+          <PreviewPanel c={c} preview={preview} />
+        </div>
+      </div>
+      <style>{`@media (max-width: 1000px) { .decisions-grid { grid-template-columns: 1fr !important; } }`}</style>
+    </div>
+  );
+}
+
+function SubmittedBanner({ c }: { c: Company }) {
+  const f = useFmt();
+  const unsubmit = useStore((s) => s.unsubmit);
+  const advance = useStore((s) => s.advance);
+  const game = useGame();
+  return (
+    <div className="row wrap">
+      <Badge tone="good">
+        <Icon name="Check" size={12} /> {f.tx("Decisions submitted", "Decisioni inviate")}
+      </Badge>
+      <button className="btn" onClick={() => unsubmit(c.id)}>
+        <Icon name="Unlock" size={16} />
+        {f.tx("Edit decisions", "Modifica decisioni")}
+      </button>
+      {game.config.mode === "solo" && (
+        <button className="btn primary" onClick={advance}>
+          <Icon name="FastForward" size={16} />
+          {f.tx("Advance to next period", "Avanza al periodo successivo")}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------------------
+
+function PreviewPanel({ c, preview }: { c: Company; preview: PreviewResult | null }) {
+  const f = useFmt();
+  if (!preview) return null;
+  const runwayTone = preview.runway < 3 ? "bad" : preview.runway < 6 ? "warn" : "good";
+  return (
+    <Card title={f.tx("Projection (what if)", "Proiezione (what if)")} icon="Gauge">
+      <p className="small faint" style={{ marginTop: -6, marginBottom: 12 }}>
+        {f.tx("Expected values at the end of the round, without random events, assuming your offers are accepted and no new funding.", "Valori attesi a fine round, senza eventi casuali, ipotizzando offerte accettate e nessun nuovo finanziamento.")}
+      </p>
+      <div className="col gap-12">
+        <Stat label={f.tx("Cash at end of round", "Cassa a fine round")} value={f.money(preview.cashEnd)} tone={preview.cashEnd < 0 ? "bad" : undefined} sub={`${f.tx("now", "ora")} ${f.money(c.cash)}`} />
+        <Stat label="Runway" value={f.months(preview.runway)} tone={runwayTone} concept="runway" />
+        <div className="kv">
+          <span>{f.tx("Expenses / month", "Spese / mese")}</span>
+          <span>{f.money(preview.expensesMonthly)}</span>
+          <span>{f.tx("Net burn / month", "Burn netto / mese")}</span>
+          <span className={preview.netBurnMonthly <= 0 ? "good" : ""}>{preview.netBurnMonthly <= 0 ? f.tx("profit", "utile") : f.money(preview.netBurnMonthly)}</span>
+          {preview.oneOffCosts > 0 && (
+            <>
+              <span>{f.tx("One-off costs", "Costi una tantum")}</span>
+              <span>{f.money(preview.oneOffCosts)}</span>
+            </>
+          )}
+          {preview.hiringCostMonthly > 0 && (
+            <>
+              <span>{f.tx("New hires / month", "Nuove assunzioni / mese")}</span>
+              <span>{f.money(preview.hiringCostMonthly)}</span>
+            </>
+          )}
+          {preview.launched ? (
+            <>
+              <span>{f.tx("Monthly revenue", "Fatturato mensile")}</span>
+              <span>{f.money(preview.revenueMonthlyEnd)}</span>
+              <span>{f.tx("Customers", "Clienti")}</span>
+              <span>
+                {f.compact(preview.customersEnd)} <span className="faint">(+{f.compact(preview.newCustomers)})</span>
+              </span>
+              <span>CAC</span>
+              <span>{f.money(preview.cac)}</span>
+              <span>LTV</span>
+              <span>{f.money(preview.ltv)}</span>
+              <span>{f.tx("Monthly churn", "Churn mensile")}</span>
+              <span>{f.pct(preview.churn, 1)}</span>
+            </>
+          ) : (
+            <>
+              <span>MVP</span>
+              <span>
+                {f.pct(c.product.mvpProgress)} → {f.pct(preview.mvpProgressEnd)}
+              </span>
+            </>
+          )}
+          <span>PMF</span>
+          <span>
+            {Math.round(c.pmf.score)} → {Math.round(preview.pmfEnd)}
+          </span>
+          <span>{f.tx("Headcount", "Persone")}</span>
+          <span>{preview.headcount}</span>
+        </div>
+        {!c.product.launched && preview.launched && (
+          <Callout tone="good" icon="Rocket">
+            {f.tx("At this pace you will launch during this round.", "A questo ritmo lancerai durante questo round.")}
+          </Callout>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+// ---------------------------------------------------------------------------------------
+
+function CoreTab({ c, d, set, preview }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void; preview: PreviewResult | null }) {
+  const f = useFmt();
+  const game = useGame();
+  const s = SECTORS[c.sector];
+  const mods = effectiveModifiers(game, c, c.sector, game.round);
+  const cap = computeCapacities(c, d, game.month, mods.dev, mods.sales);
+  const execCap = 10_000 + cap.stats.growth * 6_000 + cap.stats.design * 1_000;
+  const contractorPts = Math.max(0, d.rdBudget - 1_000) / 1_500;
+  const budgetMax = Math.max(50_000, Math.min(1_000_000, Math.round(Math.max(c.cash, 0) / 3 / 10_000) * 10_000));
+  const wtp = preview?.wtp ?? s.refPrice;
+  const priceRatio = d.price / wtp;
+  return (
+    <div className="stack">
+      <Card title={f.tx("Monthly budgets", "Budget mensili")} icon="Wallet">
+        <div className="col gap-16">
+          <SliderField
+            label={f.tx("R&D: contractors, tools, cloud", "R&S: contractor, strumenti, cloud")}
+            value={d.rdBudget}
+            min={0}
+            max={budgetMax}
+            scale="quad"
+            onChange={(v) => set({ rdBudget: v })}
+            format={(v) => `${f.money(v)}/${f.tx("mo", "mese")}`}
+            hint={f.tx(
+              `Adds ≈${contractorPts.toFixed(1)} development points/month on top of your team (${cap.devPower.toFixed(1)} total). The first €1k covers tools. Contractors create more tech debt than employees.`,
+              `Aggiunge ≈${contractorPts.toFixed(1)} punti di sviluppo/mese oltre al team (${cap.devPower.toFixed(1)} in totale). I primi 1k€ coprono gli strumenti. I contractor creano più debito tecnico dei dipendenti.`,
+            )}
+          />
+          <SliderField
+            label={f.tx("Marketing", "Marketing")}
+            value={d.marketingBudget}
+            min={0}
+            max={budgetMax}
+            scale="quad"
+            concept="cac"
+            onChange={(v) => set({ marketingBudget: v })}
+            format={(v) => `${f.money(v)}/${f.tx("mo", "mese")}`}
+            hint={
+              <>
+                {c.product.launched
+                  ? f.tx("Buys customers at the current CAC, with diminishing returns.", "Compra clienti al CAC attuale, con rendimenti decrescenti.")
+                  : f.tx("Before launch it builds a waitlist.", "Prima del lancio costruisce una lista d'attesa.")}{" "}
+                {f.tx(`Your growth team can execute about ${f.money(execCap)}/month efficiently.`, `Il tuo team growth può gestire con efficienza circa ${f.money(execCap)}/mese.`)}
+                {d.marketingBudget > execCap && <span className="warn"> {f.tx("Above that, spend is 70% less effective: hire growth people.", "Oltre, la spesa è efficace al 30%: assumi persone growth.")}</span>}
+              </>
+            }
+          />
+          <SliderField
+            label={f.tx("Operations & support", "Operations e supporto")}
+            value={d.opsBudget}
+            min={0}
+            max={Math.max(20_000, budgetMax / 2)}
+            scale="quad"
+            onChange={(v) => set({ opsBudget: v })}
+            format={(v) => `${f.money(v)}/${f.tx("mo", "mese")}`}
+            hint={f.tx("Infrastructure, admin and outsourced support: fewer bugs and outages, more support capacity, slightly better margins.", "Infrastruttura, amministrazione e supporto esterno: meno bug e disservizi, più capacità di supporto, margini leggermente migliori.")}
+          />
+        </div>
+      </Card>
+      <Card title={f.tx("Price", "Prezzo")} icon="CircleDollarSign" action={<InfoTip concept="pricing" />}>
+        <SliderField
+          label={`${f.tx("Price", "Prezzo")} (${f.L(s.priceUnit)})`}
+          value={d.price}
+          min={s.priceMin}
+          max={s.priceMax}
+          step={s.priceMin < 10 ? 0.1 : 1}
+          scale="log"
+          onChange={(v) => set({ price: v })}
+          format={(v) => f.money(v, { decimals: v < 100 ? 2 : 0 })}
+        />
+        <div className="row gap-12 wrap mt-8">
+          <Badge tone={priceRatio > 1.15 ? "bad" : priceRatio < 0.7 ? "warn" : "good"}>
+            {f.tx("Estimated willingness to pay", "Disponibilità a pagare stimata")}: {f.money(wtp, { decimals: wtp < 100 ? 2 : 0 })}
+          </Badge>
+          <span className="small muted">
+            {priceRatio > 1.15
+              ? f.tx("Too expensive: fewer conversions and more churn.", "Troppo caro: meno conversioni e più churn.")
+              : priceRatio < 0.7
+                ? f.tx("Very cheap: easy to sell, but you leave money on the table.", "Molto economico: facile da vendere, ma lasci soldi sul tavolo.")
+                : f.tx("In line with the value customers perceive.", "In linea con il valore percepito dai clienti.")}
+          </span>
+        </div>
+        <p className="small faint mt-8">{f.tx("Willingness to pay grows with product quality, PMF and brand.", "La disponibilità a pagare cresce con qualità del prodotto, PMF e brand.")}</p>
+      </Card>
+      <Card title={f.tx("Go-to-market channel", "Canale go-to-market")} icon="Megaphone" action={<InfoTip concept="gtm" />}>
+        <div className="grid cols-2" style={{ gap: 8 }}>
+          {(Object.keys(GTM_INFO) as GtmChannel[]).map((g) => {
+            const fit = s.gtmFit[g];
+            const best = Math.min(...Object.values(s.gtmFit));
+            return (
+              <OptionCard
+                key={g}
+                on={d.gtm === g}
+                onClick={() => set({ gtm: g })}
+                title={f.L(GTM_INFO[g].name)}
+                desc={f.L(GTM_INFO[g].description)}
+                badge={<Badge tone={fit === best ? "good" : fit <= 1.05 ? "accent" : "warn"}>{fit === best ? f.tx("best fit", "ideale") : fit <= 1.05 ? f.tx("ok", "ok") : f.tx("poor fit", "poco adatto")}</Badge>}
+              />
+            );
+          })}
+        </div>
+        {s.salesDependence >= 0.3 && (
+          <Callout tone="info">{f.tx("In this sector paid leads need salespeople to close: without sales capacity, marketing converts poorly.", "In questo settore i lead a pagamento vanno chiusi da venditori: senza capacità commerciale il marketing converte poco.")}</Callout>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+function ProductTab({ c, d, set, techDebt }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void; techDebt: boolean }) {
+  const f = useFmt();
+  const approachText: Record<DevApproach, [string, string]> = {
+    rush: [f.tx("Rush", "Corsa"), f.tx(`×${APPROACH.rush.speed} speed, lots of tech debt and bugs, rougher launch.`, `Velocità ×${APPROACH.rush.speed}, molto debito tecnico e bug, lancio più grezzo.`)],
+    balanced: [f.tx("Balanced", "Bilanciato"), f.tx("Standard pace, moderate tech debt.", "Ritmo standard, debito tecnico moderato.")],
+    quality: [f.tx("Quality first", "Prima la qualità"), f.tx(`×${APPROACH.quality.speed} speed, little debt, better quality at launch.`, `Velocità ×${APPROACH.quality.speed}, poco debito, qualità migliore al lancio.`)],
+  };
+  const discText: Record<DiscoveryLevel, [string, string]> = {
+    none: [f.tx("None", "Nessuna"), f.tx("All time on building.", "Tutto il tempo sullo sviluppo.")],
+    light: [f.tx("Light", "Leggera"), f.tx(`Some interviews: €${DISCOVERY.light.cost}/month, -5% dev time.`, `Qualche intervista: ${DISCOVERY.light.cost}€/mese, -5% tempo di sviluppo.`)],
+    deep: [f.tx("Deep", "Profonda"), f.tx(`Continuous discovery: €${DISCOVERY.deep.cost}/month, -12% dev time, much faster learning.`, `Discovery continua: ${DISCOVERY.deep.cost}€/mese, -12% tempo di sviluppo, apprendimento molto più rapido.`)],
+  };
+  const debtText: Record<TechDebtAction, [string, string]> = {
+    ship: [f.tx("Ship fast", "Spedisci veloce"), f.tx("No refactoring: debt grows 30% faster.", "Nessun refactoring: il debito cresce del 30% più in fretta.")],
+    maintain: [f.tx("Maintain", "Mantieni"), f.tx("10% of time on refactoring.", "10% del tempo sul refactoring.")],
+    paydown: [f.tx("Pay down", "Ripaga"), f.tx("25% of time on refactoring: debt falls, features slow down.", "25% del tempo sul refactoring: il debito scende, le funzionalità rallentano.")],
+  };
+  return (
+    <div className="stack">
+      <Card title={c.product.launched ? f.tx("Product is live", "Prodotto lanciato") : f.tx("Building the MVP", "Costruzione dell'MVP")} icon="Rocket" action={<InfoTip concept="mvp" />}>
+        {c.product.launched ? (
+          <div className="kv">
+            <span>{f.tx("Quality", "Qualità")}</span>
+            <span>{f.pct(c.product.quality)}</span>
+            <span>{f.tx("Tech debt", "Debito tecnico")}</span>
+            <span>{f.pct(c.product.techDebt)}</span>
+            <span>Bug</span>
+            <span>{Math.round(c.product.bugs)}</span>
+          </div>
+        ) : (
+          <div className="col gap-12">
+            <Progress value={c.product.mvpProgress} />
+            <div className="row between small">
+              <span className="muted">{f.pct(c.product.mvpProgress)} {f.tx("complete", "completato")}</span>
+              <span className="faint">{f.tx("Launch automatically at 100%", "Lancio automatico al 100%")}</span>
+            </div>
+            <Toggle
+              checked={d.launchNow}
+              disabled={c.product.mvpProgress < 0.5}
+              onChange={(v) => set({ launchNow: v })}
+              label={f.tx("Launch early as soon as the MVP is at least 50% done", "Lancia in anticipo appena l'MVP è almeno al 50%")}
+            />
+            <p className="small faint">{f.tx("Launching early gives you real customers to learn from, but quality and churn suffer.", "Lanciare presto ti dà clienti veri da cui imparare, ma qualità e churn ne risentono.")}</p>
+          </div>
+        )}
+      </Card>
+      <Card title={f.tx("Development approach", "Approccio allo sviluppo")} icon="Code2">
+        <div className="grid cols-3" style={{ gap: 8 }}>
+          {(["rush", "balanced", "quality"] as DevApproach[]).map((a) => (
+            <OptionCard key={a} on={d.devApproach === a} onClick={() => set({ devApproach: a })} title={approachText[a][0]} desc={approachText[a][1]} />
+          ))}
+        </div>
+      </Card>
+      <Card title={f.tx("Customer discovery", "Customer discovery")} icon="MessagesSquare" action={<InfoTip concept="customerDiscovery" />}>
+        <div className="grid cols-3" style={{ gap: 8 }}>
+          {(["none", "light", "deep"] as DiscoveryLevel[]).map((a) => (
+            <OptionCard key={a} on={d.discovery === a} onClick={() => set({ discovery: a })} title={discText[a][0]} desc={discText[a][1]} />
+          ))}
+        </div>
+        <p className="small faint mt-8">{f.tx("Discovery raises problem clarity: you cannot build a fitting solution for a problem you do not understand.", "La discovery aumenta la chiarezza del problema: non puoi costruire una soluzione adatta a un problema che non capisci.")}</p>
+      </Card>
+      {techDebt && (
+        <Card title={f.tx("Technical debt", "Debito tecnico")} icon="Wrench" action={<InfoTip concept="techDebt" />}>
+          <div className="grid cols-3" style={{ gap: 8 }}>
+            {(["ship", "maintain", "paydown"] as TechDebtAction[]).map((a) => (
+              <OptionCard key={a} on={d.techDebtAction === a} onClick={() => set({ techDebtAction: a })} title={debtText[a][0]} desc={debtText[a][1]} />
+            ))}
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+function PeopleTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void }) {
+  const f = useFmt();
+  const game = useGame();
+  const setView = useStore((s) => s.setView);
+  return (
+    <div className="stack">
+      <Card title={f.tx("Founders' workload", "Carico di lavoro dei fondatori")} icon="Clock" action={<InfoTip concept="founderWellbeing" />}>
+        <Segmented
+          value={d.founderHours}
+          options={([40, 50, 60, 80] as FounderHours[]).map((h) => ({ value: h, label: `${h}h` }))}
+          onChange={(v) => set({ founderHours: v })}
+        />
+        <p className="small muted mt-8">
+          {f.L(HOURS_INFO[d.founderHours].label)} · {f.tx("output", "produttività")} ×{HOURS_INFO[d.founderHours].output} · {f.tx("stress", "stress")} {HOURS_INFO[d.founderHours].stress >= 0 ? "+" : ""}
+          {HOURS_INFO[d.founderHours].stress}
+        </p>
+        <div className="row between mt-16">
+          <span className="small muted">
+            {f.tx("Founder stress", "Stress dei fondatori")}: <b className={c.founderStress > 0.75 ? "bad" : c.founderStress > 0.5 ? "warn" : "good"}>{f.pct(c.founderStress)}</b>
+          </span>
+          <Toggle checked={d.vacation} onChange={(v) => set({ vacation: v })} label={f.tx("Take a week off", "Prendi una settimana di pausa")} />
+        </div>
+      </Card>
+      <Card title={f.tx("Team", "Team")} icon="Users" action={<button className="btn sm" onClick={() => setView("team")}>{f.tx("Open team & job market", "Apri team e mercato del lavoro")}</button>}>
+        <div className="kv">
+          <span>{f.tx("Employees", "Dipendenti")}</span>
+          <span>{c.team.length}</span>
+          <span>{f.tx("Team morale", "Morale del team")}</span>
+          <span className={c.morale < 0.5 ? "bad" : ""}>{f.pct(c.morale)}</span>
+          <span>{f.tx("Offers this round", "Offerte in questo round")}</span>
+          <span>{d.offers.length}</span>
+          <span>{f.tx("People leaving", "Persone in uscita")}</span>
+          <span>{d.fires.length}</span>
+        </div>
+        {d.offers.length > 0 && (
+          <div className="col gap-4 mt-16">
+            {d.offers.map((o) => {
+              const cand = game.candidates.find((k) => k.id === o.candidateId);
+              return (
+                <div key={o.candidateId} className="row between small">
+                  <span>
+                    <Icon name="UserPlus" size={13} /> {cand?.name ?? o.candidateId}
+                  </span>
+                  <span className="num muted">
+                    {f.money(o.salary)}/{f.tx("yr", "anno")} {o.equityPct > 0 ? `+ ${f.pct(o.equityPct, 2)}` : ""}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {c.counterOffers.length > 0 && (
+          <div className="col gap-8 mt-16">
+            <h3>{f.tx("Counter-offers", "Controproposte")}</h3>
+            {c.counterOffers.map((co) => (
+              <Toggle
+                key={co.id}
+                checked={d.acceptCounterIds.includes(co.id)}
+                onChange={(v) => set({ acceptCounterIds: v ? [...d.acceptCounterIds, co.id] : d.acceptCounterIds.filter((x) => x !== co.id) })}
+                label={`${co.candidateName}: ${f.money(co.salary)}/${f.tx("yr", "anno")} + ${f.pct(co.equityPct, 2)}`}
+              />
+            ))}
+          </div>
+        )}
+        <div className="mt-16">
+          <Toggle checked={d.teamOffsite} onChange={(v) => set({ teamOffsite: v })} label={f.tx(`Team offsite (≈${f.money(1_000 * (c.team.length + c.founders.filter((x) => x.active).length))}, +morale)`, `Offsite del team (≈${f.money(1_000 * (c.team.length + c.founders.filter((x) => x.active).length))}, +morale)`)} />
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function GrowthTab({ d, set }: { d: Decision; set: (p: Partial<Decision>) => void }) {
+  const f = useFmt();
+  return (
+    <Card title={f.tx("Reputation & marketing actions", "Azioni di reputazione e marketing")} icon="Megaphone" action={<InfoTip concept="reputation" />}>
+      <div className="grid cols-2" style={{ gap: 8 }}>
+        {(Object.keys(REPUTATION_ACTIONS) as ReputationAction[]).map((a) => (
+          <OptionCard
+            key={a}
+            on={d.reputationAction === a}
+            onClick={() => set({ reputationAction: a })}
+            title={f.L(REPUTATION_ACTIONS[a].label)}
+            desc={
+              <>
+                {f.L(REPUTATION_ACTIONS[a].description)} {REPUTATION_ACTIONS[a].cost > 0 && <b>{f.money(REPUTATION_ACTIONS[a].cost)}</b>}
+              </>
+            }
+          />
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+function FinanceTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void }) {
+  const f = useFmt();
+  const setView = useStore((s) => s.setView);
+  return (
+    <div className="stack">
+      <Card title={f.tx("Pitches to investors", "Pitch agli investitori")} icon="Presentation" action={<button className="btn sm" onClick={() => setView("funding")}>{f.tx("Open funding page", "Apri finanziamenti")}</button>}>
+        {d.pitches.length === 0 ? (
+          <p className="muted small">{f.tx("No pitch planned this round. Investors evaluate your last round's numbers; each pitch takes founders' time.", "Nessun pitch previsto in questo round. Gli investitori valutano i numeri dell'ultimo round; ogni pitch toglie tempo ai fondatori.")}</p>
+        ) : (
+          d.pitches.map((p) => (
+            <div key={p.investorId} className="list-row">
+              <Icon name="Presentation" size={16} className="accent" />
+              <div className="grow">
+                <div style={{ fontWeight: 600 }}>{investorDef(p.investorId)?.name}</div>
+                <div className="small muted">
+                  {f.money(p.amount)} · {p.instrument === "safe" ? `SAFE cap ${f.money(p.valuation)}` : `pre-money ${f.money(p.valuation)}`}
+                </div>
+              </div>
+              <button className="icon-btn" onClick={() => set({ pitches: d.pitches.filter((x) => x.investorId !== p.investorId) })} aria-label="Remove">
+                <Icon name="Trash2" size={15} />
+              </button>
+            </div>
+          ))
+        )}
+      </Card>
+      {c.termSheets.length > 0 && (
+        <Card title={f.tx("Term sheets received", "Term sheet ricevuti")} icon="FileText" action={<InfoTip concept="termSheet" />}>
+          {c.termSheets.map((t) => (
+            <div key={t.id} className="list-row">
+              <div className="grow">
+                <div style={{ fontWeight: 600 }}>{t.investorName}</div>
+                <div className="small muted">{f.L(t.note)}</div>
+                <div className="small faint">
+                  {t.boardSeat ? f.tx("Board seat · ", "Posto nel CdA · ") : ""}
+                  {t.poolTopUp > 0 ? `${f.tx("option pool", "pool di opzioni")} ${f.pct(t.poolTopUp)} · ` : ""}
+                  {t.liquidationPref > 0 ? `${t.liquidationPref}x ${f.tx("liquidation preference", "liquidation preference")}` : ""}
+                </div>
+              </div>
+              <Toggle
+                checked={d.acceptTermSheetIds.includes(t.id)}
+                onChange={(v) => set({ acceptTermSheetIds: v ? [...d.acceptTermSheetIds, t.id] : d.acceptTermSheetIds.filter((x) => x !== t.id) })}
+                label={f.tx("Accept", "Accetta")}
+              />
+            </div>
+          ))}
+        </Card>
+      )}
+      <Card title={f.tx("Grants (non-dilutive)", "Bandi (non diluitivi)")} icon="Landmark" action={<InfoTip concept="grants" />}>
+        <div className="col gap-8">
+          <OptionCard on={d.grantApplication === null} onClick={() => set({ grantApplication: null })} title={f.tx("No application", "Nessuna domanda")} />
+          {GRANTS.map((g) => {
+            const checks = grantChecks(c, g.id);
+            const ok = checks.every((ch) => ch.met);
+            return (
+              <OptionCard
+                key={g.id}
+                on={d.grantApplication === g.id}
+                disabled={!ok}
+                onClick={() => set({ grantApplication: g.id })}
+                title={`${f.L(g.name)} · ${f.money(g.amount)}`}
+                desc={
+                  <>
+                    {f.L(g.description)}
+                    <span className="row wrap gap-4 mt-8">
+                      {checks.map((ch, i) => (
+                        <span key={i} className={`chip ${ch.met ? "good" : "bad"}`}>
+                          <Icon name={ch.met ? "Check" : "X"} size={11} /> {f.L(ch.label)}
+                        </span>
+                      ))}
+                    </span>
+                  </>
+                }
+              />
+            );
+          })}
+        </div>
+      </Card>
+      <Card title={f.tx("Loans", "Prestiti")} icon="Banknote" action={<InfoTip concept="debtVsEquity" />}>
+        <LoanPicker c={c} d={d} set={set} />
+      </Card>
+      {c.acquisitionOffers.length > 0 && (
+        <Card title={f.tx("Acquisition offers", "Offerte di acquisizione")} icon="Handshake" action={<InfoTip concept="exit" />} className="warning">
+          {c.acquisitionOffers.map((o) => {
+            const payouts = waterfall(c, o.value);
+            const fp = founderPayout(c, payouts);
+            return (
+              <div key={o.id} className="list-row">
+                <div className="grow">
+                  <div style={{ fontWeight: 600 }}>
+                    {o.acquirer} · {f.money(o.value)}
+                  </div>
+                  <div className="small muted">
+                    {o.kind === "financial" ? f.tx("Financial buyer", "Acquirente finanziario") : o.kind === "acquihire" ? "Acqui-hire" : f.tx("Strategic acquirer", "Acquirente strategico")} · {f.tx("premium", "premio")} {f.pct(o.premium - 1)} ·{" "}
+                    {f.tx("founders would receive", "i fondatori incasserebbero")} <b>{f.money(fp)}</b>
+                  </div>
+                </div>
+                <Toggle checked={d.acceptAcquisitionId === o.id} onChange={(v) => set({ acceptAcquisitionId: v ? o.id : null })} label={f.tx("Sell", "Vendi")} />
+              </div>
+            );
+          })}
+          <p className="small faint mt-8">{f.tx("Selling ends the game for your company: your final score is fixed at the exit value.", "Vendere chiude il gioco per la tua azienda: il punteggio finale resta fissato al valore dell'exit.")}</p>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+function LoanPicker({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void }) {
+  const f = useFmt();
+  const lenderId = d.loanRequest?.lenderId ?? null;
+  return (
+    <div className="col gap-8">
+      <OptionCard on={!lenderId} onClick={() => set({ loanRequest: null })} title={f.tx("No loan", "Nessun prestito")} />
+      {LENDERS.map((l) => {
+        const lim = loanLimit(c, l);
+        const ok = lim.checks.every((ch) => ch.met) && lim.max > 0;
+        const on = lenderId === l.id;
+        return (
+          <div key={l.id} className="col gap-8">
+            <OptionCard
+              on={on}
+              disabled={!ok}
+              onClick={() => set({ loanRequest: { lenderId: l.id, amount: Math.min(lim.max, Math.max(10_000, Math.round(lim.max / 2 / 1000) * 1000)) } })}
+              title={`${l.name}${ok ? ` · ${f.tx("up to", "fino a")} ${f.money(lim.max)}` : ""}`}
+              desc={
+                <>
+                  {f.L(l.description)}
+                  {!ok && (
+                    <span className="row wrap gap-4 mt-8">
+                      {lim.checks.map((ch, i) => (
+                        <span key={i} className={`chip ${ch.met ? "good" : "bad"}`}>
+                          <Icon name={ch.met ? "Check" : "X"} size={11} /> {f.L(ch.label)}
+                        </span>
+                      ))}
+                    </span>
+                  )}
+                </>
+              }
+            />
+            {on && d.loanRequest && (
+              <SliderField label={f.tx("Amount", "Importo")} value={d.loanRequest.amount} min={10_000} max={Math.max(10_000, lim.max)} step={1_000} onChange={(v) => set({ loanRequest: { lenderId: l.id, amount: v } })} format={(v) => f.money(v)} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function DilemmaTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void }) {
+  const f = useFmt();
+  const dil = c.dilemma!;
+  return (
+    <Card title={f.L(dil.title)} icon="Scale" action={dil.concept ? <InfoTip concept={dil.concept} /> : null}>
+      <p style={{ fontSize: 15 }}>{f.L(dil.description)}</p>
+      <div className="col gap-8 mt-16">
+        {dil.options.map((o) => (
+          <OptionCard key={o.id} on={d.dilemmaChoice === o.id} onClick={() => set({ dilemmaChoice: o.id })} title={f.L(o.label)} desc={f.L(o.description)} />
+        ))}
+      </div>
+      <p className="small faint mt-16">{f.tx("If you do not choose, the most passive option will be applied. Some consequences appear only in later rounds.", "Se non scegli, verrà applicata l'opzione più passiva. Alcune conseguenze si vedono solo nei round successivi.")}</p>
+    </Card>
+  );
+}
+
+function warningsFor(f: Fmt, c: Company, d: Decision, preview: PreviewResult | null): Array<{ tone: "bad" | "warn" | "info"; text: string }> {
+  const out: Array<{ tone: "bad" | "warn" | "info"; text: string }> = [];
+  if (preview) {
+    if (preview.cashEnd < 0) out.push({ tone: "bad", text: f.tx("You will run out of cash during this round. Cut spending, raise money or take a loan.", "Finirai la cassa durante questo round. Taglia le spese, raccogli capitali o chiedi un prestito.") });
+    else if (preview.runway < 3) out.push({ tone: "warn", text: f.tx("Less than 3 months of runway at the end of the round.", "Meno di 3 mesi di runway a fine round.") });
+    if (preview.launched && preview.wtp > 0 && d.price > preview.wtp * 1.3) out.push({ tone: "warn", text: f.tx("Your price is well above customers' willingness to pay.", "Il prezzo è molto sopra la disponibilità a pagare dei clienti.") });
+  }
+  if (!c.product.launched && d.discovery === "none") out.push({ tone: "info", text: f.tx("No customer discovery before launch: you risk building the wrong thing.", "Nessuna customer discovery prima del lancio: rischi di costruire la cosa sbagliata.") });
+  if (c.dilemma && !d.dilemmaChoice) out.push({ tone: "warn", text: f.tx("You have not answered this round's dilemma.", "Non hai risposto al dilemma di questo round.") });
+  if (d.founderHours >= 80 && c.founderStress > 0.6) out.push({ tone: "warn", text: f.tx("80-hour weeks with high stress: burnout risk.", "Settimane da 80 ore con stress alto: rischio burnout.") });
+  return out;
+}
+
+function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview: PreviewResult | null; onEdit: (t: Tab) => void }) {
+  const f = useFmt();
+  const submit = useStore((s) => s.submit);
+  const role = useStore((s) => s.classroomRole);
+  const toast = useStore((s) => s.toast);
+  const game = useGame();
+  const warnings = warningsFor(f, c, d, preview);
+  const oneOff = oneOffCosts(c, d);
+  const rows: Array<[string, string, Tab]> = [
+    [f.tx("R&D", "R&S"), `${f.money(d.rdBudget)}/${f.tx("mo", "mese")}`, "core"],
+    ["Marketing", `${f.money(d.marketingBudget)}/${f.tx("mo", "mese")}`, "core"],
+    ["Ops", `${f.money(d.opsBudget)}/${f.tx("mo", "mese")}`, "core"],
+    [f.tx("Price", "Prezzo"), f.money(d.price, { decimals: d.price < 100 ? 2 : 0 }), "core"],
+    [f.tx("Channel", "Canale"), f.L(GTM_INFO[d.gtm].name), "core"],
+    [f.tx("Development", "Sviluppo"), d.devApproach, "product"],
+    ["Discovery", d.discovery, "product"],
+    [f.tx("Founders' hours", "Ore dei fondatori"), `${d.founderHours}h`, "people"],
+    [f.tx("Hiring offers", "Offerte di assunzione"), String(d.offers.length), "people"],
+    [f.tx("Reputation action", "Azione di reputazione"), f.L(REPUTATION_ACTIONS[d.reputationAction].label), "growth"],
+    [f.tx("Pitches", "Pitch"), String(d.pitches.length), "finance"],
+  ];
+  if (c.dilemma) rows.push([f.tx("Dilemma", "Dilemma"), d.dilemmaChoice ? f.L(c.dilemma.options.find((o) => o.id === d.dilemmaChoice)?.label) : f.tx("not answered", "senza risposta"), "dilemma"]);
+  return (
+    <div className="stack">
+      <Card title={f.tx("Your decisions", "Le tue decisioni")} icon="ListChecks">
+        <table className="table">
+          <tbody>
+            {rows.map(([k, v, t]) => (
+              <tr key={k}>
+                <td className="muted">{k}</td>
+                <td>{v}</td>
+                <td className="right">
+                  {!c.submitted && (
+                    <button className="btn sm ghost" onClick={() => onEdit(t)}>
+                      <Icon name="Pencil" size={13} />
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+            {oneOff > 0 && (
+              <tr>
+                <td className="muted">{f.tx("One-off costs", "Costi una tantum")}</td>
+                <td>{f.money(oneOff)}</td>
+                <td />
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </Card>
+      {warnings.map((w, i) => (
+        <Callout key={i} tone={w.tone}>
+          {w.text}
+        </Callout>
+      ))}
+      {!c.submitted ? (
+        <button
+          className="btn primary lg block"
+          onClick={async () => {
+            submit(c.id);
+            if (role === "team" && (await exportDecisionFile(game, c.id, d))) toast(f.tx("Decision file exported: send it to the instructor.", "File delle decisioni esportato: invialo al docente."), "good");
+          }}
+        >
+          <Icon name={role === "team" ? "Upload" : "Check"} size={18} />
+          {role === "team" ? f.tx("Lock and export the decision file", "Blocca ed esporta il file delle decisioni") : f.tx("Submit decisions", "Invia le decisioni")}
+        </button>
+      ) : role === "team" ? (
+        <div className="stack">
+          <Callout tone="good">{f.tx("Decisions locked. Send the decision file to the instructor; when you receive the new game file, import it from Settings & save.", "Decisioni bloccate. Invia il file delle decisioni al docente; quando ricevi il nuovo file di partita, importalo da Impostazioni e salvataggio.")}</Callout>
+          <button className="btn block" onClick={() => c.decision && void exportDecisionFile(game, c.id, c.decision)}>
+            <Icon name="Upload" size={16} />
+            {f.tx("Export the decision file again", "Esporta di nuovo il file delle decisioni")}
+          </button>
+        </div>
+      ) : (
+        <Callout tone="good">
+          {game.config.mode === "solo"
+            ? f.tx("Decisions submitted. Advance to the next period when you are ready.", "Decisioni inviate. Avanza al periodo successivo quando sei pronto.")
+            : f.tx("Decisions submitted. The instructor will advance the round when all teams are ready.", "Decisioni inviate. Il docente avanzerà il round quando tutti i team saranno pronti.")}
+        </Callout>
+      )}
+    </div>
+  );
+}
