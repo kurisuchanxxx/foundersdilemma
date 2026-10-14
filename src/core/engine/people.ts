@@ -1,4 +1,4 @@
-import { fill, lt, moneyShort } from "../text";
+import { fill, lt, moneyL } from "../text";
 import type { Company, Employee, GameState, RoundReport } from "../types";
 import { departHolder, grantOptions, holderById } from "./captable";
 import { nextId } from "./util";
@@ -17,7 +17,7 @@ export function fireEmployee(_state: GameState, c: Company, empId: string, month
       why === "layoff"
         ? lt("{n} was laid off (severance {s}).", "{n} è stato licenziato per riduzione del personale (liquidazione {s}).")
         : lt("{n} left the company (severance {s}).", "{n} ha lasciato l'azienda (liquidazione {s})."),
-      { n: e.name, s: moneyShort(severance) },
+      { n: e.name, s: moneyL(severance) },
     ),
   });
   return severance;

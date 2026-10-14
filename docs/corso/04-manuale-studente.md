@@ -54,6 +54,8 @@ Prima di inviare guardate la **proiezione** (cassa a fine round, runway, clienti
 
 ## Il primo round, passo per passo
 
+Alla prima partita parte un **tour guidato** di due minuti che mostra dove si trova tutto; potete rivederlo dalla pagina **Impara**.
+
 1. Leggete il **Cruscotto** e la scheda del vostro settore in **Mercato**.
 2. In **Decisioni > Prodotto** scegliete almeno una discovery leggera: nei primi round imparare costa meno che costruire la cosa sbagliata.
 3. In **Budget e prezzo** tenete il burn compatibile con almeno 9-12 mesi di runway.

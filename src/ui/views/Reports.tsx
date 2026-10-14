@@ -6,6 +6,8 @@ import { Icon } from "../components/Icon";
 import { Card, Empty, Segmented } from "../components/ui";
 import { useActiveCompany, useGame } from "../hooks";
 import { useFmt } from "../i18n";
+import { downloadTeamReport } from "../report/teamReport";
+import { useStore } from "../store";
 import { ReportBody } from "./RoundReport";
 
 type Metric = "cash" | "mrr" | "customers" | "valuation" | "founderOwnership" | "runway";
@@ -17,6 +19,7 @@ export function Reports() {
   const reports = c ? game.reports.filter((r) => r.companyId === c.id) : [];
   const [round, setRound] = useState<number | null>(reports.length ? reports[reports.length - 1].round : null);
   const [metric, setMetric] = useState<Metric>("cash");
+  const lang = useStore((s) => s.lang);
   if (!c) return null;
   const report = reports.find((r) => r.round === round);
   const fmt = (v: number) => (metric === "founderOwnership" ? f.pct(v) : metric === "customers" ? f.compact(v) : metric === "runway" ? f.num(Math.min(v, 60), 1) : f.money(v));
@@ -34,10 +37,16 @@ export function Reports() {
           <h1>{f.tx("Round reports", "Report dei round")}</h1>
           <p className="muted">{f.tx("Look back at what happened and why.", "Riguarda cosa è successo e perché.")}</p>
         </div>
-        <button className="btn" onClick={exportCsv} disabled={c.history.length === 0}>
-          <Icon name="FileSpreadsheet" size={16} />
-          {f.tx("Export my history (CSV)", "Esporta il mio storico (CSV)")}
-        </button>
+        <div className="row wrap">
+          <button className="btn" onClick={() => void downloadTeamReport(game, c, lang)} disabled={c.history.length === 0}>
+            <Icon name="FileText" size={16} />
+            {f.tx("Team report (printable)", "Report del team (stampabile)")}
+          </button>
+          <button className="btn" onClick={exportCsv} disabled={c.history.length === 0}>
+            <Icon name="FileSpreadsheet" size={16} />
+            {f.tx("Export my history (CSV)", "Esporta il mio storico (CSV)")}
+          </button>
+        </div>
       </div>
       {c.history.length > 0 && (
         <Card title={f.tx("Trend", "Andamento")} icon="LineChart">

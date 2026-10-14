@@ -48,6 +48,27 @@ export function moneyShort(value: number, symbol = "€"): string {
   return `${sign}${symbol}${Math.round(abs)}`;
 }
 
+function moneyShortIt(value: number, symbol: string): string {
+  const abs = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+  const n = (v: number, d: number) => v.toFixed(d).replace(".", ",");
+  if (abs >= 1e9) return `${sign}${n(abs / 1e9, abs >= 1e10 ? 0 : 1)} Mrd ${symbol}`;
+  if (abs >= 1e6) return `${sign}${n(abs / 1e6, abs >= 1e7 ? 0 : 1)} Mln ${symbol}`;
+  if (abs >= 1e3) return `${sign}${n(abs / 1e3, abs >= 1e4 ? 0 : 1)} k ${symbol}`;
+  return `${sign}${Math.round(abs)} ${symbol}`;
+}
+
+/** Compact money for bilingual messages: "€1.2M" in English, "1,2 Mln €" in Italian. */
+export function moneyL(value: number, symbol = "€"): LText {
+  return { en: moneyShort(value, symbol), it: moneyShortIt(value, symbol) };
+}
+
+/** A decimal number for bilingual messages: "4.5" in English, "4,5" in Italian. */
+export function decL(value: number, digits = 1): LText {
+  const s = value.toFixed(digits);
+  return { en: s, it: s.replace(".", ",") };
+}
+
 export function pct(value: number, digits = 0): string {
   return `${(value * 100).toFixed(digits)}%`;
 }

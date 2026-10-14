@@ -23,6 +23,7 @@ import { Badge, Callout, Card, Empty, InfoTip, Modal, Segmented, SliderField, St
 import { useActiveCompany, useGame, useDraft } from "../hooks";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
+import { instrumentLabel } from "../content/labels";
 import { ExitWaterfall } from "./ExitWaterfall";
 
 export function Funding() {
@@ -108,7 +109,7 @@ export function Funding() {
                     <tr key={r.id}>
                       <td>{r.round}</td>
                       <td>{r.investorName}</td>
-                      <td className="small muted">{r.instrument}</td>
+                      <td className="small muted">{instrumentLabel(f, r.instrument)}</td>
                       <td className="num">{f.money(r.amount)}</td>
                       <td className="num">{r.equityPct ? f.pct(r.equityPct, 1) : "—"}</td>
                     </tr>

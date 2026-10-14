@@ -2,7 +2,7 @@ import { combinedMultipliers } from "../data/founders";
 import { GRANTS, INVESTORS, LENDERS, grantDef, investorDef, lenderDef, type InvestorDef, type LenderDef } from "../data/investors";
 import { SECTORS } from "../data/sectors";
 import type { Rng } from "../rng";
-import { fill, lt, moneyShort, type LText } from "../text";
+import { fill, lt, moneyShort, type LText, moneyL, decL } from "../text";
 import type { Company, Decision, GameState, Instrument, Pitch, PitchResult, RequirementCheck, RoundReport } from "../types";
 import { applyEquityRound, issueWarrants, totalShares } from "./captable";
 import type { SimCtx } from "./context";
@@ -95,7 +95,7 @@ export function investorChecks(state: GameState, c: Company, inv: InvestorDef, f
   if (r.minMvp !== undefined)
     checks.push({ label: fill(lt("MVP at least {v}% complete", "MVP completo almeno al {v}%"), { v: Math.round(r.minMvp * 100) }), met: c.product.launched || c.product.mvpProgress >= r.minMvp, hard: true });
   if (r.minMrr !== undefined)
-    checks.push({ label: fill(lt("Monthly revenue ≥ {v}", "Fatturato mensile ≥ {v}"), { v: moneyShort(r.minMrr) }), met: c.mrr >= r.minMrr, hard: true });
+    checks.push({ label: fill(lt("Monthly revenue ≥ {v}", "Fatturato mensile ≥ {v}"), { v: moneyL(r.minMrr) }), met: c.mrr >= r.minMrr, hard: true });
   if (r.minPmf !== undefined)
     checks.push({ label: fill(lt("PMF score ≥ {v}", "Punteggio PMF ≥ {v}"), { v: r.minPmf }), met: c.pmf.score >= r.minPmf, hard: true });
   if (r.minCustomers !== undefined)
@@ -110,7 +110,7 @@ export function investorChecks(state: GameState, c: Company, inv: InvestorDef, f
     checks.push({ label: fill(lt("Traction: {v}", "Trazione: {v}"), { v: parts.join(" / ") }), met, hard: true });
   }
   if (r.maxValuation !== undefined)
-    checks.push({ label: fill(lt("Valuation below {v}", "Valutazione sotto {v}"), { v: moneyShort(r.maxValuation) }), met: c.valuation <= r.maxValuation, hard: true });
+    checks.push({ label: fill(lt("Valuation below {v}", "Valutazione sotto {v}"), { v: moneyL(r.maxValuation) }), met: c.valuation <= r.maxValuation, hard: true });
   if (r.minRound !== undefined)
     checks.push({ label: fill(lt("From round {v}", "Dal round {v}"), { v: r.minRound }), met: state.round >= r.minRound, hard: true });
   if (r.maxRound !== undefined)
@@ -247,7 +247,7 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
       liquidationPref: inv.liquidationPref,
       note: fill(
         lt("Interested, but at our terms: {a} at {v} {t}.", "Interessati, ma alle nostre condizioni: {a} a {v} {t}."),
-        { a: moneyShort(amount), v: moneyShort(tsValuation), t: p.instrument === "safe" ? "cap" : "pre-money" },
+        { a: moneyL(amount), v: moneyL(tsValuation), t: p.instrument === "safe" ? "cap" : "pre-money" },
       ),
     });
     return {
@@ -256,7 +256,7 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
       outcome: "termSheet",
       reason: fill(
         lt("They sent a term sheet with different terms: {a} at a {v} valuation. Accept it next round if you want it.", "Hanno inviato un term sheet con condizioni diverse: {a} con valutazione {v}. Puoi accettarlo nel prossimo round."),
-        { a: moneyShort(amount), v: moneyShort(tsValuation) },
+        { a: moneyL(amount), v: moneyL(tsValuation) },
       ),
       amount,
       valuation: tsValuation,
@@ -265,8 +265,8 @@ export function evaluatePitch(state: GameState, c: Company, p: Pitch, rng: Rng, 
     };
   }
   let reason: LText;
-  if (rangePenalty > 0) reason = fill(lt("Your ask is outside our usual cheque size ({a}-{b}).", "La tua richiesta è fuori dal nostro ticket abituale ({a}-{b})."), { a: moneyShort(inv.checkMin), b: moneyShort(inv.checkMax) });
-  else if (askRatio > 1.3) reason = fill(lt("Valuation too high: you asked {ask}, we see the company at about {fair}.", "Valutazione troppo alta: hai chiesto {ask}, noi vediamo l'azienda a circa {fair}."), { ask: moneyShort(ask), fair: moneyShort(fair) });
+  if (rangePenalty > 0) reason = fill(lt("Your ask is outside our usual cheque size ({a}-{b}).", "La tua richiesta è fuori dal nostro ticket abituale ({a}-{b})."), { a: moneyL(inv.checkMin), b: moneyL(inv.checkMax) });
+  else if (askRatio > 1.3) reason = fill(lt("Valuation too high: you asked {ask}, we see the company at about {fair}.", "Valutazione troppo alta: hai chiesto {ask}, noi vediamo l'azienda a circa {fair}."), { ask: moneyL(ask), fair: moneyL(fair) });
   else if (c.pmf.score < 45) reason = lt("Not enough evidence of product-market fit yet. Come back with stronger retention.", "Non ci sono ancora abbastanza prove di product-market fit. Tornate con una retention più forte.");
   else if (mods.climate < 0.85) reason = lt("The market is tough right now: we are only doing follow-ons on our portfolio.", "Il mercato è difficile in questo momento: facciamo solo follow-on sul nostro portafoglio.");
   else if (sectorFit < 0) reason = lt("Interesting, but outside our investment thesis.", "Interessante, ma fuori dalla nostra tesi di investimento.");
@@ -292,7 +292,7 @@ export function closeDeal(state: GameState, c: Company, inv: InvestorDef, p: Pit
       id: nextId(state, "fr"), round, investorId: inv.id, investorName: inv.name, type: inv.type, instrument: "safe",
       amount: p.amount, preMoney: null, postMoney: p.valuation, equityPct: p.amount / p.valuation, boardSeat: false,
     });
-    report.lines.push({ kind: "finance", text: fill(lt("SAFE signed with {n}: {a} with a {v} valuation cap.", "SAFE firmato con {n}: {a} con cap di valutazione {v}."), { n: inv.name, a: moneyShort(p.amount), v: moneyShort(p.valuation) }) });
+    report.lines.push({ kind: "finance", text: fill(lt("SAFE signed with {n}: {a} with a {v} valuation cap.", "SAFE firmato con {n}: {a} con cap di valutazione {v}."), { n: inv.name, a: moneyL(p.amount), v: moneyL(p.valuation) }) });
   } else {
     const label = { angel: "Angel", accelerator: "Accelerator", seed: "Seed", seriesA: "Series A", growth: "Series B", corporate: "Strategic", crowdfunding: "Crowd", grant: "Grant", bank: "Loan", ventureDebt: "Debt" }[inv.type];
     const res = applyEquityRound(state, c, {
@@ -329,11 +329,11 @@ export function closeDeal(state: GameState, c: Company, inv: InvestorDef, p: Pit
       text: fill(
         lt("Closed {a} from {n} at {v} pre-money: they now own {p}% of the company.{pool}", "Chiusi {a} da {n} a {v} pre-money: ora possiedono il {p}% dell'azienda.{pool}"),
         {
-          a: moneyShort(p.amount),
+          a: moneyL(p.amount),
           n: inv.name,
-          v: moneyShort(p.valuation),
-          p: (res.investorPct * 100).toFixed(1),
-          pool: res.poolAdded > 0 ? ` (+${((res.poolAdded / totalShares(c.capTable)) * 100).toFixed(1)}% option pool)` : "",
+          v: moneyL(p.valuation),
+          p: decL(res.investorPct * 100, 1),
+          pool: res.poolAdded > 0 ? fill(lt(" (+{x}% option pool)", " (+{x}% di option pool)"), { x: decL((res.poolAdded / totalShares(c.capTable)) * 100, 1) }) : "",
         },
       ),
     });
@@ -391,7 +391,7 @@ export function processGrantApplication(state: GameState, x: SimCtx, round: numb
   c.flags.grantsUsed.push(id);
   if (x.rng.chance(p)) {
     c.pendingGrants.push({ id: nextId(state, "grant"), grantId: id, name: g.name, amount: g.amount, round: round + 1 });
-    x.report.lines.push({ kind: "finance", text: fill(lt("Grant '{g}' approved! {a} will be paid next round.", "Bando '{g}' approvato! {a} verranno erogati il prossimo round."), { g: g.name, a: moneyShort(g.amount) }) });
+    x.report.lines.push({ kind: "finance", text: fill(lt("Grant '{g}' approved! {a} will be paid next round.", "Bando '{g}' approvato! {a} verranno erogati il prossimo round."), { g: g.name, a: moneyL(g.amount) }) });
   } else {
     x.report.lines.push({ kind: "bad", text: fill(lt("Grant '{g}' not approved: the evaluation committee ranked other projects higher.", "Bando '{g}' non approvato: la commissione ha premiato altri progetti."), { g: g.name }) });
   }
@@ -402,7 +402,7 @@ export function payPendingGrants(c: Company, round: number, report: RoundReport)
     c.cash += g.amount;
     c.totalRaised += g.amount;
     c.fundingHistory.push({ id: g.id, round, investorId: g.grantId, investorName: g.name.en, type: "grant", instrument: "grant", amount: g.amount, preMoney: null, postMoney: null, equityPct: 0, boardSeat: false });
-    report.lines.push({ kind: "finance", text: fill(lt("Grant paid: +{a} (non-dilutive).", "Bando erogato: +{a} (non diluitivo)."), { a: moneyShort(g.amount) }) });
+    report.lines.push({ kind: "finance", text: fill(lt("Grant paid: +{a} (non-dilutive).", "Bando erogato: +{a} (non diluitivo)."), { a: moneyL(g.amount) }) });
   }
   c.pendingGrants = c.pendingGrants.filter((x) => x.round > round);
 }
@@ -438,7 +438,7 @@ export function processLoanRequest(state: GameState, x: SimCtx, round: number): 
       kind: "bad",
       text: unmet
         ? fill(lt("{l} declined the loan: {r}.", "{l} ha rifiutato il prestito: {r}."), { l: lender.name, r: unmet.label })
-        : fill(lt("{l} declined: the maximum they can lend you is {m}.", "{l} ha rifiutato: il massimo che può prestarti è {m}."), { l: lender.name, m: moneyShort(max) }),
+        : fill(lt("{l} declined: the maximum they can lend you is {m}.", "{l} ha rifiutato: il massimo che può prestarti è {m}."), { l: lender.name, m: moneyL(max) }),
     });
     return;
   }
@@ -457,7 +457,7 @@ export function processLoanRequest(state: GameState, x: SimCtx, round: number): 
   x.report.lines.push({
     kind: "finance",
     text: fill(lt("Loan from {l}: +{a}, {m} months at {r}% (monthly payment {p}).", "Prestito da {l}: +{a}, {m} mesi al {r}% (rata mensile {p})."), {
-      l: lender.name, a: moneyShort(req.amount), m: n, r: (rate * 100).toFixed(1), p: moneyShort(payment),
+      l: lender.name, a: moneyL(req.amount), m: n, r: decL(rate * 100, 1), p: moneyL(payment),
     }),
   });
 }
@@ -514,7 +514,7 @@ export function handleInsolvency(state: GameState, c: Company, round: number, mo
           "You ran out of cash. {n} rescued the company with {a} for {p}% of the shares, a 2x liquidation preference and a board seat.",
           "Hai finito la cassa. {n} ha salvato l'azienda con {a} in cambio del {p}% delle quote, una liquidation preference 2x e un posto nel CdA.",
         ),
-        { n: RESCUE_INVESTOR, a: moneyShort(amount), p: (res.investorPct * 100).toFixed(0) },
+        { n: RESCUE_INVESTOR, a: moneyL(amount), p: (res.investorPct * 100).toFixed(0) },
       ),
     });
     return;

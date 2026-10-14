@@ -1,6 +1,6 @@
 import { SECTORS } from "../data/sectors";
 import { createPreviewRng, createRng, type Rng } from "../rng";
-import { fill, lt, moneyShort } from "../text";
+import { fill, lt, moneyL } from "../text";
 import type { Company, CustomEventSpec, Decision, Employee, Features, GameEvent, GameState, PreviewResult, RoundReport, SectorId, Snapshot } from "../types";
 import { checkAchievements, finalAchievements } from "./achievements";
 import { botDecision } from "./bots";
@@ -217,7 +217,7 @@ function summaryLines(x: SimCtx): void {
       kind: "info",
       text: fill(
         lt("Revenue this round {r}, {n} new customers, {ch} lost. Monthly revenue now {m}.", "Ricavi del round {r}, {n} nuovi clienti, {ch} persi. Fatturato mensile ora {m}."),
-        { r: moneyShort(x.revenue), n: Math.round(x.newCustomers), ch: Math.round(x.churnedCustomers), m: moneyShort(c.mrr) },
+        { r: moneyL(x.revenue), n: Math.round(x.newCustomers), ch: Math.round(x.churnedCustomers), m: moneyL(c.mrr) },
       ),
     });
   } else {

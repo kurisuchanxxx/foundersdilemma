@@ -1,6 +1,6 @@
 import { SECTORS } from "../data/sectors";
 import type { Rng } from "../rng";
-import { fill, lt, moneyShort } from "../text";
+import { fill, lt, moneyL } from "../text";
 import type { AcquisitionOffer, Company, GameState, RoundReport, SectorId } from "../types";
 import { founderPayout, waterfall } from "./captable";
 import { nextId } from "./util";
@@ -62,7 +62,7 @@ export function executeExit(_state: GameState, c: Company, value: number, acquir
     kind: "good",
     text: fill(
       lt("EXIT! {a} acquired the company for {v}. The founders receive {f} after liquidation preferences and dilution.", "EXIT! {a} ha acquisito l'azienda per {v}. I fondatori ricevono {f} dopo liquidation preference e diluizione."),
-      { a: acquirer, v: moneyShort(value), f: moneyShort(fp) },
+      { a: acquirer, v: moneyL(value), f: moneyL(fp) },
     ),
   });
 }

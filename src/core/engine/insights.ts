@@ -1,5 +1,5 @@
 import { SECTORS } from "../data/sectors";
-import { fill, lt, moneyShort } from "../text";
+import { fill, lt, moneyL, decL } from "../text";
 import type { Company, GameState, Insight, Snapshot } from "../types";
 import { foundersOwnership } from "./captable";
 import { PMF_THRESHOLD } from "./product";
@@ -22,8 +22,8 @@ export function mentorInsights(state: GameState, c: Company, snap: Snapshot): In
   }
   if (c.status === "exited") return out;
 
-  if (snap.runway < 3) add("critical", fill(lt("Only {r} months of runway. Raise money, cut costs or reach break-even now.", "Solo {r} mesi di runway. Raccogli capitali, taglia i costi o raggiungi il pareggio subito."), { r: snap.runway.toFixed(1) }), "runway");
-  else if (snap.runway < 6) add("warn", fill(lt("{r} months of runway: fundraising takes time, start now.", "{r} mesi di runway: il fundraising richiede tempo, inizia ora."), { r: snap.runway.toFixed(1) }), "runway");
+  if (snap.runway < 3) add("critical", fill(lt("Only {r} months of runway. Raise money, cut costs or reach break-even now.", "Solo {r} mesi di runway. Raccogli capitali, taglia i costi o raggiungi il pareggio subito."), { r: decL(snap.runway, 1) }), "runway");
+  else if (snap.runway < 6) add("warn", fill(lt("{r} months of runway: fundraising takes time, start now.", "{r} mesi di runway: il fundraising richiede tempo, inizia ora."), { r: decL(snap.runway, 1) }), "runway");
   else if (snap.netBurn <= 0 && c.product.launched) add("good", lt("You generate more cash than you burn: you control your destiny.", "Generi più cassa di quanta ne bruci: sei padrone del tuo destino."), "defaultAlive");
 
   if (!c.product.launched) {
@@ -36,17 +36,17 @@ export function mentorInsights(state: GameState, c: Company, snap: Snapshot): In
   } else {
     const ratio = snap.cac > 0 ? snap.ltv / snap.cac : 0;
     if (snap.newCustomers > 0 && snap.marketingSpend > 0) {
-      if (ratio < 1) add("critical", fill(lt("LTV/CAC is {r}: you lose money on every customer you buy.", "LTV/CAC è {r}: perdi soldi su ogni cliente che acquisti."), { r: ratio.toFixed(1) }), "ltvCac");
-      else if (ratio < 3) add("warn", fill(lt("LTV/CAC is {r}. Investors look for at least 3.", "LTV/CAC è {r}. Gli investitori cercano almeno 3."), { r: ratio.toFixed(1) }), "ltvCac");
-      else add("good", fill(lt("Healthy unit economics: LTV/CAC = {r}.", "Unit economics sane: LTV/CAC = {r}."), { r: ratio.toFixed(1) }), "ltvCac");
+      if (ratio < 1) add("critical", fill(lt("LTV/CAC is {r}: you lose money on every customer you buy.", "LTV/CAC è {r}: perdi soldi su ogni cliente che acquisti."), { r: decL(ratio, 1) }), "ltvCac");
+      else if (ratio < 3) add("warn", fill(lt("LTV/CAC is {r}. Investors look for at least 3.", "LTV/CAC è {r}. Gli investitori cercano almeno 3."), { r: decL(ratio, 1) }), "ltvCac");
+      else add("good", fill(lt("Healthy unit economics: LTV/CAC = {r}.", "Unit economics sane: LTV/CAC = {r}."), { r: decL(ratio, 1) }), "ltvCac");
       const payback = snap.cac / Math.max(0.01, snap.price * s.grossMargin);
       if (payback > 18) add("warn", fill(lt("CAC payback of {m} months: growth will eat a lot of cash.", "CAC payback di {m} mesi: la crescita consumerà molta cassa."), { m: Math.round(payback) }), "cacPayback");
     }
     if (snap.churn > s.baseChurn * 1.6)
-      add("warn", fill(lt("Monthly churn is {c}%: improve quality, customer success and fit before pushing acquisition.", "Il churn mensile è al {c}%: migliora qualità, customer success e fit prima di spingere l'acquisizione."), { c: (snap.churn * 100).toFixed(1) }), "churn");
+      add("warn", fill(lt("Monthly churn is {c}%: improve quality, customer success and fit before pushing acquisition.", "Il churn mensile è al {c}%: migliora qualità, customer success e fit prima di spingere l'acquisizione."), { c: decL(snap.churn * 100, 1) }), "churn");
     const wtp = estimateWtp(c);
-    if (snap.price > wtp * 1.15) add("warn", fill(lt("Your price ({p}) is above what customers value (~{w}): fewer conversions, more churn.", "Il tuo prezzo ({p}) è sopra il valore percepito (~{w}): meno conversioni, più churn."), { p: moneyShort(snap.price), w: moneyShort(wtp) }), "pricing");
-    else if (snap.price < wtp * 0.7) add("info", fill(lt("Customers would probably pay more than {p}: you may be leaving money on the table.", "I clienti probabilmente pagherebbero più di {p}: potresti lasciare soldi sul tavolo."), { p: moneyShort(snap.price) }), "pricing");
+    if (snap.price > wtp * 1.15) add("warn", fill(lt("Your price ({p}) is above what customers value (~{w}): fewer conversions, more churn.", "Il tuo prezzo ({p}) è sopra il valore percepito (~{w}): meno conversioni, più churn."), { p: moneyL(snap.price), w: moneyL(wtp) }), "pricing");
+    else if (snap.price < wtp * 0.7) add("info", fill(lt("Customers would probably pay more than {p}: you may be leaving money on the table.", "I clienti probabilmente pagherebbero più di {p}: potresti lasciare soldi sul tavolo."), { p: moneyL(snap.price) }), "pricing");
     const seg = segmentFor(sectorPenetration(state, s));
     if ((seg === "earlyMajority" || seg === "lateMajority") && c.pmf.score < CHASM_PMF)
       add("warn", lt("Your market is moving to the early majority, which only buys proven products: you are in the chasm.", "Il tuo mercato sta passando alla maggioranza anticipatrice, che compra solo prodotti provati: sei nel 'chasm'."), "chasm");
