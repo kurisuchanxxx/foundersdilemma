@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useMemo } from "react";
 import {
   APPROACH,
   DISCOVERY,
@@ -35,9 +35,9 @@ import { Badge, Callout, Card, InfoTip, OptionCard, Progress, Segmented, SliderF
 import { useActiveCompany, useGame, useDraft } from "../hooks";
 import { useFmt, type Fmt } from "../i18n";
 import { exportDecisionFile } from "../classroom";
-import { useStore } from "../store";
+import { useStore, type DecisionTab } from "../store";
 
-type Tab = "core" | "product" | "people" | "growth" | "finance" | "dilemma" | "review";
+type Tab = DecisionTab;
 
 export function Decisions() {
   const f = useFmt();
@@ -45,7 +45,8 @@ export function Decisions() {
   const c = useActiveCompany();
   const draft = useDraft(c);
   const update = useStore((s) => s.updateDraft);
-  const [tab, setTab] = useState<Tab>("core");
+  const storedTab = useStore((s) => s.decisionsTab);
+  const setTab = useStore((s) => s.setDecisionsTab);
   const deferred = useDeferredValue(draft);
   const preview = useMemo(() => (c && deferred && c.status === "active" ? previewDecision(game, c.id, deferred) : null), [game, c, deferred]);
   if (!c || !draft) return null;
@@ -62,6 +63,7 @@ export function Decisions() {
       </div>
     );
   }
+  const tab: Tab = storedTab === "dilemma" && !c.dilemma ? "core" : storedTab;
   const locked = c.submitted;
   const set = (patch: Partial<Decision>) => update(c.id, patch);
   const features = featuresFor(game.config);
@@ -90,7 +92,9 @@ export function Decisions() {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(250px, 300px)", gap: 16, alignItems: "start" }} className="decisions-grid">
         <div style={{ minWidth: 0 }}>
-          <Tabs value={tab} tabs={tabs} onChange={setTab} />
+          <div data-tour="decision-tabs">
+            <Tabs value={tab} tabs={tabs} onChange={setTab} />
+          </div>
           <fieldset disabled={locked} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
             {tab === "core" && <CoreTab c={c} d={draft} set={set} preview={preview} />}
             {tab === "product" && <ProductTab c={c} d={draft} set={set} techDebt={features.techDebt} />}
@@ -149,7 +153,7 @@ function PreviewPanel({ c, preview }: { c: Company; preview: PreviewResult | nul
   if (!preview) return null;
   const runwayTone = preview.runway < 3 ? "bad" : preview.runway < 6 ? "warn" : "good";
   return (
-    <Card title={f.tx("Projection (what if)", "Proiezione (what if)")} icon="Gauge">
+    <Card title={f.tx("Projection (what if)", "Proiezione (what if)")} icon="Gauge" tour="projection">
       <p className="small faint" style={{ marginTop: -6, marginBottom: 12 }}>
         {f.tx("Expected values at the end of the round, without random events, assuming your offers are accepted and no new funding.", "Valori attesi a fine round, senza eventi casuali, ipotizzando offerte accettate e nessun nuovo finanziamento.")}
       </p>
@@ -228,7 +232,7 @@ function CoreTab({ c, d, set, preview }: { c: Company; d: Decision; set: (p: Par
   const priceRatio = d.price / wtp;
   return (
     <div className="stack">
-      <Card title={f.tx("Monthly budgets", "Budget mensili")} icon="Wallet">
+      <Card title={f.tx("Monthly budgets", "Budget mensili")} icon="Wallet" tour="budgets">
         <div className="col gap-16">
           <SliderField
             label={f.tx("R&D: contractors, tools, cloud", "R&S: contractor, strumenti, cloud")}
@@ -377,7 +381,7 @@ function ProductTab({ c, d, set, techDebt }: { c: Company; d: Decision; set: (p:
           ))}
         </div>
       </Card>
-      <Card title={f.tx("Customer discovery", "Customer discovery")} icon="MessagesSquare" action={<InfoTip concept="customerDiscovery" />}>
+      <Card title={f.tx("Customer discovery", "Customer discovery")} icon="MessagesSquare" action={<InfoTip concept="customerDiscovery" />} tour="discovery">
         <div className="grid cols-3" style={{ gap: 8 }}>
           {(["none", "light", "deep"] as DiscoveryLevel[]).map((a) => (
             <OptionCard key={a} on={d.discovery === a} onClick={() => set({ discovery: a })} title={discText[a][0]} desc={discText[a][1]} />
@@ -540,7 +544,7 @@ function FinanceTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<D
           ))}
         </Card>
       )}
-      <Card title={f.tx("Grants (non-dilutive)", "Bandi (non diluitivi)")} icon="Landmark" action={<InfoTip concept="grants" />}>
+      <Card title={f.tx("Grants (non-dilutive)", "Bandi (non diluitivi)")} icon="Landmark" action={<InfoTip concept="grants" />} tour="grants">
         <div className="col gap-8">
           <OptionCard on={d.grantApplication === null} onClick={() => set({ grantApplication: null })} title={f.tx("No application", "Nessuna domanda")} />
           {GRANTS.map((g) => {
@@ -729,6 +733,7 @@ function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview
       {!c.submitted ? (
         <button
           className="btn primary lg block"
+          data-tour="submit"
           onClick={async () => {
             submit(c.id);
             if (role === "team" && (await exportDecisionFile(game, c.id, d))) toast(f.tx("Decision file exported: send it to the instructor.", "File delle decisioni esportato: invialo al docente."), "good");
