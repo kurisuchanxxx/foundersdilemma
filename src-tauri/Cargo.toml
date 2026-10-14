@@ -3,6 +3,7 @@ name = "founders-dilemma"
 version = "2.0.0"
 description = "Founder's Dilemma: a startup venturing business simulation for the classroom"
 authors = ["Founder's Dilemma contributors"]
+license = "PolyForm-Noncommercial-1.0.0"
 edition = "2021"
 rust-version = "1.77.2"
 

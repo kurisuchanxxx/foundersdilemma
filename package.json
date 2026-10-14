@@ -3,6 +3,7 @@
   "private": true,
   "version": "2.0.0",
   "description": "Founder's Dilemma: a startup venturing business simulation for the classroom (macOS, Windows, web).",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
