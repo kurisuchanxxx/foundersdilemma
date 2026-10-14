@@ -193,9 +193,10 @@ function TopBar({ company, label, onAdvance, draftsPending }: { company: Company
   const setView = useStore((s) => s.setView);
   const timerEndsAt = useStore((s) => s.timerEndsAt);
   const revealed = useStore((s) => s.revealedCompanyId);
+  const view = useStore((s) => s.view);
   const [confirmAdvance, setConfirmAdvance] = useState(false);
   const mode = game.config.mode;
-  const showCompanyStats = company && (mode !== "hotseat" || revealed === company.id || role === "team");
+  const showCompanyStats = company && view !== "instructor" && (mode !== "hotseat" || revealed === company.id || role === "team");
   const last = company?.history[company.history.length - 1];
   const ready = game.companies.filter((c) => !c.isBot && c.status === "active");
   const submitted = ready.filter((c) => c.submitted).length;
