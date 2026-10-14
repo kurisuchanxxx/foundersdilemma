@@ -21,6 +21,7 @@ export function Home() {
   const [saves, setSaves] = useState<SaveMeta[]>([]);
   const [showLoad, setShowLoad] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   const refresh = () => void listSaves().then(setSaves);
   useEffect(refresh, []);
@@ -133,17 +134,27 @@ export function Home() {
                 <button className="btn sm primary" onClick={() => open(s)}>
                   {f.tx("Open", "Apri")}
                 </button>
-                <button
-                  className="icon-btn"
-                  aria-label="Delete"
-                  onClick={async () => {
-                    if (!confirm(f.tx("Delete this save?", "Eliminare questo salvataggio?"))) return;
-                    await deleteSave(s.id);
-                    refresh();
-                  }}
-                >
-                  <Icon name="Trash2" size={16} />
-                </button>
+                {confirmDelete === s.id ? (
+                  <>
+                    <button
+                      className="btn sm danger"
+                      onClick={async () => {
+                        await deleteSave(s.id);
+                        setConfirmDelete(null);
+                        refresh();
+                      }}
+                    >
+                      {f.tx("Delete", "Elimina")}
+                    </button>
+                    <button className="btn sm ghost" onClick={() => setConfirmDelete(null)}>
+                      {f.tx("Keep", "Annulla")}
+                    </button>
+                  </>
+                ) : (
+                  <button className="icon-btn" aria-label={f.tx("Delete this save", "Elimina questo salvataggio")} onClick={() => setConfirmDelete(s.id)}>
+                    <Icon name="Trash2" size={16} />
+                  </button>
+                )}
               </div>
             ))}
           </div>

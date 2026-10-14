@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { ACHIEVEMENTS, PMF_THRESHOLD, SECTORS, decisionsCsv, historyCsv, standings, standingsCsv, type Company } from "../../core";
-import { saveTextFile } from "../../platform/files";
+import { isFramed, saveTextFile } from "../../platform/files";
 import { LineChart, Scatter } from "../components/charts";
 import { Icon } from "../components/Icon";
 import { Badge, Callout, Card, InfoTip, Logo } from "../components/ui";
@@ -29,10 +29,12 @@ export function Results() {
           <p className="muted">{game.config.sessionName || game.config.seed}</p>
         </div>
         <div className="row wrap no-print">
-          <button className="btn" onClick={() => window.print()}>
-            <Icon name="Printer" size={16} />
-            {f.tx("Print / PDF", "Stampa / PDF")}
-          </button>
+          {!isFramed() && (
+            <button className="btn" onClick={() => window.print()}>
+              <Icon name="Printer" size={16} />
+              {f.tx("Print / PDF", "Stampa / PDF")}
+            </button>
+          )}
           {role !== "team" && (
             <>
               <button className="btn" onClick={() => saveTextFile(`${game.config.seed}_standings.csv`, standingsCsv(game, lang), [{ name: "CSV", extensions: ["csv"] }], "text/csv")}>
