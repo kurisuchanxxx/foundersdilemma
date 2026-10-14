@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Founder's Dilemma",
+  "productName": "Founder’s Dilemma",
   "mainBinaryName": "founders-dilemma",
   "version": "2.0.0",
   "identifier": "com.foundersdilemma.desktop",
