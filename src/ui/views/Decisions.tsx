@@ -240,7 +240,7 @@ function CoreTab({ c, d, set, preview }: { c: Company; d: Decision; set: (p: Par
             format={(v) => `${f.money(v)}/${f.tx("mo", "mese")}`}
             hint={f.tx(
               `Adds ≈${contractorPts.toFixed(1)} development points/month on top of your team (${cap.devPower.toFixed(1)} total). The first €1k covers tools. Contractors create more tech debt than employees.`,
-              `Aggiunge ≈${contractorPts.toFixed(1)} punti di sviluppo/mese oltre al team (${cap.devPower.toFixed(1)} in totale). I primi 1k€ coprono gli strumenti. I contractor creano più debito tecnico dei dipendenti.`,
+              `Aggiunge ≈${f.num(contractorPts, 1)} punti di sviluppo/mese oltre al team (${f.num(cap.devPower, 1)} in totale). I primi 1k€ coprono gli strumenti. I contractor creano più debito tecnico dei dipendenti.`,
             )}
           />
           <SliderField

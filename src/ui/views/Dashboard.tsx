@@ -136,7 +136,7 @@ export function Dashboard() {
               <Stat label={f.tx("Monthly churn", "Churn mensile")} concept="churn" value={f.pct(c.churn, 1)} deltaGood={false} delta={change(last?.churn, prev?.churn)} />
               <Stat label="CAC" concept="cac" value={f.money(c.cac)} />
               <Stat label="LTV" concept="ltv" value={f.money(c.ltv)} />
-              <Stat label="LTV / CAC" concept="ltvCac" value={c.cac > 0 ? `${(c.ltv / c.cac).toFixed(1)}×` : "—"} tone={c.cac > 0 ? (c.ltv / c.cac >= 3 ? "good" : c.ltv / c.cac < 1 ? "bad" : "warn") : undefined} />
+              <Stat label="LTV / CAC" concept="ltvCac" value={c.cac > 0 ? `${f.num(c.ltv / c.cac, 1)}×` : "—"} tone={c.cac > 0 ? (c.ltv / c.cac >= 3 ? "good" : c.ltv / c.cac < 1 ? "bad" : "warn") : undefined} />
             </div>
           ) : (
             <div className="col gap-12">

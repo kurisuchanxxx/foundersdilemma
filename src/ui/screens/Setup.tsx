@@ -484,7 +484,7 @@ function ArchetypeMults({ archetype }: { archetype: Archetype }) {
       <span className="row wrap gap-4">
         {items.map(([k, v]) => (
           <span key={k} className={`chip ${v > 1 ? "good" : v < 1 ? "bad" : ""}`} style={{ fontSize: 11, padding: "0 6px" }}>
-            {k} {v.toFixed(1)}×
+            {k} {f.num(v, 1)}×
           </span>
         ))}
       </span>
