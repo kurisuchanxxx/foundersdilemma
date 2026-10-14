@@ -16,7 +16,8 @@
     "balance": "vite-node scripts/balance.ts",
     "tauri": "tauri",
     "desktop:dev": "tauri dev",
-    "desktop:build": "tauri build"
+    "desktop:build": "tauri build",
+    "e2e": "node tests/e2e/smoke.mjs http://localhost:1420/ test-results/screens && node tests/e2e/classroom.mjs http://localhost:1420/ test-results/classroom"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.12.3",
