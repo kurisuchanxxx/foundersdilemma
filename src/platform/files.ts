@@ -9,8 +9,42 @@ export interface FileFilter {
   extensions: string[];
 }
 
+/** True when the page runs inside another page (for example an online viewer), where printing is unavailable. */
+export function isFramed(): boolean {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
+interface HostDownloads {
+  save(req: { filename: string; data: string }): Promise<unknown>;
+}
+
+/** Online viewers that block plain downloads may offer a save capability instead. */
+async function hostDownloads(): Promise<HostDownloads | null> {
+  const host = (window as unknown as { claude?: { use?: (name: string) => Promise<unknown> } }).claude;
+  if (!host?.use) return null;
+  try {
+    return (await host.use("downloads")) as HostDownloads | null;
+  } catch {
+    return null;
+  }
+}
+
 /** Saves text to a file chosen by the user. Returns false if cancelled. */
 export async function saveTextFile(defaultName: string, contents: string, filters: FileFilter[], mime = "application/json"): Promise<boolean> {
+  const hosted = await hostDownloads();
+  if (hosted) {
+    try {
+      await hosted.save({ filename: defaultName, data: contents });
+      return true;
+    } catch (e) {
+      console.warn("Save not completed", e);
+      return false;
+    }
+  }
   if (isDesktop()) {
     try {
       const { save } = await import("@tauri-apps/plugin-dialog");

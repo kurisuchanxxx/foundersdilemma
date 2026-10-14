@@ -121,6 +121,9 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 ### Giornata intensiva (6-7 ore)
 Complessità **Standard** o **Essenziale**, 6-8 round con piano **Semestri**. Mattina: fondazione, 3 round con mini-lezioni da 15'. Pomeriggio: 3-4 round, debriefing finale e presentazioni brevi. Valutazione: un solo report finale.
 
+### Percorso breve per corsi privati (4 incontri da 3 ore)
+Per manager e professionisti in formazione serale o nel fine settimana. Complessità **Standard**, 8 round con piano **4 trimestri, poi semestri**. Incontro 1: fondazione e round 1-2 (temi degli incontri 1 e 2). Incontro 2: round 3-4, go-to-market ed economia unitaria. Incontro 3: round 5-6, persone e finanziamento. Incontro 4: round 7-8, exit, debriefing finale e presentazioni. Al posto della valutazione a voto: decision memo condivisi in aula e un post-mortem di team presentato all'ultimo incontro.
+
 ### Due settimane, con round a distanza
 Gli incontri 2-5 si alternano a round giocati a casa: il docente condivide il file di partita su Moodle, i team inviano il file di decisioni entro una scadenza, il docente importa, avanza e ripubblica (vedi [Guida per il docente](03-guida-docente.md)).
 
