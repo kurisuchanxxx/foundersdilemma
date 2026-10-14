@@ -52,6 +52,10 @@ export interface InvestorDef {
   /** Option pool the investor requires (fraction of post-money), created before the round. */
   poolTopUp: number;
   liquidationPref: number;
+  /** Most new companies the investor backs in one round (pitches compete for these slots). */
+  dealsPerRound?: number;
+  /** Capital the investor can deploy in this game, across all companies. */
+  capital?: number;
   /** Investor reputation gained by the startup when the deal closes. */
   repBoost: number;
   perks: InvestorPerk[];
@@ -65,6 +69,8 @@ export interface InvestorDef {
 export const INVESTORS: InvestorDef[] = [
   {
     id: "angel_marta",
+    dealsPerRound: 2,
+    capital: 1_000_000,
     name: "Marta Ferri",
     type: "angel",
     tagline: lt("Business angel, ex-founder (fintech exit)", "Business angel, ex fondatrice (exit fintech)"),
@@ -94,6 +100,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "angel_mark",
+    dealsPerRound: 2,
+    capital: 1_500_000,
     name: "Mark Johnson",
     type: "angel",
     tagline: lt("Angel investor, early employee at a social app", "Business angel, tra i primi dipendenti di un social network"),
@@ -123,6 +131,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "angel_lisa",
+    dealsPerRound: 2,
+    capital: 1_500_000,
     name: "Dr. Lisa Wang",
     type: "angel",
     tagline: lt("Physician and health innovation angel", "Medico e angel dell'innovazione sanitaria"),
@@ -153,6 +163,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "angels_club",
+    dealsPerRound: 3,
+    capital: 3_000_000,
     name: "Club Angeli del Nord",
     type: "angel",
     tagline: lt("Business angel syndicate (generalist)", "Network di business angel (generalista)"),
@@ -179,6 +191,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "accelerator_launchlab",
+    dealsPerRound: 3,
+    capital: 1_800_000,
     name: "LaunchLab Accelerator",
     type: "accelerator",
     tagline: lt("3-month accelerator program with Demo Day", "Programma di accelerazione di 3 mesi con Demo Day"),
@@ -210,6 +224,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "seed_aurora",
+    dealsPerRound: 3,
+    capital: 14_000_000,
     name: "Aurora Seed Fund",
     type: "seed",
     tagline: lt("Seed VC fund, generalist", "Fondo VC seed, generalista"),
@@ -236,6 +252,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "seed_bluefield",
+    dealsPerRound: 2,
+    capital: 16_000_000,
     name: "Bluefield Ventures",
     type: "seed",
     tagline: lt("Deep-tech and AI seed fund", "Fondo seed deep-tech e AI"),
@@ -263,6 +281,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "corporate_nimbus",
+    dealsPerRound: 2,
+    capital: 24_000_000,
     name: "Nimbus Ventures",
     type: "corporate",
     tagline: lt("Corporate VC of a global cloud provider", "Corporate VC di un grande provider cloud"),
@@ -294,6 +314,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "seriesA_peak",
+    dealsPerRound: 2,
+    capital: 40_000_000,
     name: "Peak Capital",
     type: "seriesA",
     tagline: lt("Series A VC fund, generalist", "Fondo VC Series A, generalista"),
@@ -320,6 +342,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "seriesA_meridian",
+    dealsPerRound: 2,
+    capital: 40_000_000,
     name: "Meridian Partners",
     type: "seriesA",
     tagline: lt("B2B-focused Series A fund", "Fondo Series A specializzato B2B"),
@@ -347,6 +371,8 @@ export const INVESTORS: InvestorDef[] = [
   },
   {
     id: "growth_titan",
+    dealsPerRound: 1,
+    capital: 120_000_000,
     name: "Titan Growth Partners",
     type: "growth",
     tagline: lt("Growth equity for scale-ups", "Growth equity per scale-up"),

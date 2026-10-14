@@ -74,6 +74,12 @@ Il debriefing è il momento in cui si impara davvero. Una struttura in tre passi
 2. **Perché?** Collegate i risultati a un concetto: *il vostro CAC è salito perché il settore ha superato gli early adopter e il vostro PMF era sotto 55: questo è il chasm*. Aprite la scheda corrispondente in *Impara*.
 3. **E nella realtà?** Un caso reale o una domanda: *quale startup conoscete che ha scalato prima del PMF?*
 
+Le meccaniche di interazione danno ottimi spunti di debriefing:
+
+- **Investitori contesi**: quando due team fanno pitch allo stesso investitore e uno resta fuori, il report lo dice esplicitamente. È il momento per parlare di *dry powder* e di come gli investitori confrontano le opportunità.
+- **Partnership e acquisizioni tra team** (scheda *Altri team*): fate raccontare la trattativa. Chi ha proposto, chi ha accettato e perché? In un'acquisizione, il prezzo era giusto rispetto al waterfall dei venditori e alla cassa del compratore?
+- **Concorrenti esterni**: le loro mosse compaiono nelle notizie a inizio round. Chiedete ai team del settore colpito come hanno reagito (prezzo, valore, nicchia).
+
 Evitate di premiare solo il primo in classifica: valorizzate le decisioni ben argomentate anche quando l'esito è stato sfortunato (la simulazione contiene incertezza di proposito).
 
 ## 5. Problemi frequenti

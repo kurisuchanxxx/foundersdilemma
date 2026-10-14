@@ -1,7 +1,7 @@
-import { CHASM_PMF, SECTORS, SEGMENTS, competitionFactor, effectiveModifiers, estimateWtp, sectorPenetration, segmentFor, type Segment } from "../../core";
+import { CHASM_PMF, PRICING_INFO, SECTORS, SEGMENTS, SEGMENT_INFO, competitionFactor, effectiveModifiers, estimateWtp, sectorPenetration, segmentFor, strategyEffects, type Segment } from "../../core";
 import { LineChart } from "../components/charts";
 import { Icon } from "../components/Icon";
-import { Badge, Callout, Card, InfoTip, Logo, Stat } from "../components/ui";
+import { Badge, Callout, Card, InfoTip, Logo, Progress, Stat } from "../components/ui";
 import { useActiveCompany, useGame } from "../hooks";
 import { useFmt } from "../i18n";
 
@@ -19,6 +19,15 @@ export function Market() {
   const wtp = estimateWtp(c) * mods.wtp;
   const payback = c.cac > 0 ? c.cac / Math.max(0.01, c.price * s.grossMargin) : 0;
   const segs = Object.keys(SEGMENTS) as Segment[];
+  const fx = strategyEffects(c);
+  const named = game.markets[c.sector].rivals ?? [];
+  const reachable = s.tam * mods.demand * fx.tam;
+  const strategyNotes = Object.entries(fx.mods)
+    .filter(([k, v]) => (k === "gm" ? v !== 0 : Math.abs((v as number) - 1) > 0.005))
+    .map(([k, v]) => describeEffect(f, k, v as number));
+  if (fx.pmfLearn !== 1) strategyNotes.unshift(f.tx(`PMF learning +${Math.round((fx.pmfLearn - 1) * 100)}%`, `apprendimento PMF +${Math.round((fx.pmfLearn - 1) * 100)}%`));
+  if (fx.elasticity !== 1) strategyNotes.push(f.tx(`price sensitivity −${Math.round((1 - fx.elasticity) * 100)}%`, `sensibilità al prezzo −${Math.round((1 - fx.elasticity) * 100)}%`));
+  if (fx.salesDep > 0) strategyNotes.push(f.tx("needs more salespeople", "servono più venditori"));
   const activeMods = [...game.globalModifiers.filter((m) => (!m.sectors || m.sectors.includes(c.sector)) && m.untilRound >= game.round && (m.fromRound ?? 0) <= game.round), ...c.modifiers.filter((m) => m.untilRound >= game.round)];
 
   return (
@@ -33,7 +42,11 @@ export function Market() {
       </div>
       <div className="grid cols-4">
         <Card>
-          <Stat label={f.tx("Addressable market", "Mercato indirizzabile")} value={f.compact(s.tam * mods.demand)} sub={f.tx("potential customers", "clienti potenziali")} />
+          <Stat
+            label={f.tx("Addressable market", "Mercato indirizzabile")}
+            value={f.compact(s.tam * mods.demand)}
+            sub={fx.tam < 1 ? `${f.tx("you can reach", "raggiungibili da te")} ${f.compact(reachable)} (${f.L(SEGMENT_INFO[c.segment].label)})` : f.tx("potential customers", "clienti potenziali")}
+          />
         </Card>
         <Card>
           <Stat label={f.tx("Sector penetration", "Penetrazione del settore")} value={f.pct(pen, pen < 0.1 ? 2 : 1)} sub={`${f.compact(sectorCustomers)} ${f.tx("customers, all players", "clienti, tutti i giocatori")}`} />
@@ -111,6 +124,60 @@ export function Market() {
               </div>
             ))
           )}
+        </Card>
+      </div>
+
+      <div className="grid cols-2">
+        <Card title={f.tx("Your strategy", "La tua strategia")} icon="Crosshair" action={<InfoTip concept="beachhead" />}>
+          <div className="kv">
+            <span>{f.tx("Target customers", "Clienti obiettivo")}</span>
+            <span>{f.L(SEGMENT_INFO[c.segment].label)}</span>
+            <span>{f.tx("Pricing model", "Modello di prezzo")}</span>
+            <span>
+              {f.L(PRICING_INFO[c.pricingModel].label)} <InfoTip concept="pricingModel" />
+            </span>
+            <span>{f.tx("Reachable market", "Mercato raggiungibile")}</span>
+            <span>
+              {f.compact(reachable)} {f.tx("customers", "clienti")} ({f.pct(fx.tam)})
+            </span>
+          </div>
+          {reachable > 0 && c.customers > 0 && (
+            <div className="mt-8">
+              <div className="row between tiny faint">
+                <span>{f.tx("Your customers out of the reachable market", "I tuoi clienti sul mercato raggiungibile")}</span>
+                <span className="num">{f.pct(c.customers / reachable, c.customers / reachable < 0.1 ? 1 : 0)}</span>
+              </div>
+              <Progress value={c.customers / reachable} thin tone={c.customers / reachable > 0.6 ? "warn" : undefined} />
+            </div>
+          )}
+          <p className="small faint mt-8">{strategyNotes.length > 0 ? strategyNotes.join(" · ") : f.tx("The reference strategy: no adjustments.", "La strategia di riferimento: nessun aggiustamento.")}</p>
+          {c.segment === "niche" && reachable > 0 && c.customers / reachable > 0.6 && (
+            <Callout tone="warn">{f.tx("You are saturating your niche: time to widen the target (Decisions, Product).", "State saturando la nicchia: è il momento di allargare l'obiettivo (Decisioni, Prodotto).")}</Callout>
+          )}
+        </Card>
+        <Card title={f.tx("Competitors outside the game", "Concorrenti esterni alla partita")} icon="Swords" action={<InfoTip concept="competitorMoves" />}>
+          {named.length === 0 ? (
+            <p className="muted">{f.tx("No named competitor yet.", "Ancora nessun concorrente noto.")}</p>
+          ) : (
+            named.map((r) => (
+              <div key={r.id} className="list-row" style={{ alignItems: "flex-start", opacity: r.active ? 1 : 0.6 }}>
+                <Icon name={r.active ? "Building2" : "X"} size={16} className={r.active ? "accent" : "faint"} />
+                <div className="grow">
+                  <div className="row between">
+                    <span style={{ fontWeight: 600 }}>{r.name}</span>
+                    {r.active ? <span className="tiny faint">{f.tx("strength", "forza")}</span> : <Badge>{f.tx("closed", "chiuso")}</Badge>}
+                  </div>
+                  {r.active && <Progress value={r.strength} thin tone={r.strength > 0.7 ? "bad" : r.strength > 0.45 ? "warn" : undefined} />}
+                  {r.lastMove && (
+                    <div className="small muted mt-4">
+                      {f.tx("Round", "Round")} {r.lastMoveRound}: {f.L(r.lastMove)}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+          <p className="small faint mt-8">{`${game.markets[c.sector].npcCompetitors} ${f.tx("smaller companies also compete in the sector.", "aziende minori competono anche nel settore.")}`}</p>
         </Card>
       </div>
 

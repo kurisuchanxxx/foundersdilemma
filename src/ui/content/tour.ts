@@ -52,8 +52,8 @@ export const TOUR: TourStep[] = [
     target: "decision-tabs",
     title: ["This round's decisions", "Le decisioni del round"],
     body: [
-      "Decisions are split into tabs: budget and price, product, founders and team, reputation, finance. When a founder's dilemma arrives it gets its own tab.",
-      "Le decisioni sono divise in schede: budget e prezzo, prodotto, fondatori e team, reputazione, finanza. Quando arriva un dilemma del fondatore compare una scheda dedicata.",
+      "Decisions are split into tabs: budget and price, product, founders and team, reputation, finance, other teams (partnerships and acquisitions). When a founder's dilemma arrives it gets its own tab.",
+      "Le decisioni sono divise in schede: budget e prezzo, prodotto, fondatori e team, reputazione, finanza, altri team (partnership e acquisizioni). Quando arriva un dilemma del fondatore compare una scheda dedicata.",
     ],
   },
   {
@@ -74,6 +74,16 @@ export const TOUR: TourStep[] = [
     body: [
       "Every change updates the expected cash, runway and PMF at the end of the round. It shows the trend, not the surprises: random events stay hidden.",
       "Ogni modifica aggiorna cassa, runway e PMF attesi a fine round. Mostra la tendenza, non le sorprese: gli eventi casuali restano nascosti.",
+    ],
+  },
+  {
+    view: "decisions",
+    tab: "product",
+    target: "segment",
+    title: ["Who are your customers?", "Chi sono i tuoi clienti?"],
+    body: [
+      "A niche learns faster and wins customers cheaply, but the market is smaller; premium customers pay more but want quality. Choose before launch: changing later costs customers.",
+      "Una nicchia fa imparare più in fretta e costa meno conquistarla, ma il mercato è più piccolo; i clienti premium pagano di più ma vogliono qualità. Scegli prima del lancio: cambiare dopo costa clienti.",
     ],
   },
   {

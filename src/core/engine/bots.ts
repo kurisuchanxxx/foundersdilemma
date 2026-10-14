@@ -189,6 +189,33 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
     }
   }
 
+  // Strategy: lean bots start from a beachhead niche and widen after product-market fit
+  if (c.botStyle === "lean") d.targetSegment = launched && c.pmf.score >= 65 ? "broad" : "niche";
+  else if (c.botStyle === "steady") d.targetSegment = s.salesDependence >= 0.7 ? "premium" : "broad";
+  else d.targetSegment = "broad";
+  d.pricingModel = c.botStyle === "blitz" && s.virality >= 0.01 ? "freemium" : c.botStyle === "steady" && c.sector === "aiinfra" ? "usage" : "subscription";
+
+  // Other teams: answer partnership proposals, sometimes propose one or bid for a struggling rival
+  const others = state.companies.filter((o) => o.id !== c.id && o.status === "active");
+  d.acceptPartnershipIds = (c.partnershipOffers ?? []).filter((o) => o.validRound >= state.round && others.some((x) => x.id === o.fromCompanyId) && rng.chance(0.7)).map((o) => o.id);
+  d.partnershipProposals = [];
+  if (c.botStyle === "steady" && launched && rng.chance(0.15)) {
+    const partners = others.filter((o) => o.sector !== c.sector && !(c.partnerships ?? []).some((p) => p.partnerId === o.id && p.untilRound >= state.round));
+    if (partners.length > 0) d.partnershipProposals = [rng.pick(partners).id];
+  }
+  d.acquisitionBid = null;
+  if (c.botStyle !== "lean" && launched && runway > 10 && rng.chance(0.25)) {
+    // a struggling or weaker company that costs at most half of the cash
+    const targets = others.filter((o) => {
+      const r = o.history[o.history.length - 1]?.runway ?? 99;
+      return o.valuation * 1.1 <= c.cash * 0.6 && (r < 6 || o.pmf.score < c.pmf.score - 10) && (o.sector === c.sector || o.product.quality > c.product.quality);
+    });
+    if (targets.length > 0) {
+      const t = rng.pick(targets);
+      d.acquisitionBid = { targetId: t.id, amount: Math.round((t.valuation * rng.range(0.95, 1.25)) / 10_000) * 10_000 };
+    }
+  }
+
   // Dilemma
   if (c.dilemma) {
     const choice = DILEMMA_CHOICES[c.dilemma.templateId]?.[c.botStyle ?? "steady"];

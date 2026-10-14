@@ -1,6 +1,7 @@
 import { fill, lt } from "../text";
 import type { DevApproach, DiscoveryLevel, TechDebtAction } from "../types";
 import type { SimCtx } from "./context";
+import { strategyEffects } from "./strategy";
 import { clamp, clamp01 } from "./util";
 
 export const APPROACH: Record<DevApproach, { speed: number; debt: number; bugs: number; launchQuality: number }> = {
@@ -100,7 +101,7 @@ function updatePmf(x: SimCtx, devFeatures: number): void {
   const p = c.product;
   const disc = x.d.discovery;
   const discovery = DISCOVERY[disc].clarity;
-  const learnBoost = 1 + x.cap.traits.learning;
+  const learnBoost = (1 + x.cap.traits.learning) * strategyEffects(c).pmfLearn;
 
   // Problem clarity: customer discovery and (after launch) feedback from real customers.
   let pc = pmf.problemClarity;
@@ -122,7 +123,7 @@ function updatePmf(x: SimCtx, devFeatures: number): void {
   // Solution fit converges to what the team understands and can build.
   const build = p.launched ? p.quality : 0.25 + 0.4 * p.mvpProgress;
   const sfTarget = Math.pow(pmf.problemClarity, 0.8) * (0.25 + 0.75 * build) * c.fitPotential;
-  const speed = (0.06 + 0.12 * pmf.learningVelocity) * clamp(0.5 + devFeatures / (0.15 * x.sector.mvpEffort), 0.5, 1.6);
+  const speed = (0.06 + 0.12 * pmf.learningVelocity) * clamp(0.5 + devFeatures / (0.15 * x.sector.mvpEffort), 0.5, 1.6) * Math.sqrt(strategyEffects(c).pmfLearn);
   pmf.solutionFit = clamp01(pmf.solutionFit + (sfTarget - pmf.solutionFit) * speed);
 
   // Market pull

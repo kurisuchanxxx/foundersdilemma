@@ -6,8 +6,13 @@ import {
   GTM_INFO,
   HOURS_INFO,
   LENDERS,
+  MAX_PARTNERSHIPS,
+  PARTNERSHIP_ROUNDS,
+  PRICING_INFO,
   REPUTATION_ACTIONS,
+  SEGMENT_INFO,
   SECTORS,
+  activePartnerships,
   computeCapacities,
   effectiveModifiers,
   featuresFor,
@@ -27,11 +32,13 @@ import {
   type FounderHours,
   type GtmChannel,
   type PreviewResult,
+  type PricingModel,
   type ReputationAction,
+  type TargetSegment,
   type TechDebtAction,
 } from "../../core";
 import { Icon } from "../components/Icon";
-import { Badge, Callout, Card, InfoTip, OptionCard, Progress, Segmented, SliderField, Stat, Tabs, Toggle } from "../components/ui";
+import { Badge, Callout, Card, InfoTip, Logo, OptionCard, Progress, Segmented, SliderField, Stat, Tabs, Toggle } from "../components/ui";
 import { useActiveCompany, useGame, useDraft } from "../hooks";
 import { useFmt, type Fmt } from "../i18n";
 import { exportDecisionFile } from "../classroom";
@@ -63,7 +70,8 @@ export function Decisions() {
       </div>
     );
   }
-  const tab: Tab = storedTab === "dilemma" && !c.dilemma ? "core" : storedTab;
+  const otherTeams = game.companies.filter((o) => o.id !== c.id && o.status === "active");
+  const tab: Tab = (storedTab === "dilemma" && !c.dilemma) || (storedTab === "teams" && otherTeams.length === 0) ? "core" : storedTab;
   const locked = c.submitted;
   const set = (patch: Partial<Decision>) => update(c.id, patch);
   const features = featuresFor(game.config);
@@ -76,6 +84,7 @@ export function Decisions() {
     { id: "growth", label: f.tx("Reputation", "Reputazione"), icon: "Megaphone" },
     { id: "finance", label: f.tx("Finance & exit", "Finanza ed exit"), icon: "HandCoins", dot: c.termSheets.length + c.acquisitionOffers.length > 0 },
   ];
+  if (otherTeams.length > 0) tabs.push({ id: "teams", label: f.tx("Other teams", "Altri team"), icon: "Handshake", dot: c.partnershipOffers.length > 0 });
   if (c.dilemma) tabs.push({ id: "dilemma", label: f.tx("Dilemma", "Dilemma"), icon: "Scale", dot: !draft.dilemmaChoice });
   tabs.push({ id: "review", label: f.tx("Review & submit", "Riepilogo e invio"), icon: "ListChecks" });
 
@@ -101,6 +110,7 @@ export function Decisions() {
             {tab === "people" && <PeopleTab c={c} d={draft} set={set} />}
             {tab === "growth" && <GrowthTab d={draft} set={set} />}
             {tab === "finance" && <FinanceTab c={c} d={draft} set={set} />}
+            {tab === "teams" && <TeamsTab c={c} d={draft} set={set} />}
             {tab === "dilemma" && c.dilemma && <DilemmaTab c={c} d={draft} set={set} />}
           </fieldset>
           {tab === "review" && <ReviewTab c={c} d={draft} preview={preview} onEdit={setTab} />}
@@ -278,6 +288,14 @@ function CoreTab({ c, d, set, preview }: { c: Company; d: Decision; set: (p: Par
           />
         </div>
       </Card>
+      <Card title={f.tx("Pricing model", "Modello di prezzo")} icon="Layers" action={<InfoTip concept="pricingModel" />}>
+        <div className="grid cols-3" style={{ gap: 8 }}>
+          {(Object.keys(PRICING_INFO) as PricingModel[]).map((m) => (
+            <OptionCard key={m} on={d.pricingModel === m} onClick={() => set({ pricingModel: m })} title={f.L(PRICING_INFO[m].label)} desc={f.L(PRICING_INFO[m].description)} badge={c.pricingModel === m ? <Badge>{f.tx("current", "attuale")}</Badge> : undefined} />
+          ))}
+        </div>
+        <StrategySwitchNote c={c} changed={d.pricingModel !== c.pricingModel} loss={0.05} />
+      </Card>
       <Card title={f.tx("Price", "Prezzo")} icon="CircleDollarSign" action={<InfoTip concept="pricing" />}>
         <SliderField
           label={`${f.tx("Price", "Prezzo")} (${f.L(s.priceUnit)})`}
@@ -373,6 +391,14 @@ function ProductTab({ c, d, set, techDebt }: { c: Company; d: Decision; set: (p:
             <p className="small faint">{f.tx("Launching early gives you real customers to learn from, but quality and churn suffer.", "Lanciare presto ti dà clienti veri da cui imparare, ma qualità e churn ne risentono.")}</p>
           </div>
         )}
+      </Card>
+      <Card title={f.tx("Target customers", "Clienti obiettivo")} icon="Crosshair" action={<InfoTip concept="beachhead" />} tour="segment">
+        <div className="grid cols-3" style={{ gap: 8 }}>
+          {(Object.keys(SEGMENT_INFO) as TargetSegment[]).map((g) => (
+            <OptionCard key={g} on={d.targetSegment === g} onClick={() => set({ targetSegment: g })} title={f.L(SEGMENT_INFO[g].label)} desc={f.L(SEGMENT_INFO[g].description)} badge={c.segment === g ? <Badge>{f.tx("current", "attuale")}</Badge> : undefined} />
+          ))}
+        </div>
+        <StrategySwitchNote c={c} changed={d.targetSegment !== c.segment} loss={0.12} />
       </Card>
       <Card title={f.tx("Development approach", "Approccio allo sviluppo")} icon="Code2">
         <div className="grid cols-3" style={{ gap: 8 }}>
@@ -589,7 +615,7 @@ function FinanceTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<D
                     {o.acquirer} · {f.money(o.value)}
                   </div>
                   <div className="small muted">
-                    {o.kind === "financial" ? f.tx("Financial buyer", "Acquirente finanziario") : o.kind === "acquihire" ? "Acqui-hire" : f.tx("Strategic acquirer", "Acquirente strategico")} · {f.tx("premium", "premio")} {f.pct(o.premium - 1)} ·{" "}
+                    {o.kind === "team" ? f.tx("Another team of the game", "Un altro team della partita") : o.kind === "financial" ? f.tx("Financial buyer", "Acquirente finanziario") : o.kind === "acquihire" ? "Acqui-hire" : f.tx("Strategic acquirer", "Acquirente strategico")} · {f.tx("premium", "premio")} {f.pct(o.premium - 1)} ·{" "}
                     {f.tx("founders would receive", "i fondatori incasserebbero")} <b>{f.money(fp)}</b>
                   </div>
                 </div>
@@ -646,6 +672,148 @@ function LoanPicker({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<D
   );
 }
 
+function StrategySwitchNote({ c, changed, loss }: { c: Company; changed: boolean; loss: number }) {
+  const f = useFmt();
+  if (!changed) return null;
+  const launched = c.product.launched && c.customers > 0;
+  return launched ? (
+    <Callout tone="warn">
+      {f.tx(
+        `Changing now costs about ${f.pct(loss)} of your customers (≈${f.compact(c.customers * loss)})${loss > 0.1 ? " and some product-market fit" : ""}: decide once, then stick to it.`,
+        `Cambiare ora costa circa il ${f.pct(loss)} dei clienti (≈${f.compact(c.customers * loss)})${loss > 0.1 ? " e un po' di product-market fit" : ""}: decidi una volta e poi tieni la rotta.`,
+      )}
+    </Callout>
+  ) : (
+    <p className="small faint mt-8">{f.tx("Before launch you can change it for free.", "Prima del lancio puoi cambiarlo senza costi.")}</p>
+  );
+}
+
+function TeamsTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void }) {
+  const f = useFmt();
+  const game = useGame();
+  const others = game.companies.filter((o) => o.id !== c.id && o.status === "active");
+  const partners = activePartnerships(c, game.round);
+  const full = partners.length >= MAX_PARTNERSHIPS;
+  const teamOffers = c.acquisitionOffers.filter((o) => o.kind === "team");
+  return (
+    <div className="stack">
+      {c.partnershipOffers.length > 0 && (
+        <Card title={f.tx("Partnership proposals received", "Proposte di partnership ricevute")} icon="Handshake" action={<InfoTip concept="coopetition" />} className="warning">
+          {c.partnershipOffers.map((o) => {
+            const from = game.companies.find((x) => x.id === o.fromCompanyId);
+            return (
+              <div key={o.id} className="list-row">
+                {from && <Logo company={from} size={28} />}
+                <div className="grow">
+                  <div style={{ fontWeight: 600 }}>{o.fromName}</div>
+                  <div className="small muted">
+                    {from && from.sector === c.sector
+                      ? f.tx(`Same sector: an alliance for ${PARTNERSHIP_ROUNDS} rounds (CAC -8%, churn -5% for both).`, `Stesso settore: un'alleanza per ${PARTNERSHIP_ROUNDS} round (CAC -8%, churn -5% per entrambi).`)
+                      : f.tx(`Different sector: co-marketing for ${PARTNERSHIP_ROUNDS} rounds (CAC -12%, word of mouth +15% for both).`, `Settore diverso: co-marketing per ${PARTNERSHIP_ROUNDS} round (CAC -12%, passaparola +15% per entrambi).`)}
+                  </div>
+                </div>
+                <Toggle
+                  checked={d.acceptPartnershipIds.includes(o.id)}
+                  onChange={(v) => set({ acceptPartnershipIds: v ? [...d.acceptPartnershipIds, o.id] : d.acceptPartnershipIds.filter((x) => x !== o.id) })}
+                  label={f.tx("Accept", "Accetta")}
+                />
+              </div>
+            );
+          })}
+        </Card>
+      )}
+      {teamOffers.length > 0 && (
+        <Callout tone="warn" icon="Handshake">
+          {f.tx("Another team wants to buy your company: you find the offer in Finance & exit.", "Un altro team vuole comprare la vostra azienda: trovate l'offerta in Finanza ed exit.")}
+        </Callout>
+      )}
+      <Card title={f.tx("Teams in the game", "I team della partita")} icon="Users" action={<span className="small faint">{f.tx("Partnerships", "Partnership")} {partners.length}/{MAX_PARTNERSHIPS}</span>}>
+        <p className="small muted" style={{ marginBottom: 12 }}>
+          {f.tx(
+            "You can propose one partnership per round and make one acquisition offer. The other team answers next round; an acquisition is paid in cash from your account.",
+            "Potete proporre una partnership per round e fare un'offerta di acquisizione. L'altro team risponde nel round successivo; l'acquisizione si paga in contanti dalla vostra cassa.",
+          )}{" "}
+          <InfoTip concept="startupMna" />
+        </p>
+        {others.map((o) => {
+          const partner = partners.find((p) => p.partnerId === o.id);
+          const proposed = d.partnershipProposals.includes(o.id);
+          const bidding = d.acquisitionBid?.targetId === o.id;
+          const bidMax = Math.max(0, Math.floor(c.cash / 10_000) * 10_000);
+          // offers below half of the valuation are not taken seriously
+          const bidMin = Math.max(10_000, Math.round((o.valuation * 0.5) / 10_000) * 10_000);
+          const canBid = bidMax >= bidMin;
+          return (
+            <div key={o.id} className="list-row" style={{ alignItems: "flex-start", flexWrap: "wrap" }}>
+              <Logo company={o} size={32} />
+              <div className="grow" style={{ minWidth: 200 }}>
+                <div style={{ fontWeight: 600 }}>
+                  {o.name} {o.isBot && <Badge>bot</Badge>} {partner && <Badge tone="good">{f.tx(`partner until round ${partner.untilRound}`, `partner fino al round ${partner.untilRound}`)}</Badge>}
+                </div>
+                <div className="small muted">
+                  {f.L(SECTORS[o.sector].name)}
+                  {o.sector === c.sector ? ` (${f.tx("your sector", "il tuo settore")})` : ""} · {f.tx("valuation", "valutazione")} {f.money(o.valuation)} · {f.compact(o.customers)} {f.tx("customers", "clienti")}
+                </div>
+                {!canBid && !bidding && <div className="tiny faint">{f.tx(`To make an offer you need at least ${f.money(bidMin)} in cash (half of their valuation).`, `Per fare un'offerta servono almeno ${f.money(bidMin)} in cassa (metà della loro valutazione).`)}</div>}
+                {bidding && d.acquisitionBid && (
+                  <div className="mt-8">
+                    <SliderField
+                      label={f.tx("Cash offer", "Offerta in contanti")}
+                      value={d.acquisitionBid.amount}
+                      min={bidMin}
+                      max={Math.max(bidMin, bidMax)}
+                      step={10_000}
+                      onChange={(v) => set({ acquisitionBid: { targetId: o.id, amount: v } })}
+                      format={(v) => `${f.money(v)} (${f.num(v / Math.max(1, o.valuation), 2)}× ${f.tx("valuation", "valutazione")})`}
+                      hint={f.tx(
+                        o.sector === c.sector
+                          ? "Same sector: you take on most of their customers and their team. Below their valuation they will probably refuse."
+                          : "Different sector: you gain their team and know-how, not their customers. Below their valuation they will probably refuse.",
+                        o.sector === c.sector
+                          ? "Stesso settore: prendete gran parte dei loro clienti e il loro team. Sotto la loro valutazione probabilmente rifiuteranno."
+                          : "Settore diverso: acquisite il loro team e le competenze, non i clienti. Sotto la loro valutazione probabilmente rifiuteranno.",
+                      )}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="col gap-8" style={{ alignItems: "flex-end" }}>
+                <Toggle
+                  checked={proposed}
+                  disabled={!!partner || (full && !proposed) || (!proposed && d.partnershipProposals.length >= 1)}
+                  onChange={(v) => set({ partnershipProposals: v ? [o.id] : [] })}
+                  label={f.tx("Propose partnership", "Proponi partnership")}
+                />
+                <Toggle
+                  checked={bidding}
+                  disabled={!canBid && !bidding}
+                  onChange={(v) => set({ acquisitionBid: v ? { targetId: o.id, amount: Math.min(bidMax, Math.max(bidMin, Math.round(o.valuation / 10_000) * 10_000)) } : null })}
+                  label={f.tx("Acquisition offer", "Offerta di acquisizione")}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </Card>
+      {partners.length > 0 && (
+        <Card title={f.tx("Active partnerships", "Partnership attive")} icon="Handshake">
+          {partners.map((p) => (
+            <div key={p.id} className="list-row">
+              <Icon name="Handshake" size={16} className="accent" />
+              <div className="grow">
+                <div style={{ fontWeight: 600 }}>{p.partnerName}</div>
+                <div className="small muted">
+                  {p.sameSector ? f.tx("Alliance: CAC -8%, churn -5%", "Alleanza: CAC -8%, churn -5%") : f.tx("Co-marketing: CAC -12%, word of mouth +15%", "Co-marketing: CAC -12%, passaparola +15%")} · {f.tx("until round", "fino al round")} {p.untilRound}
+                </div>
+              </div>
+            </div>
+          ))}
+        </Card>
+      )}
+    </div>
+  );
+}
+
 function DilemmaTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void }) {
   const f = useFmt();
   const dil = c.dilemma!;
@@ -669,6 +837,10 @@ function warningsFor(f: Fmt, c: Company, d: Decision, preview: PreviewResult | n
     else if (preview.runway < 3) out.push({ tone: "warn", text: f.tx("Less than 3 months of runway at the end of the round.", "Meno di 3 mesi di runway a fine round.") });
     if (preview.launched && preview.wtp > 0 && d.price > preview.wtp * 1.3) out.push({ tone: "warn", text: f.tx("Your price is well above customers' willingness to pay.", "Il prezzo è molto sopra la disponibilità a pagare dei clienti.") });
   }
+  const live = c.product.launched && c.customers > 0;
+  if (live && d.targetSegment !== c.segment) out.push({ tone: "warn", text: f.tx("You are changing target customers: about 12% of customers will leave and PMF drops a little.", "State cambiando clienti obiettivo: circa il 12% dei clienti se ne andrà e il PMF scende un po'.") });
+  if (live && d.pricingModel !== c.pricingModel) out.push({ tone: "warn", text: f.tx("You are changing pricing model: about 5% of customers will leave.", "State cambiando modello di prezzo: circa il 5% dei clienti se ne andrà.") });
+  if (d.acquisitionBid && preview && preview.cashEnd < d.acquisitionBid.amount) out.push({ tone: "warn", text: f.tx("If the acquisition is accepted next round, you may not have enough cash to pay it.", "Se l'acquisizione verrà accettata il prossimo round, potreste non avere abbastanza cassa per pagarla.") });
   if (!c.product.launched && d.discovery === "none") out.push({ tone: "info", text: f.tx("No customer discovery before launch: you risk building the wrong thing.", "Nessuna customer discovery prima del lancio: rischi di costruire la cosa sbagliata.") });
   if (c.dilemma && !d.dilemmaChoice) out.push({ tone: "warn", text: f.tx("You have not answered this round's dilemma.", "Non hai risposto al dilemma di questo round.") });
   if (d.founderHours >= 80 && c.founderStress > 0.6) out.push({ tone: "warn", text: f.tx("80-hour weeks with high stress: burnout risk.", "Settimane da 80 ore con stress alto: rischio burnout.") });
@@ -689,6 +861,8 @@ function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview
     ["Ops", `${f.money(d.opsBudget)}/${f.tx("mo", "mese")}`, "core"],
     [f.tx("Price", "Prezzo"), f.money(d.price, { decimals: d.price < 100 ? 2 : 0 }), "core"],
     [f.tx("Channel", "Canale"), f.L(GTM_INFO[d.gtm].name), "core"],
+    [f.tx("Pricing model", "Modello di prezzo"), f.L(PRICING_INFO[d.pricingModel].label), "core"],
+    [f.tx("Target customers", "Clienti obiettivo"), f.L(SEGMENT_INFO[d.targetSegment].label), "product"],
     [f.tx("Development", "Sviluppo"), d.devApproach, "product"],
     ["Discovery", d.discovery, "product"],
     [f.tx("Founders' hours", "Ore dei fondatori"), `${d.founderHours}h`, "people"],
@@ -696,6 +870,17 @@ function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview
     [f.tx("Reputation action", "Azione di reputazione"), f.L(REPUTATION_ACTIONS[d.reputationAction].label), "growth"],
     [f.tx("Pitches", "Pitch"), String(d.pitches.length), "finance"],
   ];
+  const teamName = (id: string) => game.companies.find((o) => o.id === id)?.name ?? "?";
+  if (d.partnershipProposals.length + d.acceptPartnershipIds.length > 0 || d.acquisitionBid)
+    rows.push([
+      f.tx("Other teams", "Altri team"),
+      [
+        ...d.partnershipProposals.map((id) => `${f.tx("partnership proposed to", "partnership proposta a")} ${teamName(id)}`),
+        ...d.acceptPartnershipIds.map((id) => `${f.tx("partnership accepted with", "partnership accettata con")} ${c.partnershipOffers.find((o) => o.id === id)?.fromName ?? "?"}`),
+        ...(d.acquisitionBid ? [`${f.tx("offer to buy", "offerta per comprare")} ${teamName(d.acquisitionBid.targetId)}: ${f.money(d.acquisitionBid.amount)}`] : []),
+      ].join("; "),
+      "teams",
+    ]);
   if (c.dilemma) rows.push([f.tx("Dilemma", "Dilemma"), d.dilemmaChoice ? f.L(c.dilemma.options.find((o) => o.id === d.dilemmaChoice)?.label) : f.tx("not answered", "senza risposta"), "dilemma"]);
   return (
     <div className="stack">

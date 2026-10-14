@@ -112,6 +112,34 @@ dopo il lancio: PMF = 0,85 × PMF + 15 × qualità della retention
 
 **Unit economics**: LTV = prezzo × margine lordo × min(1/churn, 60 mesi); CAC mostrato = budget marketing ÷ clienti acquisiti a pagamento.
 
+### Clienti obiettivo e modello di prezzo
+
+Ogni team sceglie **chi servire** (testa di ponte di Moore) e **come farsi pagare** (`engine/strategy.ts`). Gli effetti si sommano ai modificatori dell'azienda:
+
+| Scelta | Mercato raggiungibile | Effetti |
+|---|---|---|
+| Nicchia (testa di ponte) | 30% del settore | Apprendimento del PMF × 1,3, CAC × 0,85, churn × 0,9, disponibilità a pagare × 1,05, penalità del chasm × 1,2 invece di × 1,5 |
+| Mercato ampio | 100% | Nessuno (riferimento) |
+| Premium / grandi clienti | 40% | Disponibilità a pagare × 1,7 × (0,75 + 0,5 × qualità), churn × 0,75, CAC × 1,5, dipendenza dai venditori +0,25, vendite outbound × 0,7 |
+| Abbonamento | | Nessuno (riferimento) |
+| Freemium | | CAC × 0,7, passaparola × 1,6, disponibilità a pagare × 0,85, churn × 1,1, margine lordo −7 punti |
+| A consumo | | Elasticità al prezzo × 0,6, churn × 0,85, disponibilità a pagare × 0,9, CAC × 0,95, margine lordo −2 punti |
+
+Il **mercato raggiungibile** limita saturazione, lista d'attesa e nuovi clienti: un'azienda di nicchia smette di crescere quando ha conquistato la sua nicchia, ed è il segnale per allargare l'obiettivo. Prima del lancio le scelte si cambiano gratis; dopo, cambiare clienti obiettivo costa il 12% dei clienti, 0,08 di market pull e l'8% di solution fit, cambiare modello di prezzo il 5% dei clienti e un po' di brand.
+
+### Concorrenti esterni
+
+Ogni settore parte con due **concorrenti con un nome** (aziende di fantasia, `data/rivals.ts`) con una forza tra 0,3 e 0,7 che varia nel tempo; altri possono entrare (probabilità 6% a round per settore, +1 concorrente esterno). Dal round 2, in ogni settore con almeno un team, al massimo un concorrente fa una mossa per round, con probabilità 0,06 + 0,16 × forza (+0,08 se un team ha più del 40% dei clienti del settore). Le mosse diventano notizie del settore e modificatori:
+
+| Mossa | Effetto sul settore |
+|---|---|
+| Guerra dei prezzi | Disponibilità a pagare × 0,9 per 2 round |
+| Campagna pubblicitaria massiccia | CAC × 1,15 per 1 round |
+| Nuova versione del prodotto | Churn × 1,08 per 2 round |
+| Grande round di finanziamento | Richieste salariali × 1,05, il concorrente diventa più forte |
+| Assunzioni aggressive | Richieste salariali × 1,12 e candidati più difficili per 1 round |
+| Chiusura | Domanda × 1,06 per 2 round, un concorrente in meno |
+
 ## 6. Team e assunzioni
 
 - **Ruoli**: ingegnere, prodotto, design, growth, vendite, operations, customer success, finanza. Stipendi annui da 30-40k (junior) a 130-155k (principal).
@@ -127,17 +155,19 @@ dopo il lancio: PMF = 0,85 × PMF + 15 × qualità della retention
 
 ### Investitori
 
-| Tipo | Taglio | Requisiti principali | Condizioni |
-|---|---|---|---|
-| Business angel (4) | 25k-400k | MVP almeno al 15-60% | Preferenza 1x |
-| Acceleratore | 120k per il 7% | Entro il round 6, valutazione fino a 4 M€, almeno 50 ore settimanali | Un solo tentativo |
-| Seed (2) | 0,3-2,5 M€ | Lancio e trazione (MRR 5k, PMF 50 o 500 clienti), oppure MVP al 60% per deeptech, AI e health | Option pool 5-8%, a volte un seggio |
-| Corporate VC | 0,5-6 M€ | MRR almeno 20k | Può diventare acquirente |
-| Series A (2) | 2-10 M€ | MRR 60-80k e PMF 55-57 | Seggio nel CdA, pool 10% |
-| Growth | 10-40 M€ | MRR 300k, PMF 62, un round precedente | Seggio più un indipendente |
-| Crowdfunding | 0,1-1,5 M€ | Lancio, B2C, fintech o health | Tutto o niente, nessuna preferenza |
+| Tipo | Taglio | Requisiti principali | Condizioni | Nuovi investimenti per round · capitale per partita |
+|---|---|---|---|---|
+| Business angel (4) | 25k-400k | MVP almeno al 15-60% | Preferenza 1x | 2 · 1-1,5 M€ (club: 3 · 3 M€) |
+| Acceleratore | 120k per il 7% | Entro il round 6, valutazione fino a 4 M€, almeno 50 ore settimanali | Un solo tentativo | 3 · 1,8 M€ |
+| Seed (2) | 0,3-2,5 M€ | Lancio e trazione (MRR 5k, PMF 50 o 500 clienti), oppure MVP al 60% per deeptech, AI e health | Option pool 5-8%, a volte un seggio | 2-3 · 14-16 M€ |
+| Corporate VC | 0,5-6 M€ | MRR almeno 20k | Può diventare acquirente | 2 · 24 M€ |
+| Series A (2) | 2-10 M€ | MRR 60-80k e PMF 55-57 | Seggio nel CdA, pool 10% | 2 · 40 M€ |
+| Growth | 10-40 M€ | MRR 300k, PMF 62, un round precedente | Seggio più un indipendente | 1 · 120 M€ |
+| Crowdfunding | 0,1-1,5 M€ | Lancio, B2C, fintech o health | Tutto o niente, nessuna preferenza | Nessun limite |
 
 **Decisione dell'investitore** (`engine/finance.ts`): valutazione pre-money equa = max(300k, valutazione − cassa netta) × propensione dell'investitore × √clima. L'interesse cresce con PMF, crescita, reputazione, forza del team, abilità di fundraising dei fondatori e clima; cala se si chiede una valutazione sopra quella equa, se l'importo è fuori dal taglio, se la runway è sotto 3 mesi. Il deal si chiude con interesse almeno 0,55 e richiesta entro il 115% della valutazione equa; con interesse tra 0,4 e 0,55 arriva un term sheet alternativo. Una diluizione oltre il 40% è sempre rifiutata. Massimo 2 pitch per round.
+
+**Capacità degli investitori** (*dry powder*): ogni investitore chiude al massimo un certo numero di nuovi investimenti per round e ha un capitale totale per la partita (tabella sopra). Tutti i pitch del round, di tutti i team e dei bot, vengono valutati insieme: l'investitore ordina quelli che vorrebbe chiudere per punteggio di interesse e firma i migliori finché ha posti e capitale. Gli altri ricevono un rifiuto che nomina chi ha ottenuto i soldi (o, se manca il capitale, quanto ne resta).
 
 ### Cap table
 
@@ -198,9 +228,17 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 ## 10. Exit e fallimento
 
 - **Offerte di acquisizione** dal round 4 al penultimo, per aziende con valutazione almeno 5 M€ o ARR almeno 1 M€. Acquirenti: un corporate VC già socio, un fondo di private equity (se l'azienda è in utile) o un acquirente strategico del settore, con premio tra 0,9 e 1,8 volte la valutazione. Accettare distribuisce il prezzo con il waterfall.
+- **Offerte da altri team**: vedi la sezione seguente.
 - **Fallimento**: solo se la cassa è negativa a fine round e non restano salvataggi.
 
-## 11. Bot
+## 11. Interazione tra team
+
+Nella scheda **Altri team** delle decisioni (`engine/deals.ts`):
+
+- **Partnership**: un team propone, l'altro accetta nel round successivo. Dura 3 round e dà a entrambe le aziende CAC × 0,92 e churn × 0,95 se sono dello stesso settore (alleanza), CAC × 0,88 e passaparola × 1,15 se sono di settori diversi (co-marketing), più 0,02 di brand. Al massimo 2 partnership attive per azienda.
+- **Acquisizione**: un team offre una cifra in contanti (almeno metà della valutazione dell'altra azienda e non oltre la propria cassa); l'altro team decide nel round successivo in Finanza ed exit. Se accetta, il prezzo è distribuito ai suoi soci con il waterfall e la sua partita finisce. Chi compra paga subito, riceve tutte le persone (senza equity, con un periodo di inserimento e morale −0,03), la qualità di prodotto migliore e una parte del brand; se l'azienda acquisita è dello stesso settore anche l'85% dei clienti, metà della lista d'attesa e la chiarezza del problema. Se al momento del sì il compratore non ha più la cassa, l'offerta decade.
+
+## 12. Bot
 
 | Stile | Runway obiettivo | Prezzo | Ore | Comportamento |
 |---|---|---|---|---|
@@ -208,14 +246,16 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 | Steady | 11 mesi | −8% | 60 | Lancio all'85% dell'MVP, raccolte regolari |
 | Blitz | 7 mesi | −18% | 80 | Sviluppo veloce, lancio al 60%, raccolte grandi e frequenti, più assunzioni |
 
-## 12. Punteggio e Ricco o Re
+Strategia dei bot: i lean partono da una **nicchia** e passano al mercato ampio dopo il PMF; gli steady vanno sul **premium** nei settori che dipendono dai venditori e usano il prezzo **a consumo** nell'infrastruttura AI; i blitz puntano al mercato ampio e al **freemium** nei settori virali. I bot accettano il 70% delle partnership proposte, gli steady ne propongono a volte una, e steady e blitz con molta cassa possono fare un'offerta per un'azienda in difficoltà o con meno PMF.
+
+## 13. Punteggio e Ricco o Re
 
 - **Ricchezza dei fondatori** (predefinito): quanto riceverebbero i fondatori dal waterfall.
 - **Valutazione**: valore dell'azienda o prezzo di uscita.
 - **Bilanciato**: 35% ricchezza, 25% valutazione, 15% sostenibilità (runway), 10% reputazione, 10% NPS, 5% morale.
 - **Re**: fondatori con più del 50% dei voti e più seggi degli altri nel CdA, CEO non sostituito. **Ricco**: ricchezza dei fondatori di almeno 10 M€.
 
-## 13. Complessità
+## 14. Complessità
 
 | Livello | Dilemmi | Aste e rilanci | Debito tecnico | Simulatore del waterfall |
 |---|---|---|---|---|
@@ -223,26 +263,28 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 | Standard | sì | sì | sì | no |
 | Avanzata | sì | sì | sì | sì, nella pagina Finanziamenti |
 
-## 14. Bilanciamento
+## 15. Bilanciamento
 
 Lo script `npm run balance` gioca 60 partite con 6 aziende bot ciascuna (impostazioni predefinite) e riassume i risultati. Esecuzione di riferimento:
 
 | Gruppo | Falliti | Exit | Salvati | PMF ≥ 60 raggiunto | Valutazione mediana | Ricchezza fondatori mediana | Quota fondatori |
 |---|---|---|---|---|---|---|---|
-| Tutte (360) | 5% | 18% | 10% | 39% | 13,0 M€ | 5,5 M€ | 45% |
-| Bot lean | 2% | 23% | 6% | 81% | 12,0 M€ | 5,9 M€ | 54% |
-| Bot steady | 5% | 26% | 7% | 36% | 18,1 M€ | 9,0 M€ | 53% |
-| Bot blitz | 9% | 5% | 18% | 0% | 10,7 M€ | 3,5 M€ | 32% |
+| Tutte (360) | 6% | 18% | 13% | 43% | 12,2 M€ | 5,4 M€ | 44% |
+| Bot lean | 5% | 22% | 8% | 89% | 11,5 M€ | 6,1 M€ | 56% |
+| Bot steady | 6% | 28% | 10% | 41% | 17,5 M€ | 7,9 M€ | 51% |
+| Bot blitz | 8% | 5% | 22% | 0% | 11,2 M€ | 3,4 M€ | 31% |
 
 Letture utili in aula:
 - La strategia **lean** raggiunge il PMF molto più spesso e fallisce meno: il gioco premia la disciplina della lean startup.
 - La strategia **blitz** cresce e raccoglie di più ma non raggiunge mai il PMF, si diluisce di più e lascia meno ricchezza ai fondatori: è il costo dello *scalare prima del fit*.
 - I settori B2B con multipli alti (DeepTech, AI, SaaS) generano più exit; consumer, e-commerce e fintech hanno più fallimenti e salvataggi per margini sottili o churn alto.
+- Con investitori dai posti limitati i salvataggi aumentano soprattutto per chi brucia molto (blitz 22%): quando tutti chiedono soldi insieme, chi ha i numeri peggiori resta fuori.
+- La nicchia iniziale dei bot lean porta il PMF all'89%: la testa di ponte accelera l'apprendimento.
 - I fallimenti si concentrano nei round 7-8, quando i round diventano semestrali e la cassa si consuma più in fretta per round: un buon momento per discutere di runway.
 
 Il gioco è volutamente *indulgente* (pochi fallimenti), perché una squadra fallita impara meno dei round successivi. Per aule più esperte si può scegliere la difficoltà *Realistica*.
 
-## 15. Dalla teoria alla meccanica
+## 16. Dalla teoria alla meccanica
 
 | Teoria | Autori | Dove si vede nel gioco |
 |---|---|---|
@@ -250,20 +292,25 @@ Il gioco è volutamente *indulgente* (pochi fallimenti), perché una squadra fal
 | Build-measure-learn, MVP | Ries | Lancio anticipato, velocità di apprendimento, report dei round |
 | Product-market fit e test del 40% | Andreessen; Ellis | Punteggio PMF e quota di utenti molto delusi |
 | Diffusione dell'innovazione | Rogers | Segmenti di adozione con CAC, churn e WTP diversi |
-| Chasm | Moore | Penalità sul CAC con PMF sotto 55 nella maggioranza |
+| Chasm e testa di ponte | Moore | Penalità sul CAC con PMF sotto 55 nella maggioranza; scelta della nicchia, del mercato ampio o dei clienti premium |
+| Modelli di prezzo | Ramanujam e Tacke; Anderson | Abbonamento, freemium e a consumo con effetti su CAC, passaparola, churn e margine |
+| Strategia competitiva | Porter | Concorrenti esterni con mosse (guerre dei prezzi, campagne, chiusure) |
+| Coopetizione | Brandenburger e Nalebuff | Partnership tra team dello stesso settore o di settori diversi |
+| Mercato dei capitali | | Investitori con posti e capitale limitati; acquisizioni tra startup |
 | Default alive | Graham | Runway, mentor, burn netto |
 | Scelte fondative e Rich vs King | Wasserman | Archetipi, quote e vesting, CdA, punteggio sulla ricchezza dei fondatori |
 | Term sheet, option pool, preferenze | Feld e Mendelson | Investitori, shuffle del pool, waterfall, salvataggi 2x |
 | Economia unitaria | | LTV, CAC, payback, elasticità del prezzo |
 | Etica e reputazione | | Dilemmi con rischi differiti, reputazione su quattro pubblici |
 
-## 16. Limiti e semplificazioni
+## 17. Limiti e semplificazioni
 
 Discuterli in aula è parte dell'apprendimento:
 
 - niente imposte, IVA, capitale circolante e ammortamenti: la cassa è un flusso semplificato;
 - preferenze solo 1x o 2x non partecipanti, niente clausole anti-diluizione, drag-along o vendite secondarie;
-- concorrenti esterni rappresentati solo come pressione sul CAC, senza prezzi propri;
+- concorrenti esterni con mosse a livello di settore, senza clienti e prezzi propri;
+- le partnership hanno effetti fissi e le acquisizioni si pagano solo in contanti (niente carta, earn-out o integrazioni fallite);
 - dimensione del mercato fissa, salvo eventi;
 - persone descritte da poche competenze numeriche; cultura e conflitti sintetizzati in morale, stress e dilemmi;
 - gli investitori decidono con regole trasparenti e un po' di rumore, senza negoziazione libera.
