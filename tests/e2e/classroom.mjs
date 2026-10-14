@@ -10,7 +10,10 @@ const base = process.argv[2] ?? "http://localhost:1420/";
 const out = process.argv[3] ?? "test-results/classroom";
 fs.mkdirSync(out, { recursive: true });
 
-const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium" });
+// Uses CHROME_PATH, the preinstalled sandbox Chromium, or Playwright's own browser (CI).
+const localChromium = "/opt/pw-browsers/chromium";
+const executablePath = process.env.CHROME_PATH ?? (fs.existsSync(localChromium) ? localChromium : undefined);
+const browser = await chromium.launch({ executablePath });
 const errors = [];
 
 async function newPage(name) {
@@ -134,6 +137,20 @@ try {
   await hs.locator(".sidebar-head .card.selectable").click();
   await hs.locator(".sidebar-head").getByRole("button", { name: /Blue/ }).click();
   await hs.waitForSelector("text=Pass the computer to Blue");
+
+  // Advanced complexity: the exit waterfall simulator appears in Funding.
+  const adv = await newPage("advanced");
+  await btn(adv, /New game/).click();
+  await adv.getByText("Advanced", { exact: true }).click();
+  await btn(adv, /Configure teams/).click();
+  await adv.locator("input.input").first().fill("Deep Waters");
+  await btn(adv, /^Review/).click();
+  await btn(adv, /Start the game/).click();
+  await nav(adv, "Funding");
+  await adv.waitForSelector("text=Exit waterfall simulator");
+  await adv.getByRole("radio", { name: /2×/ }).click();
+  await adv.locator("text=Exit waterfall simulator").scrollIntoViewIfNeeded();
+  await adv.screenshot({ path: `${out}/09-advanced-waterfall.png` });
 } catch (e) {
   failed = true;
   console.error("E2E failure:", e);
@@ -145,4 +162,4 @@ if (errors.length) {
   process.exit(1);
 }
 if (failed) process.exit(1);
-console.log("Classroom and hot-seat flows OK");
+console.log("Classroom, hot-seat and advanced flows OK");

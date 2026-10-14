@@ -312,6 +312,28 @@ export interface ScatterPoint {
   highlight?: boolean;
 }
 
+/** Direct labels next to scatter points, nudged vertically so they do not overlap. */
+function placeLabels(points: ScatterPoint[], sx: (x: number) => number, sy: (y: number) => number, W: number) {
+  const placed: Array<{ p: ScatterPoint; x: number; y: number; anchor: "start" | "end"; x0: number; x1: number }> = [];
+  const sorted = [...points].sort((a, b) => sy(a.y) - sy(b.y));
+  for (const p of sorted) {
+    const px = sx(p.x);
+    const right = px < W - 140;
+    const w = p.label.length * 7;
+    const x = px + (right ? 10 : -10);
+    const x0 = right ? x : x - w;
+    const x1 = right ? x + w : x;
+    let y = sy(p.y) - 8;
+    for (let guard = 0; guard < 10; guard++) {
+      const clash = placed.find((q) => q.x0 < x1 && x0 < q.x1 && Math.abs(q.y - y) < 14);
+      if (!clash) break;
+      y = clash.y + 14;
+    }
+    placed.push({ p, x, y, anchor: right ? "start" : "end", x0, x1 });
+  }
+  return placed;
+}
+
 export function Scatter({ points, xLabel, yLabel, xFormat, yFormat, height = 280, xSplit, logY }: {
   points: ScatterPoint[];
   xLabel: string;
@@ -366,16 +388,11 @@ export function Scatter({ points, xLabel, yLabel, xFormat, yFormat, height = 280
             <circle cx={sx(p.x)} cy={sy(p.y)} r={p.highlight ? 7 : 5} fill={p.color} stroke="var(--surface)" strokeWidth={2} />
           </g>
         ))}
-        {points
-          .filter((p) => p.highlight || points.length <= 6)
-          .map((p) => {
-            const right = sx(p.x) < W - 140;
-            return (
-              <text key={`l-${p.id}`} x={sx(p.x) + (right ? 10 : -10)} y={sy(p.y) - 8} textAnchor={right ? "start" : "end"} style={{ fill: p.highlight ? "var(--text)" : "var(--text-2)", fontWeight: p.highlight ? 600 : 400 }}>
-                {p.label}
-              </text>
-            );
-          })}
+        {placeLabels(points.filter((p) => p.highlight || points.length <= 6), sx, sy, W).map(({ p, x, y, anchor }) => (
+          <text key={`l-${p.id}`} x={x} y={y} textAnchor={anchor} style={{ fill: p.highlight ? "var(--text)" : "var(--text-2)", fontWeight: p.highlight ? 600 : 400 }}>
+            {p.label}
+          </text>
+        ))}
       </svg>
       {hp && (
         <div className="chart-tip" style={{ left: Math.min(W - 180, sx(hp.x) + 12), top: Math.max(0, sy(hp.y) - 40) }}>

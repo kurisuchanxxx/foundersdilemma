@@ -5,6 +5,7 @@ import {
   MAX_PITCHES,
   SECTORS,
   fairValuation,
+  featuresFor,
   foundersOwnership,
   foundersVoting,
   investorChecks,
@@ -22,6 +23,7 @@ import { Badge, Callout, Card, Empty, InfoTip, Modal, Segmented, SliderField, St
 import { useActiveCompany, useGame, useDraft } from "../hooks";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
+import { ExitWaterfall } from "./ExitWaterfall";
 
 export function Funding() {
   const f = useFmt();
@@ -130,6 +132,8 @@ export function Funding() {
           )}
         </Card>
       </div>
+
+      {featuresFor(game.config).advancedFinance && <ExitWaterfall c={c} />}
 
       {report && (
         <Card title={f.tx("Last pitch results", "Esito degli ultimi pitch")} icon="Presentation">

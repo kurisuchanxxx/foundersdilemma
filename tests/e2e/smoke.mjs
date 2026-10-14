@@ -7,7 +7,10 @@ const base = process.argv[2] ?? "http://localhost:1420/";
 const out = process.argv[3] ?? "test-results/screens";
 fs.mkdirSync(out, { recursive: true });
 
-const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium" });
+// Uses CHROME_PATH, the preinstalled sandbox Chromium, or Playwright's own browser (CI).
+const localChromium = "/opt/pw-browsers/chromium";
+const executablePath = process.env.CHROME_PATH ?? (fs.existsSync(localChromium) ? localChromium : undefined);
+const browser = await chromium.launch({ executablePath });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const errors = [];
 page.on("pageerror", (e) => errors.push(`pageerror: ${e.message}`));
