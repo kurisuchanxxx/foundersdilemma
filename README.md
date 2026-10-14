@@ -19,6 +19,7 @@ Gira su **macOS** (Apple silicon e Intel), **Windows** e, come file unico, in **
 - [Sviluppo](#sviluppo)
 - [Architettura](#architettura)
 - [Pubblicare una nuova versione](#pubblicare-una-nuova-versione)
+- [Licenza](#licenza)
 - [English](#english)
 
 ## Cosa si impara
@@ -119,6 +120,13 @@ Il motore è una funzione pura dello stato e delle decisioni: ogni estrazione ca
 
 Il workflow **CI** controlla tipi, test unitari, build e test end-to-end a ogni push. Il workflow **Web version on GitHub Pages** pubblica la versione browser sul branch `gh-pages` a ogni push su `main` (oppure a mano da Actions); il sito è servito da GitHub Pages.
 
+## Licenza
+
+- **Codice** (gioco, motore, app desktop): [PolyForm Noncommercial 1.0.0](LICENSE.md). Si può usare, studiare e modificare per scopi non commerciali; l'uso commerciale richiede il permesso dell'autore.
+- **Materiali del corso** (`docs/`): [Creative Commons BY-NC-SA 4.0](docs/LICENSE.txt). Si possono condividere e adattare citando la fonte, senza scopi commerciali e con la stessa licenza.
+
+Per usi commerciali (ad esempio corsi a pagamento tenuti da altri) contattare l'autore tramite GitHub.
+
 ## English
 
 **Founder's Dilemma** is a startup venturing business simulation for university courses. Teams found a startup, search for product-market fit, hire, raise money and face the founder's dilemmas (Rich vs King), solo against bots, hot-seat on one computer, or as a class exchanging files with the instructor (no server needed). It runs on macOS, Windows, Linux and in any browser as a single HTML file, in English and Italian.
@@ -128,3 +136,5 @@ Il workflow **CI** controlla tipi, test unitari, build e test end-to-end a ogni 
 - **Teach**: the course package (Italian) is in [`docs/corso`](docs/corso/README.md): module proposal, session plan, instructor guide, student manual, assessment rubrics and the simulation model.
 
 The deterministic TypeScript engine (`src/core`) is a rewrite and expansion of the original Swift/SwiftUI blueprint kept in `legacy/`.
+
+License: code under PolyForm Noncommercial 1.0.0 (`LICENSE.md`), course materials under CC BY-NC-SA 4.0 (`docs/LICENSE.txt`). Commercial use requires the author's permission.
