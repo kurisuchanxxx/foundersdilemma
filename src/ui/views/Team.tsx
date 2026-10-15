@@ -17,6 +17,8 @@ import {
   type Stats,
 } from "../../core";
 import { MAX_OFFERS } from "../../core";
+import { Avatar } from "../components/Avatar";
+import { LevelChip, XpBar } from "../components/Gamify";
 import { Icon } from "../components/Icon";
 import { Badge, Callout, Card, Empty, InfoTip, Modal, Progress, Segmented, SliderField, Stat } from "../components/ui";
 import { lastSnapshot, useActiveCompany, useGame, useDraft } from "../hooks";
@@ -90,21 +92,25 @@ export function Team() {
         </Card>
       </div>
 
-      <Card title={f.tx("Founders", "Fondatori")} icon="Crown">
+      <Card title={f.tx("Founders", "Fondatori")} icon="Crown" action={<LevelChip xp={c.xp} size="md" />}>
         <div className="grid cols-2">
           {c.founders.map((fd) => (
             <div key={fd.id} className="row gap-12" style={{ opacity: fd.active ? 1 : 0.5 }}>
-              <span className="logo" style={{ width: 36, height: 36, background: "var(--surface-3)", color: "var(--accent-text)" }}>
-                <Icon name={ARCHETYPES[fd.archetype].icon} size={18} />
-              </span>
+              <Avatar avatar={fd.avatar} name={fd.name} size={46} />
               <div className="grow">
                 <div style={{ fontWeight: 600 }}>
                   {fd.name} {!fd.active && <Badge tone="bad">{f.tx("left", "uscito")}</Badge>}
                 </div>
-                <div className="small muted">{f.L(ARCHETYPES[fd.archetype].name)} · {f.L(ARCHETYPES[fd.archetype].description)}</div>
+                <div className="small muted row gap-4">
+                  <Icon name={ARCHETYPES[fd.archetype].icon} size={12} className="accent" />
+                  {f.L(ARCHETYPES[fd.archetype].name)} · {f.L(ARCHETYPES[fd.archetype].description)}
+                </div>
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-16">
+          <XpBar company={c} />
         </div>
         <div className="row between mt-16 small">
           <span className="muted">

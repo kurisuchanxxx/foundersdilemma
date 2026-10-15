@@ -44,6 +44,9 @@ function emptyTraits(): Required<TraitEffects> {
 
 const SENIORITY_PRODUCTIVITY = { Junior: 0.85, Mid: 1, Senior: 1, Staff: 1, Principal: 1 } as const;
 
+/** Share of a founder's output counted for the third and fourth founder (coordination overhead). */
+export const EXTRA_FOUNDER_WEIGHT = 0.35;
+
 export function rampFactor(e: Employee, month: number): number {
   const m = month - e.startMonth;
   if (m <= 0) return 0.5;
@@ -126,17 +129,19 @@ export function computeCapacities(
   const mult = combinedMultipliers(founders.map((f) => f.archetype));
   const stats: Stats = { eng: 0, product: 0, design: 0, growth: 0, sales: 0, ops: 0, cs: 0 };
   const fOut = founderOutput(c, d);
-  for (const f of founders) {
+  founders.forEach((f, i) => {
     const s = ARCHETYPES[f.archetype].stats;
     const m = ARCHETYPES[f.archetype].multipliers;
-    stats.eng += s.eng * m.rnd * fOut;
-    stats.product += s.product * m.rnd * fOut;
-    stats.design += s.design * m.quality * fOut;
-    stats.growth += s.growth * m.marketing * fOut;
-    stats.sales += s.sales * m.sales * fOut;
-    stats.ops += s.ops * m.operations * fOut;
-    stats.cs += s.cs * m.operations * fOut;
-  }
+    // Founders beyond the second add hands but also meetings: they count at the extra-founder weight.
+    const w = fOut * (i < 2 ? 1 : EXTRA_FOUNDER_WEIGHT);
+    stats.eng += s.eng * m.rnd * w;
+    stats.product += s.product * m.rnd * w;
+    stats.design += s.design * m.quality * w;
+    stats.growth += s.growth * m.marketing * w;
+    stats.sales += s.sales * m.sales * w;
+    stats.ops += s.ops * m.operations * w;
+    stats.cs += s.cs * m.operations * w;
+  });
   const hasMentor = c.team.some((e) => e.perks.includes("mentor") || e.seniority === "Staff" || e.seniority === "Principal");
   let seniorEng = 0;
   let totalEng = 0;

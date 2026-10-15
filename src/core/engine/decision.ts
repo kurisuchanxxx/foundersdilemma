@@ -2,6 +2,7 @@ import { investorDef, lenderDef, grantDef } from "../data/investors";
 import { SECTORS } from "../data/sectors";
 import { lt, type LText } from "../text";
 import type { Company, Decision, GameState, GtmChannel, ReputationAction } from "../types";
+import { sanitizeInteractions } from "./interactions";
 import { headcount } from "./util";
 
 export const REPUTATION_ACTIONS: Record<ReputationAction, { cost: number; distraction: number; label: LText; description: LText }> = {
@@ -69,6 +70,7 @@ export function defaultDecision(c: Company): Decision {
     loanRequest: null,
     acceptAcquisitionId: null,
     dilemmaChoice: null,
+    interactions: [],
   };
 }
 
@@ -91,6 +93,7 @@ export function carryOverDecision(c: Company): Decision {
     loanRequest: null,
     acceptAcquisitionId: null,
     dilemmaChoice: null,
+    interactions: [],
   };
 }
 
@@ -130,6 +133,7 @@ export function sanitizeDecision(state: GameState, c: Company, input: Decision):
   if (d.acceptAcquisitionId && !c.acquisitionOffers.some((o) => o.id === d.acceptAcquisitionId && o.validRound >= state.round)) d.acceptAcquisitionId = null;
   if (d.dilemmaChoice && !(c.dilemma && c.dilemma.options.some((o) => o.id === d.dilemmaChoice))) d.dilemmaChoice = null;
   if (c.product.launched) d.launchNow = false;
+  d.interactions = sanitizeInteractions(state, c, d.interactions);
   return d;
 }
 
