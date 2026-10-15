@@ -1,4 +1,5 @@
-import { ACHIEVEMENTS, SECTORS, roundLabel, type GameEvent } from "../../core";
+import { ACHIEVEMENTS, INTERACTION_DEFS, SECTORS, roundLabel, type GameEvent } from "../../core";
+import { Avatar } from "../components/Avatar";
 import { Icon } from "../components/Icon";
 import { Badge, Card, Empty, InfoTip, Progress } from "../components/ui";
 import { useActiveCompany, useGame } from "../hooks";
@@ -25,6 +26,48 @@ export function EventCard({ e }: { e: GameEvent }) {
   );
 }
 
+function FounderBuzz() {
+  const f = useFmt();
+  const game = useGame();
+  const items = game.interactions.filter((i) => i.round >= game.round - 3).slice().reverse().slice(0, 12);
+  const byId = (id: string) => game.companies.find((c) => c.id === id);
+  return (
+    <Card title={f.tx("Founder buzz", "Chiacchiere tra fondatori")} icon="HeartHandshake" action={<span className="small faint">{f.tx("what the teams did to each other", "cosa si sono fatti i team")}</span>}>
+      {items.length === 0 ? (
+        <p className="muted">{f.tx("No shout-outs, mentorships, taunts or poaching yet. Use the 'Founder network' tab in Decisions.", "Ancora nessuno shout-out, mentorship, sfottò o talento soffiato. Usa la scheda 'Rete dei fondatori' nelle Decisioni.")}</p>
+      ) : (
+        <div className="col" style={{ gap: 0 }}>
+          {items.map((i) => {
+            const a = byId(i.fromId);
+            const b = byId(i.toId);
+            const def = INTERACTION_DEFS[i.kind];
+            if (!a || !b) return null;
+            return (
+              <div key={i.id} className="feed-row">
+                <span className="row" style={{ marginRight: 4 }}>
+                  <Avatar avatar={a.founders[0]?.avatar} name={a.founders[0]?.name ?? a.name} size={26} />
+                  <span className={`badge ${def.tone === "bad" ? "bad" : def.tone === "warn" ? "warn" : def.tone === "good" ? "good" : "accent"}`} style={{ margin: "0 -4px", zIndex: 1 }}>
+                    <Icon name={def.icon} size={11} />
+                  </span>
+                  <Avatar avatar={b.founders[0]?.avatar} name={b.founders[0]?.name ?? b.name} size={26} />
+                </span>
+                <div className="grow small">
+                  <div>{f.L(i.text)}</div>
+                  <div className="tiny faint">
+                    {f.L(roundLabel(game.config, i.round))} · {f.L(def.title)}
+                    {i.xpFrom > 0 ? ` · +${i.xpFrom} XP ${a.name}` : ""}
+                    {i.xpTo > 0 ? ` · +${i.xpTo} XP ${b.name}` : ""}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Card>
+  );
+}
+
 export function News() {
   const f = useFmt();
   const game = useGame();
@@ -45,6 +88,7 @@ export function News() {
       <Card title={f.tx("Breaking news this round", "Ultime notizie di questo round")} icon="Newspaper">
         {game.outlook.length === 0 ? <p className="muted">{f.tx("A quiet period: no major market news.", "Un periodo tranquillo: nessuna grande notizia di mercato.")}</p> : game.outlook.map((e) => <EventCard key={e.id} e={e} />)}
       </Card>
+      <FounderBuzz />
       {c && showPrivate && (
         <div className="grid cols-2">
           <Card title={f.tx("Reputation", "Reputazione")} icon="Star" action={<InfoTip concept="reputation" />}>

@@ -72,9 +72,153 @@ export interface Features {
   advancedFinance: boolean;
 }
 
+// ---------------------------------------------------------------------------------------
+// Branding & engagement (avatars, logos, XP, challenges, showdowns, founder interactions)
+// ---------------------------------------------------------------------------------------
+
+export interface AvatarTraits {
+  bg: number;
+  skin: number;
+  hair: number;
+  hairColor: number;
+  eyes: number;
+  mouth: number;
+  accessory: number;
+}
+
+/** A cartoon avatar built from traits, or a small photo (data URL, downscaled by the UI). */
+export type FounderAvatar = { kind: "traits"; traits: AvatarTraits } | { kind: "photo"; data: string };
+
+export type LogoShape =
+  | "circle"
+  | "ring"
+  | "square"
+  | "rounded"
+  | "triangle"
+  | "diamond"
+  | "hexagon"
+  | "star"
+  | "bolt"
+  | "heart"
+  | "drop"
+  | "leaf"
+  | "bar"
+  | "arc"
+  | "dots"
+  | "monogram";
+
+export interface LogoLayer {
+  shape: LogoShape;
+  /** Hex color or a token ("light", "dark", "tint", "shade", "ink") resolved against the company color. */
+  color: string;
+  /** Size in percent of the logo box. */
+  size: number;
+  x: number;
+  y: number;
+  rotation: number;
+  opacity: number;
+}
+
+/** Ready-made mark, hand-composed layers, or an uploaded image. null = plain icon logo. */
+export type LogoArt = { kind: "template"; template: string } | { kind: "composed"; layers: LogoLayer[] } | { kind: "image"; data: string };
+
+export type ChallengeKind =
+  | "mrrGrowth"
+  | "newCustomers"
+  | "lowChurn"
+  | "hire"
+  | "deepDiscovery"
+  | "lowStress"
+  | "raise"
+  | "launch"
+  | "pmfGain"
+  | "cashPositive"
+  | "qualityShip"
+  | "noDebt"
+  | "runway"
+  | "morale"
+  | "nps"
+  | "frugal"
+  | "pitch"
+  | "community";
+export type ChallengeTier = "easy" | "medium" | "hard";
+
+/** A challenge proposed to every team for one round. */
+export interface RoundChallenge {
+  id: string;
+  round: number;
+  kind: ChallengeKind;
+  tier: ChallengeTier;
+  xp: number;
+  target: number;
+}
+
+export interface ChallengeOutcome {
+  challengeId: string;
+  kind: ChallengeKind;
+  tier: ChallengeTier;
+  round: number;
+  target: number;
+  /** 0-1 progress towards the target (1 = completed). */
+  progress: number;
+  completed: boolean;
+  /** false when the challenge did not apply to the company (e.g. MRR growth before launch). */
+  applicable: boolean;
+  xp: number;
+}
+
+export type ShowdownKind = "mrrSprint" | "customerRush" | "retentionDuel" | "pmfRace" | "moraleCup" | "efficiencyCup" | "brandBattle" | "fundraisingDerby" | "buildSprint";
+
+export interface ShowdownResult {
+  companyId: string;
+  value: number;
+  rank: number;
+  xp: number;
+}
+
+/** A race between all the teams of the game, announced at the start of a round and resolved at its end. */
+export interface Showdown {
+  id: string;
+  round: number;
+  kind: ShowdownKind;
+  resolved: boolean;
+  results: ShowdownResult[];
+}
+
+export type InteractionKind = "shoutout" | "mentorship" | "taunt" | "poach";
+
+export interface InteractionRequest {
+  kind: InteractionKind;
+  targetId: string;
+  /** Only for poaching: the employee to approach (null = let the engine pick). */
+  employeeId: string | null;
+}
+
+export interface InteractionRecord {
+  id: string;
+  round: number;
+  kind: InteractionKind;
+  fromId: string;
+  toId: string;
+  success: boolean;
+  text: LText;
+  xpFrom: number;
+  xpTo: number;
+}
+
+export type XpSource = "challenge" | "streak" | "achievement" | "showdown" | "interaction";
+
+export interface XpEntry {
+  round: number;
+  source: XpSource;
+  amount: number;
+  label: LText;
+}
+
 export interface FounderSetup {
   name: string;
   archetype: Archetype;
+  avatar?: FounderAvatar | null;
 }
 
 export interface CompanySetup {
@@ -83,10 +227,15 @@ export interface CompanySetup {
   sector: SectorId;
   logo: string;
   color: string;
+  /** Richer logo (gallery mark, composed layers or uploaded image); null keeps the plain icon. */
+  logoArt?: LogoArt | null;
   riskProfile: RiskProfile;
+  /** One to four founders (students can each play a founder). */
   founders: FounderSetup[];
   /** Share of founder equity that goes to the first founder (only with two founders). */
   equitySplit: number;
+  /** Optional explicit equity shares (one per founder, summing to 1) for teams of three or four. */
+  equityShares?: number[];
   founderVesting: boolean;
   teamMembers: string[];
   isBot: boolean;
@@ -183,6 +332,7 @@ export interface Founder {
   id: string;
   name: string;
   archetype: Archetype;
+  avatar: FounderAvatar | null;
   active: boolean;
   holderId: string;
   leftRound: number | null;
@@ -504,6 +654,8 @@ export interface Decision {
   // Exit & dilemmas
   acceptAcquisitionId: string | null;
   dilemmaChoice: string | null;
+  // Founder network (max 2 per round)
+  interactions: InteractionRequest[];
 }
 
 // ---------------------------------------------------------------------------------------
@@ -662,6 +814,7 @@ export interface Company {
   sector: SectorId;
   logo: string;
   color: string;
+  logoArt: LogoArt | null;
   riskProfile: RiskProfile;
   isBot: boolean;
   botStyle: BotStyle | null;
@@ -732,6 +885,13 @@ export interface Company {
   monthly: MonthPoint[];
   achievements: Achievement[];
   flags: CompanyFlags;
+
+  // engagement
+  xp: number;
+  cups: number;
+  challengeStreak: number;
+  challengeLog: ChallengeOutcome[];
+  xpLog: XpEntry[];
 }
 
 export interface SectorMarketState {
@@ -762,6 +922,12 @@ export interface GameState {
   reports: RoundReport[];
   firsts: { pmf: string | null; profitable: string | null };
   idSeq: number;
+  /** Challenges of the current round (the same for every team). */
+  challenges: RoundChallenge[];
+  showdowns: Showdown[];
+  interactions: InteractionRecord[];
+  /** Relationship between two companies, keyed "idA|idB" (sorted), from -5 (feud) to +5 (allies). */
+  relations: Record<string, number>;
 }
 
 export interface PreviewResult {
