@@ -1,6 +1,6 @@
 [package]
 name = "founders-dilemma"
-version = "2.0.0"
+version = "2.1.0"
 description = "Founder's Dilemma: a startup venturing business simulation for the classroom"
 authors = ["Founder's Dilemma contributors"]
 license = "PolyForm-Noncommercial-1.0.0"

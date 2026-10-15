@@ -5,6 +5,7 @@ import {
   GRANTS,
   GTM_INFO,
   HOURS_INFO,
+  INTERACTION_DEFS,
   LENDERS,
   REPUTATION_ACTIONS,
   SECTORS,
@@ -36,6 +37,7 @@ import { useActiveCompany, useGame, useDraft } from "../hooks";
 import { useFmt, type Fmt } from "../i18n";
 import { exportDecisionFile } from "../classroom";
 import { useStore, type DecisionTab } from "../store";
+import { NetworkTab } from "./Network";
 
 type Tab = DecisionTab;
 
@@ -75,6 +77,7 @@ export function Decisions() {
     { id: "people", label: f.tx("Founders & team", "Fondatori e team"), icon: "Users" },
     { id: "growth", label: f.tx("Reputation", "Reputazione"), icon: "Megaphone" },
     { id: "finance", label: f.tx("Finance & exit", "Finanza ed exit"), icon: "HandCoins", dot: c.termSheets.length + c.acquisitionOffers.length > 0 },
+    { id: "network", label: f.tx("Founder network", "Rete dei fondatori"), icon: "HeartHandshake" },
   ];
   if (c.dilemma) tabs.push({ id: "dilemma", label: f.tx("Dilemma", "Dilemma"), icon: "Scale", dot: !draft.dilemmaChoice });
   tabs.push({ id: "review", label: f.tx("Review & submit", "Riepilogo e invio"), icon: "ListChecks" });
@@ -101,6 +104,7 @@ export function Decisions() {
             {tab === "people" && <PeopleTab c={c} d={draft} set={set} />}
             {tab === "growth" && <GrowthTab d={draft} set={set} />}
             {tab === "finance" && <FinanceTab c={c} d={draft} set={set} />}
+            {tab === "network" && <NetworkTab c={c} d={draft} set={set} />}
             {tab === "dilemma" && c.dilemma && <DilemmaTab c={c} d={draft} set={set} />}
           </fieldset>
           {tab === "review" && <ReviewTab c={c} d={draft} preview={preview} onEdit={setTab} />}
@@ -695,6 +699,11 @@ function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview
     [f.tx("Hiring offers", "Offerte di assunzione"), String(d.offers.length), "people"],
     [f.tx("Reputation action", "Azione di reputazione"), f.L(REPUTATION_ACTIONS[d.reputationAction].label), "growth"],
     [f.tx("Pitches", "Pitch"), String(d.pitches.length), "finance"],
+    [
+      f.tx("Founder network", "Rete dei fondatori"),
+      d.interactions.length > 0 ? d.interactions.map((i) => `${f.L(INTERACTION_DEFS[i.kind].title)} → ${game.companies.find((o) => o.id === i.targetId)?.name ?? "?"}`).join(", ") : f.tx("none", "nessuna"),
+      "network",
+    ],
   ];
   if (c.dilemma) rows.push([f.tx("Dilemma", "Dilemma"), d.dilemmaChoice ? f.L(c.dilemma.options.find((o) => o.id === d.dilemmaChoice)?.label) : f.tx("not answered", "senza risposta"), "dilemma"]);
   return (

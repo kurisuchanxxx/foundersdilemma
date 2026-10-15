@@ -2,7 +2,7 @@ import { EXPECTED_EQUITY } from "../data/candidates";
 import { INVESTORS, GRANTS, LENDERS } from "../data/investors";
 import { SECTORS } from "../data/sectors";
 import type { Rng } from "../rng";
-import type { BotStyle, Candidate, Company, Decision, GameState, Pitch, Role } from "../types";
+import type { BotStyle, Candidate, Company, Decision, GameState, InteractionRequest, Pitch, Role } from "../types";
 import { carryOverDecision } from "./decision";
 import { defaultOption } from "./dilemmas";
 import { fairValuation, grantChecks, investorChecks, loanLimit, monthlyExpenses } from "./finance";
@@ -197,4 +197,21 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
     if (c.dilemma.templateId === "acquihire_offer" && c.botStyle === "lean" && c.pmf.score > 25 && runway > 4) d.dilemmaChoice = "decline";
   }
   return d;
+}
+
+/** Bots join the founder network too: blitz bots taunt, steady bots cheer, lean bots mentor. */
+export function botInteractions(state: GameState, c: Company, rng: Rng): InteractionRequest[] {
+  if (state.round < 2 || !rng.chance(0.35)) return [];
+  const others = state.companies.filter((o) => o.id !== c.id && o.status === "active");
+  if (others.length === 0) return [];
+  const style = c.botStyle ?? "steady";
+  if (style === "blitz") {
+    const humans = others.filter((o) => !o.isBot);
+    return [{ kind: "taunt", targetId: rng.pick(humans.length > 0 ? humans : others).id, employeeId: null }];
+  }
+  if (style === "lean") {
+    const weakest = [...others].sort((a, b) => a.pmf.score - b.pmf.score)[0];
+    return [{ kind: "mentorship", targetId: weakest.id, employeeId: null }];
+  }
+  return [{ kind: "shoutout", targetId: rng.pick(others).id, employeeId: null }];
 }

@@ -1,6 +1,7 @@
 import {
   Activity, AlertTriangle, ArrowDownRight, ArrowUpRight, Atom, Award, BadgeCheck, Banknote, BarChart3, Bike, Bot, Box, BookOpen,
-  BrainCircuit, Briefcase, Bug, Building2, CalendarClock, Car, Check, ChevronLeft, ChevronRight, CircleDollarSign, CircleHelp,
+  BrainCircuit, Briefcase, Bug, Building2, CalendarClock, Camera, Car, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleDollarSign, CircleHelp,
+  Eraser, Gift, HeartHandshake, ImagePlus, PartyPopper, Shuffle,
   ClipboardList, Clock, Cloud, Code2, Coins, Compass, Cpu, CreditCard, Crosshair, Crown, Dna, Download, Eye, EyeOff, FastForward,
   Feather, FileSpreadsheet, FileText, Flag, Flame, FolderOpen, Gauge, Gem, Globe, GraduationCap, HandCoins, Handshake, Hammer,
   Heart, HeartPulse, Hexagon, Hourglass, Info, KeyRound, Landmark, Languages, Layers, LayoutDashboard, Leaf, Lightbulb, LineChart, ListChecks,
@@ -14,7 +15,8 @@ import {
 
 const ICONS: Record<string, LucideIcon> = {
   Activity, AlertTriangle, ArrowDownRight, ArrowUpRight, Atom, Award, BadgeCheck, Banknote, BarChart3, Bike, Bot, Box, BookOpen,
-  BrainCircuit, Briefcase, Bug, Building2, CalendarClock, Car, Check, ChevronLeft, ChevronRight, CircleDollarSign, CircleHelp,
+  BrainCircuit, Briefcase, Bug, Building2, CalendarClock, Camera, Car, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleDollarSign, CircleHelp,
+  Eraser, Gift, HeartHandshake, ImagePlus, PartyPopper, Shuffle,
   ClipboardList, Clock, Cloud, Code2, Coins, Compass, Cpu, CreditCard, Crosshair, Crown, Dna, Download, Eye, EyeOff, FastForward,
   Feather, FileSpreadsheet, FileText, Flag, Flame, FolderOpen, Gauge, Gem, Globe, GraduationCap, HandCoins, Handshake, Hammer,
   Heart, HeartPulse, Hexagon, Hourglass, Info, KeyRound, Landmark, Languages, Layers, LayoutDashboard, Leaf, Lightbulb, LineChart, ListChecks,
