@@ -3,6 +3,8 @@ import { ACHIEVEMENTS, PMF_THRESHOLD, SECTORS, decisionsCsv, historyCsv, standin
 import { isFramed, saveTextFile } from "../../platform/files";
 import { LineChart, Scatter } from "../components/charts";
 import { Icon } from "../components/Icon";
+import { AvatarStack } from "../components/Avatar";
+import { LevelChip } from "../components/Gamify";
 import { Badge, Callout, Card, InfoTip, Logo } from "../components/ui";
 import { useActiveCompany, useGame } from "../hooks";
 import { useFmt } from "../i18n";
@@ -71,6 +73,7 @@ export function Results() {
                   {f.tx("Founders", "Fondatori")} {f.money(r.founderWealth)} · {f.tx("valuation", "valutazione")} {f.money(r.valuation)}
                 </div>
               </div>
+              <AvatarStack founders={c.founders} size={24} />
             </div>
           </Card>
         ))}
@@ -79,6 +82,45 @@ export function Results() {
       <Card title={f.tx("Final standings", "Classifica finale")} icon="Trophy">
         <StandingsTable highlight={active?.id} />
       </Card>
+
+      <div className="grid cols-3">
+        {(() => {
+          const byXp = [...game.companies].sort((a, b) => b.xp - a.xp);
+          const byCups = [...game.companies].sort((a, b) => b.cups - a.cups);
+          const byStreak = [...game.companies].sort((a, b) => b.challengeLog.filter((o) => o.completed).length - a.challengeLog.filter((o) => o.completed).length);
+          const cards = [
+            { icon: "Star", title: f.tx("Most engaged team", "Team più coinvolto"), c: byXp[0], sub: byXp[0] ? `${byXp[0].xp} XP` : "" },
+            { icon: "Trophy", title: f.tx("Showdown champion", "Campione delle sfide di squadra"), c: byCups[0]?.cups > 0 ? byCups[0] : undefined, sub: byCups[0] ? `${byCups[0].cups} ${f.tx("cups", "coppe")}` : "" },
+            { icon: "Flag", title: f.tx("Challenge hunter", "Cacciatore di sfide"), c: byStreak[0], sub: byStreak[0] ? `${byStreak[0].challengeLog.filter((o) => o.completed).length} ${f.tx("challenges completed", "sfide completate")}` : "" },
+          ];
+          return cards.map((k) => (
+            <Card key={k.title}>
+              <div className="row gap-12">
+                <span className="logo" style={{ width: 36, height: 36, background: "var(--surface-3)", color: "var(--warn)" }}>
+                  <Icon name={k.icon} size={18} />
+                </span>
+                {k.c ? (
+                  <>
+                    <Logo company={k.c} size={32} />
+                    <div className="grow">
+                      <div className="tiny faint">{k.title}</div>
+                      <div style={{ fontWeight: 650 }}>{k.c.name}</div>
+                      <div className="small muted row gap-4">
+                        {k.sub} <LevelChip xp={k.c.xp} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="grow">
+                    <div className="tiny faint">{k.title}</div>
+                    <div className="small muted">—</div>
+                  </div>
+                )}
+              </div>
+            </Card>
+          ));
+        })()}
+      </div>
 
       <div className="grid cols-2">
         <Card title={f.tx("Rich or King?", "Ricco o Re?")} icon="Crown" action={<InfoTip concept="richVsKing" />}>

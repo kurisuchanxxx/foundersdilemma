@@ -62,6 +62,19 @@ Per firmare le app (niente avvisi al primo avvio) servono un certificato Apple D
 
 La console docente offre timer del round, vista proiettore, eventi a sorpresa, spunti di discussione ed esportazioni CSV (storico, classifica, decisioni) per la valutazione. Con lo stesso **seed** due classi giocano esattamente lo stesso mercato.
 
+## Coinvolgimento degli studenti
+
+Uno strato di gioco che non tocca la classifica economica ma tiene alta l'attenzione tra un round e l'altro:
+
+| Elemento | Cosa fa |
+|---|---|
+| **Team da 1 a 4 fondatori** | Ogni studente impersona un fondatore con nome, archetipo e avatar: cartoon componibile (sfondo, pelle, capelli, occhi, bocca, accessori) oppure una foto caricata, trascinata o incollata, ritagliata e tenuta piccola. Il terzo e il quarto fondatore aggiungono capacità ridotta, così i team numerosi non sono avvantaggiati. |
+| **Logo e brand** | Icone, una galleria di 24 marchi pronti nel colore del brand, uno studio per comporre il proprio logo con pezzi, colori, posizione, rotazione e opacità, oppure il caricamento di un'immagine. |
+| **Sfide del round** | Tre sfide per round (facile, media, difficile) con XP bonus, serie di round consecutivi premiate e livelli da *Sognatore da garage* a *Leggenda delle startup*. |
+| **Sfide di squadra** | Ogni round una gara tra tutti i team (sprint dell'MRR, corsa ai clienti, duello della retention, coppa del morale...) con podio, coppa e XP per i primi tre. |
+| **Rete dei fondatori** | Fino a due azioni per round verso gli altri team: shout-out, mentorship, sfottò e tentativi di soffiare talenti. Le relazioni tra team ricordano quello che è successo e tutto finisce nelle news. |
+| **Recap animato** | A fine round: XP guadagnati, salita di livello con coriandoli, sfide spuntate e podio della sfida di squadra. |
+
 ### Schermate
 
 | Decisioni del round con proiezione | Console del docente (modalità Classe) |
@@ -132,6 +145,7 @@ Per usi commerciali (ad esempio corsi a pagamento tenuti da altri) contattare l'
 **Founder's Dilemma** is a startup venturing business simulation for university courses. Teams found a startup, search for product-market fit, hire, raise money and face the founder's dilemmas (Rich vs King), solo against bots, hot-seat on one computer, or as a class exchanging files with the instructor (no server needed). It runs on macOS, Windows, Linux and in any browser as a single HTML file, in English and Italian.
 
 - **Download**: see the repository Releases (unsigned builds: on macOS right click > Open; on Windows SmartScreen > More info > Run anyway).
+- **Engagement layer**: teams of one to four founders with cartoon or photo avatars, a logo gallery and studio, three XP challenges per round, a showdown between teams every round, a founder network (shout-outs, mentorship, taunts, poaching) and an animated round recap. XP never changes the economic ranking.
 - **Develop**: `npm ci`, `npm run dev` (web) or `npm run desktop:dev` (Tauri, needs Rust), `npm test`, `npm run e2e`.
 - **Teach**: the course package (Italian) is in [`docs/corso`](docs/corso/README.md): module proposal, session plan, instructor guide, student manual, assessment rubrics and the simulation model.
 

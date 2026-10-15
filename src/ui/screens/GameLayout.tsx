@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { allHumansSubmitted, roundLabel, type Company } from "../../core";
 import { Coach } from "../components/Coach";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { XpBar } from "../components/Gamify";
 import { Icon } from "../components/Icon";
 import { Logo, Modal, Progress } from "../components/ui";
 import { useActiveCompany, useGame } from "../hooks";
@@ -72,6 +73,11 @@ export function GameLayout() {
             <div style={{ fontWeight: 700 }}>Founder's Dilemma</div>
           </div>
           {company && <CompanySwitcher company={company} humans={humans} onPick={setActive} locked={isTeamCopy || mode === "solo"} />}
+          {company && (
+            <div style={{ marginTop: 10, padding: "0 2px" }}>
+              <XpBar company={company} compact />
+            </div>
+          )}
         </div>
         <nav>
           {showInstructor && (

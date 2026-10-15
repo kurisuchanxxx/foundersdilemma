@@ -4,6 +4,7 @@ import {
   createGame,
   draftFor,
   injectCustomEvent,
+  normalizeState,
   saveDraft,
   startGame,
   submitDecision,
@@ -34,7 +35,7 @@ export type View =
   | "instructor"
   | "results";
 export type Theme = "auto" | "light" | "dark";
-export type DecisionTab = "core" | "product" | "people" | "growth" | "finance" | "dilemma" | "review";
+export type DecisionTab = "core" | "product" | "people" | "growth" | "finance" | "network" | "dilemma" | "review";
 
 export interface SaveMeta {
   id: string;
@@ -175,7 +176,7 @@ export function parseGame(raw: string): GameState | null {
     const state = (obj && obj.kind === "founders-dilemma-game" ? obj.state : obj) as GameState;
     if (!state || !Array.isArray(state.companies) || !state.config || typeof state.round !== "number") return null;
     if (state.version !== STATE_VERSION) console.warn("Loading a game saved with a different version", state.version);
-    return state;
+    return normalizeState(state);
   } catch {
     return null;
   }
@@ -238,6 +239,7 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   loadGame: (state, opts) => {
+    normalizeState(state);
     const role = opts?.classroomRole ?? (state.config.mode === "classroom" ? "host" : null);
     const active = opts?.activeCompanyId ?? firstHuman(state);
     set({
@@ -256,7 +258,7 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   replaceGame: (state) => {
-    set({ game: state, drafts: {} });
+    set({ game: normalizeState(state), drafts: {} });
     void get().persist();
   },
 

@@ -47,13 +47,22 @@ export const TOUR: TourStep[] = [
     ],
   },
   {
+    view: "dashboard",
+    target: "challenges",
+    title: ["Challenges and XP", "Sfide e XP"],
+    body: [
+      "Every round brings three challenges (easy, medium, hard) worth bonus XP, plus a showdown against the other teams with a cup for the winner. XP and cups show how actively you play; they never change the economic ranking.",
+      "Ogni round porta tre sfide (facile, media, difficile) che valgono XP bonus, più una sfida di squadra contro gli altri team con una coppa per chi vince. XP e coppe mostrano quanto giocate attivamente; non cambiano mai la classifica economica.",
+    ],
+  },
+  {
     view: "decisions",
     tab: "core",
     target: "decision-tabs",
     title: ["This round's decisions", "Le decisioni del round"],
     body: [
-      "Decisions are split into tabs: budget and price, product, founders and team, reputation, finance. When a founder's dilemma arrives it gets its own tab.",
-      "Le decisioni sono divise in schede: budget e prezzo, prodotto, fondatori e team, reputazione, finanza. Quando arriva un dilemma del fondatore compare una scheda dedicata.",
+      "Decisions are split into tabs: budget and price, product, founders and team, reputation, finance, founder network. When a founder's dilemma arrives it gets its own tab.",
+      "Le decisioni sono divise in schede: budget e prezzo, prodotto, fondatori e team, reputazione, finanza, rete dei fondatori. Quando arriva un dilemma del fondatore compare una scheda dedicata.",
     ],
   },
   {

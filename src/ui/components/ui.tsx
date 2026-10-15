@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import type { Company } from "../../core";
+import type { LogoArt } from "../../core";
 import { glossaryEntry } from "../content/glossary";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
 import { Icon } from "./Icon";
+import { LogoMark } from "./LogoArt";
 
 export function Card({ title, icon, action, children, className = "", onClick, tour }: { title?: ReactNode; icon?: string; action?: ReactNode; children?: ReactNode; className?: string; onClick?: () => void; tour?: string }) {
   return (
@@ -249,12 +250,8 @@ export function InfoTip({ concept, text }: { concept?: string; text?: ReactNode 
   );
 }
 
-export function Logo({ company, size = 40 }: { company: Pick<Company, "logo" | "color">; size?: number }) {
-  return (
-    <span className="logo" style={{ width: size, height: size, background: company.color, borderRadius: size * 0.26 }}>
-      <Icon name={company.logo} size={size * 0.55} />
-    </span>
-  );
+export function Logo({ company, size = 40 }: { company: { logo: string; color: string; logoArt?: LogoArt | null; name?: string }; size?: number }) {
+  return <LogoMark brand={company} size={size} />;
 }
 
 export function Empty({ icon = "Sparkles", children }: { icon?: string; children: ReactNode }) {

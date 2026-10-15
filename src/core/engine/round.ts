@@ -3,7 +3,7 @@ import { createPreviewRng, createRng, type Rng } from "../rng";
 import { fill, lt, moneyL } from "../text";
 import type { Company, CustomEventSpec, Decision, Employee, Features, GameEvent, GameState, PreviewResult, RoundReport, SectorId, Snapshot } from "../types";
 import { checkAchievements, finalAchievements } from "./achievements";
-import { botDecision } from "./bots";
+import { botDecision, botInteractions } from "./bots";
 import { foundersOwnership } from "./captable";
 import type { SimCtx } from "./context";
 import { carryOverDecision, oneOffCosts, REPUTATION_ACTIONS, sanitizeDecision } from "./decision";
@@ -12,7 +12,9 @@ import { averageReputation } from "./effects";
 import { applyCustomEvent, fireCompanyEvent, generateOutlook, scheduleCompanyEvents } from "./events";
 import { acceptAcquisition, generateAcquisitionOffers } from "./exit";
 import { acceptTermSheet, evaluatePitch, financeMonth, handleInsolvency, monthlyExpenses, payPendingGrants, processGrantApplication, processLoanRequest } from "./finance";
+import { evaluateChallenges, generateChallenges, openShowdown, resolveShowdown } from "./gamify";
 import { refreshCandidates, resolveHiring } from "./hiring";
+import { resolveInteractions } from "./interactions";
 import { mentorInsights } from "./insights";
 import { brandAndSentiment, convertWaitlist, marketMonth, quote } from "./market";
 import { fireEmployee, resignEmployee } from "./people";
@@ -65,7 +67,9 @@ export function prepareBots(state: GameState): void {
   for (const c of state.companies) {
     if (!c.isBot || c.status !== "active" || c.submitted) continue;
     const rng = createRng(state.config.seed, state.round, "bot", c.id);
-    c.decision = sanitizeDecision(state, c, botDecision(state, c, rng));
+    const d = botDecision(state, c, rng);
+    d.interactions = botInteractions(state, c, createRng(state.config.seed, state.round, "bot-network", c.id));
+    c.decision = sanitizeDecision(state, c, d);
     c.submitted = true;
   }
 }
@@ -250,6 +254,8 @@ function newDecisionPhase(state: GameState, round: number): void {
     generateAcquisitionOffers(state, c, round - 1, netBurn, crng);
     c.dilemma = features.dilemmas ? generateDilemma(state, c, round, netBurn, runway, crng) : null;
   }
+  state.challenges = generateChallenges(state, round, createRng(state.config.seed, round, "challenges"));
+  openShowdown(state, round, createRng(state.config.seed, round, "showdown"));
   prepareBots(state);
 }
 
@@ -304,6 +310,7 @@ export function advanceRound(state: GameState): void {
     ctxs.push(x);
   }
 
+  resolveInteractions(state, ctxs, round);
   resolveHiring(state, ctxs, round, (x) => projectedRunway(state, x, round), createRng(state.config.seed, round, "hiring"));
 
   for (const x of ctxs) {
@@ -317,6 +324,7 @@ export function advanceRound(state: GameState): void {
   }
 
   for (const x of ctxs) endOfRound(state, x, round, months);
+  resolveShowdown(state, round, (id) => ctxs.find((x) => x.c.id === id)?.report);
 
   for (const c of state.companies) c.modifiers = c.modifiers.filter((mo) => mo.untilRound > round);
   state.globalModifiers = state.globalModifiers.filter((mo) => mo.untilRound > round);
@@ -366,9 +374,11 @@ function endOfRound(state: GameState, x: SimCtx, round: number, months: number):
   updateValuation(state, c, round);
   summaryLines(x);
   const snap = makeSnapshot(state, x, round, months);
+  const prev = c.history[c.history.length - 1] ?? null;
   c.history.push(snap);
   if (c.status === "active") {
     checkAchievements(state, c, round, snap, x.report);
+    evaluateChallenges(state, c, round, snap, prev, x.d, x.report);
   }
   x.report.insights = mentorInsights(state, c, snap);
   c.lastDecision = x.d;
