@@ -141,6 +141,7 @@ Il workflow **CI** controlla tipi, test unitari, build e test end-to-end a ogni 
 
 - **Codice** (gioco, motore, app desktop): [PolyForm Noncommercial 1.0.0](LICENSE.md). Si può usare, studiare e modificare per scopi non commerciali; l'uso commerciale richiede il permesso dell'autore.
 - **Materiali del corso** (`docs/`): [Creative Commons BY-NC-SA 4.0](docs/LICENSE.txt). Si possono condividere e adattare citando la fonte, senza scopi commerciali e con la stessa licenza.
+- **Contributi**: chi propone modifiche con una pull request accetta il [Contributor License Agreement](CLA.md). Il diritto d'autore resta al contributore, che concede all'autore una licenza d'uso, anche commerciale, sul proprio contributo.
 
 Per usi commerciali (ad esempio corsi a pagamento tenuti da altri) contattare l'autore tramite GitHub.
 
@@ -155,4 +156,4 @@ Per usi commerciali (ad esempio corsi a pagamento tenuti da altri) contattare l'
 
 The deterministic TypeScript engine (`src/core`) is a rewrite and expansion of the original Swift/SwiftUI blueprint kept in `legacy/`.
 
-License: code under PolyForm Noncommercial 1.0.0 (`LICENSE.md`), course materials under CC BY-NC-SA 4.0 (`docs/LICENSE.txt`). Commercial use requires the author's permission.
+License: code under PolyForm Noncommercial 1.0.0 (`LICENSE.md`), course materials under CC BY-NC-SA 4.0 (`docs/LICENSE.txt`). Commercial use requires the author's permission. Contributors accept the [Contributor License Agreement](CLA.md) when they open a pull request.
