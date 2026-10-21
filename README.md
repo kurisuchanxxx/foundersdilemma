@@ -4,9 +4,9 @@
 
 Gira su **macOS** (Apple silicon e Intel), **Windows** e, come file unico, in **qualsiasi browser**. Interfaccia in italiano e inglese.
 
-**Gioca subito online: [kurisuchanxxx.github.io/foundersdilemma](https://kurisuchanxxx.github.io/foundersdilemma/)** (nessuna installazione, funziona anche da smartphone).
+**Gioca subito online: [kurisuchanxxx.github.io/foundersdilemma/play](https://kurisuchanxxx.github.io/foundersdilemma/play/)** (nessuna installazione, funziona anche da smartphone).
 
-Pagina di presentazione, da condividere con docenti e interessati: [kurisuchanxxx.github.io/foundersdilemma/landing](https://kurisuchanxxx.github.io/foundersdilemma/landing/).
+Pagina di presentazione, da condividere con docenti e interessati: [kurisuchanxxx.github.io/foundersdilemma](https://kurisuchanxxx.github.io/foundersdilemma/).
 
 ![Cruscotto](docs/img/dashboard.png)
 
@@ -123,7 +123,7 @@ src/platform/   salvataggi (IndexedDB) e file (dialoghi nativi su desktop, downl
 src-tauri/      guscio desktop Tauri v2 (Rust): finestra, dialoghi di apertura e salvataggio
 tests/          test unitari del motore ed end-to-end (Playwright)
 scripts/        bilanciamento Monte Carlo e tracce di partite
-landing/        pagina di presentazione statica (HTML, CSS e screenshot), pubblicata su GitHub Pages in /landing/
+landing/        pagina di presentazione statica (HTML, CSS e screenshot), radice del sito su GitHub Pages
 legacy/         il blueprint originale in Swift/SwiftUI (VentureSim) e i video del mockup
 ```
 
@@ -135,7 +135,7 @@ Il motore è una funzione pura dello stato e delle decisioni: ogni estrazione ca
 2. Crea e pubblica un tag: `git tag v2.0.0 && git push origin v2.0.0`.
 3. Il workflow **Desktop apps** compila macOS (universale), Windows e Linux e crea una release in bozza con gli installer e il file web. Controlla la bozza e pubblicala.
 
-Il workflow **CI** controlla tipi, test unitari, build e test end-to-end a ogni push. Il workflow **Web version on GitHub Pages** pubblica la versione browser e la pagina di presentazione (`landing/`, servita in `/landing/`) sul branch `gh-pages` a ogni push su `main` (oppure a mano da Actions); il sito è servito da GitHub Pages.
+Il workflow **CI** controlla tipi, test unitari, build e test end-to-end a ogni push. Il workflow **Web version on GitHub Pages** pubblica il sito sul branch `gh-pages` a ogni push su `main` (oppure a mano da Actions): la pagina di presentazione (`landing/`) alla radice e la versione browser del gioco in `/play/`.
 
 ## Licenza
 
