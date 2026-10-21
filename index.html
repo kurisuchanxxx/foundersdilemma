@@ -1,15 +1,954 @@
 <!doctype html>
 <html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark light" />
-    <link rel="icon" type="image/png" href="./favicon.png" />
-    <title>Founder's Dilemma</title>
-    <script type="module" crossorigin src="./assets/index-CG-zJQv1.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-D0VV5_4s.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#09090b" />
+  <title>Founder's Dilemma · Business game di startup venturing</title>
+  <meta name="description" content="Founder's Dilemma è un business game di startup venturing per l'aula universitaria: i team fondano una startup, cercano il product-market fit, raccolgono capitali e affrontano i dilemmi del fondatore. Gratis, nel browser, senza server." />
+  <link rel="canonical" href="https://kurisuchanxxx.github.io/foundersdilemma/" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Founder's Dilemma" />
+  <meta property="og:title" content="Founder's Dilemma · Business game di startup venturing" />
+  <meta property="og:description" content="Fonda una startup, cerca il product-market fit, raccogli capitali e scegli se essere ricco o re. Un business game per l'aula universitaria, gratis e nel browser." />
+  <meta property="og:url" content="https://kurisuchanxxx.github.io/foundersdilemma/" />
+  <meta property="og:image" content="https://kurisuchanxxx.github.io/foundersdilemma/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="it_IT" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Founder's Dilemma · Business game di startup venturing" />
+  <meta name="twitter:description" content="Fonda una startup, cerca il product-market fit, raccogli capitali e scegli se essere ricco o re. Gratis, nel browser, senza server." />
+  <meta name="twitter:image" content="https://kurisuchanxxx.github.io/foundersdilemma/og.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Founder's Dilemma",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web, macOS, Windows, Linux",
+    "url": "https://kurisuchanxxx.github.io/foundersdilemma/play/",
+    "description": "Business game di startup venturing per l'aula universitaria.",
+    "inLanguage": ["it", "en"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "author": { "@type": "Organization", "name": "Ctrl Studio", "url": "https://ctrlstudio.it" }
+  }
+  </script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #09090b;
+      --bg-2: #0e0e11;
+      --surface: #131316;
+      --surface-2: #1a1a1e;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-2: rgba(255, 255, 255, 0.14);
+      --text: #f5f5f7;
+      --text-2: #a4a4ac;
+      --text-3: #70707a;
+      --accent: #0a84ff;
+      --accent-2: #5ab0ff;
+      --accent-soft: rgba(10, 132, 255, 0.14);
+      --good: #30d158;
+      --warn: #ffb020;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --font: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --container: 1120px;
+      --gutter: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: clip;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+    h1, h2, h3, h4, p { margin: 0; }
+    h1, h2, h3 { letter-spacing: -0.025em; font-weight: 650; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+    :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
+
+    .container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+    .mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; }
+    .muted { color: var(--text-2); }
+    .faint { color: var(--text-3); }
+
+    /* ---------- buttons ---------- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 12px 20px; border-radius: 999px;
+      font-weight: 600; font-size: 15px; line-height: 1;
+      border: 1px solid transparent; white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+    .btn svg { width: 17px; height: 17px; flex: none; }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: var(--accent); color: #fff; box-shadow: 0 8px 30px rgba(10, 132, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18); }
+    .btn.primary:hover { background: #2a94ff; }
+    .btn.secondary { background: rgba(255, 255, 255, 0.06); border-color: var(--border-2); color: var(--text); }
+    .btn.secondary:hover { background: rgba(255, 255, 255, 0.1); }
+    .btn.ghost { color: var(--text-2); padding: 10px 14px; }
+    .btn.ghost:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
+    .btn.lg { padding: 15px 26px; font-size: 16px; }
+
+    /* ---------- nav ---------- */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
+      background: rgba(9, 9, 11, 0.72);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .nav.scrolled { border-bottom-color: var(--border); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 650; font-size: 15px; letter-spacing: -0.01em; }
+    .brand-mark {
+      width: 30px; height: 30px; border-radius: 9px; background: var(--accent);
+      display: grid; place-items: center; color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 14px rgba(10, 132, 255, 0.35);
+    }
+    .brand-mark svg { width: 17px; height: 17px; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a { padding: 8px 12px; border-radius: 8px; font-size: 14px; color: var(--text-2); transition: color 0.15s, background 0.15s; }
+    .nav-links a:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .nav-actions .btn { padding: 9px 16px; font-size: 14px; }
+    .icon-link { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; color: var(--text-2); transition: color 0.15s, background 0.15s; }
+    .icon-link:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
+    .icon-link svg { width: 20px; height: 20px; }
+
+    /* ---------- hero ---------- */
+    .hero { position: relative; padding: 96px 0 40px; text-align: center; overflow: hidden; }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(60% 45% at 50% 0%, rgba(10, 132, 255, 0.22), transparent 70%),
+        radial-gradient(30% 25% at 50% 10%, rgba(90, 176, 255, 0.12), transparent 70%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(70% 55% at 50% 0%, #000 20%, transparent 100%);
+      mask-image: radial-gradient(70% 55% at 50% 0%, #000 20%, transparent 100%);
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px 6px 8px; border-radius: 999px;
+      border: 1px solid var(--border-2); background: rgba(255, 255, 255, 0.04);
+      font-size: 13px; color: var(--text-2);
+    }
+    .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px rgba(48, 209, 88, 0.18); }
+    .pill b { color: var(--text); font-weight: 600; }
+    .hero h1 {
+      font-size: clamp(40px, 7.2vw, 80px); line-height: 1.02; letter-spacing: -0.04em;
+      margin: 26px auto 0; max-width: 14ch;
+    }
+    .hero h1 .soft { color: var(--text-2); }
+    .hero .lead { font-size: clamp(17px, 2vw, 21px); color: var(--text-2); max-width: 640px; margin: 24px auto 0; line-height: 1.5; }
+    .hero-cta { display: flex; justify-content: center; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .hero-note { margin-top: 18px; color: var(--text-3); font-size: 13px; }
+    .hero-note span + span::before { content: "·"; margin: 0 8px; color: var(--text-3); }
+
+    /* ---------- browser frame ---------- */
+    .frame-wrap { position: relative; margin: 64px auto 0; max-width: 1080px; }
+    .frame-wrap::before {
+      content: ""; position: absolute; inset: -8% -6% auto; height: 70%; z-index: 0; pointer-events: none;
+      background: radial-gradient(50% 60% at 50% 30%, rgba(10, 132, 255, 0.28), transparent 70%);
+      filter: blur(30px);
+    }
+    .frame {
+      position: relative; z-index: 1; margin: 0;
+      border-radius: 16px; overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 40px 100px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(0, 0, 0, 0.4);
+    }
+    .frame-bar {
+      display: flex; align-items: center; gap: 12px;
+      height: 40px; padding: 0 14px;
+      background: #1b1b1f; border-bottom: 1px solid var(--border);
+    }
+    .frame-bar .dots { display: flex; gap: 6px; }
+    .frame-bar .dots i { width: 11px; height: 11px; border-radius: 50%; background: #3a3a40; display: block; }
+    .frame-bar .dots i:nth-child(1) { background: #ff5f57; }
+    .frame-bar .dots i:nth-child(2) { background: #febc2e; }
+    .frame-bar .dots i:nth-child(3) { background: #28c840; }
+    .frame-bar .url {
+      flex: 1; max-width: 420px; margin: 0 auto;
+      font-family: var(--mono); font-size: 12px; color: var(--text-3);
+      background: rgba(255, 255, 255, 0.05); border-radius: 7px; padding: 5px 12px; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .frame img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; background: #161617; }
+    .frame.sm { border-radius: 12px; }
+    .frame.sm .frame-bar { height: 32px; }
+    .frame.sm .frame-bar .dots i { width: 9px; height: 9px; }
+    .frame.sm .url { font-size: 11px; padding: 3px 10px; }
+
+    /* ---------- stats ---------- */
+    .stats { margin-top: 72px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
+    .stat { padding: 26px 16px; text-align: center; border-left: 1px solid var(--border); }
+    .stat:first-child { border-left: 0; }
+    .stat b { display: block; font-size: 30px; font-weight: 650; letter-spacing: -0.03em; line-height: 1.1; }
+    .stat span { display: block; margin-top: 6px; font-size: 13px; color: var(--text-2); }
+
+    /* ---------- sections ---------- */
+    .section { padding: 110px 0; }
+    .section.tight { padding-top: 70px; }
+    .section-head { max-width: 680px; }
+    .section-head.center { margin: 0 auto; text-align: center; }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2); }
+    .section-head h2 { font-size: clamp(30px, 4.4vw, 48px); line-height: 1.08; letter-spacing: -0.035em; margin-top: 14px; }
+    .section-head p { margin-top: 18px; color: var(--text-2); font-size: 17px; line-height: 1.55; }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015));
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover { border-color: var(--border-2); }
+    .card h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; }
+    .card p { margin-top: 8px; color: var(--text-2); font-size: 14.5px; line-height: 1.55; }
+    .card .ref { margin-top: 14px; color: var(--text-3); }
+    .icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: grid; place-items: center; margin-bottom: 18px;
+      background: var(--accent-soft); color: var(--accent-2);
+      border: 1px solid rgba(10, 132, 255, 0.25);
+    }
+    .icon svg { width: 19px; height: 19px; }
+
+    /* learn grid */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 52px; }
+
+    /* steps */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 52px; }
+    .step { padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); position: relative; }
+    .step .n { font-family: var(--mono); font-size: 13px; color: var(--accent-2); }
+    .step h3 { margin-top: 14px; font-size: 18px; font-weight: 600; }
+    .step p { margin-top: 8px; color: var(--text-2); font-size: 14.5px; }
+    .steps-visual { margin-top: 28px; }
+
+    /* features */
+    .feature { display: grid; grid-template-columns: 5fr 7fr; gap: 56px; align-items: center; margin-top: 90px; }
+    .feature:first-of-type { margin-top: 64px; }
+    .feature.flip .feature-text { order: 2; }
+    .feature h3 { font-size: clamp(24px, 3vw, 32px); line-height: 1.15; letter-spacing: -0.03em; }
+    .feature p { margin-top: 16px; color: var(--text-2); font-size: 16px; }
+    .feature ul { margin-top: 20px; display: grid; gap: 10px; }
+    .feature li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--text-2); }
+    .feature li svg { width: 16px; height: 16px; flex: none; margin-top: 4px; color: var(--good); }
+    .feature li b { color: var(--text); font-weight: 600; }
+    .feature .frame-wrap { margin: 0; }
+    .feature .frame-wrap::before { inset: 10% 0 auto; height: 80%; background: radial-gradient(50% 50% at 50% 50%, rgba(10, 132, 255, 0.18), transparent 70%); }
+
+    /* two-up */
+    .two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 52px; }
+    .two-up .card { padding: 0; overflow: hidden; }
+    .two-up .card .frame { border: 0; border-radius: 0; box-shadow: none; }
+    .two-up .card .text { padding: 22px 24px 26px; border-top: 1px solid var(--border); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+    .chip { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--border-2); background: rgba(255, 255, 255, 0.04); font-size: 13px; color: var(--text-2); }
+    .chip b { color: var(--text); font-weight: 600; }
+
+    /* modes */
+    .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 52px; }
+    .mode { padding: 26px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); }
+    .mode .tag { font-family: var(--mono); font-size: 12px; color: var(--text-3); }
+    .mode h3 { margin-top: 10px; font-size: 19px; font-weight: 600; }
+    .mode p { margin-top: 10px; color: var(--text-2); font-size: 14.5px; }
+    .console { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: center; margin-top: 64px; }
+    .console .frame-wrap { margin: 0; }
+
+    /* materials */
+    .docs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 52px; }
+    .doc { display: flex; gap: 14px; padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); transition: border-color 0.2s, background 0.2s; }
+    .doc:hover { border-color: var(--border-2); background: var(--surface-2); }
+    .doc .num { font-family: var(--mono); font-size: 12px; color: var(--accent-2); margin-top: 3px; flex: none; }
+    .doc h3 { font-size: 15.5px; font-weight: 600; }
+    .doc p { margin-top: 4px; color: var(--text-2); font-size: 13.5px; }
+    .doc .arrow { margin-left: auto; color: var(--text-3); flex: none; align-self: center; }
+    .doc .arrow svg { width: 16px; height: 16px; }
+
+    /* platforms */
+    .platforms { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 52px; }
+    .platform { padding: 22px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); }
+    .platform h3 { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .platform h3 svg { width: 18px; height: 18px; color: var(--accent-2); }
+    .platform p { margin-top: 8px; color: var(--text-2); font-size: 14px; }
+    .fineprint { margin-top: 28px; color: var(--text-3); font-size: 13.5px; max-width: 720px; }
+
+    /* cta */
+    .cta { position: relative; overflow: hidden; border-radius: 28px; border: 1px solid var(--border-2); padding: 80px 32px; text-align: center; background: var(--surface); }
+    .cta::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(50% 70% at 50% 100%, rgba(10, 132, 255, 0.28), transparent 70%),
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: auto, 48px 48px, 48px 48px;
+      -webkit-mask-image: radial-gradient(70% 90% at 50% 50%, #000 30%, transparent 100%);
+      mask-image: radial-gradient(70% 90% at 50% 50%, #000 30%, transparent 100%);
+    }
+    .cta > * { position: relative; }
+    .cta h2 { font-size: clamp(30px, 4.6vw, 52px); letter-spacing: -0.035em; line-height: 1.06; max-width: 16ch; margin: 0 auto; }
+    .cta p { margin: 18px auto 0; color: var(--text-2); font-size: 17px; max-width: 520px; }
+    .cta .hero-cta { margin-top: 32px; }
+    .copy-row { margin-top: 26px; display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--border-2); border-radius: 12px; background: rgba(0, 0, 0, 0.35); overflow: hidden; max-width: 100%; }
+    .copy-row code { font-family: var(--mono); font-size: 13px; color: var(--text-2); padding: 11px 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .copy-row button { padding: 11px 14px; border-left: 1px solid var(--border-2); font-size: 13px; font-weight: 600; color: var(--text); background: rgba(255, 255, 255, 0.04); display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .copy-row button:hover { background: rgba(255, 255, 255, 0.09); }
+    .copy-row button svg { width: 14px; height: 14px; }
+    .copy-row button.done { color: var(--good); }
+
+    /* footer */
+    .footer { border-top: 1px solid var(--border); padding: 56px 0 40px; margin-top: 110px; background: var(--bg-2); }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; }
+    .footer h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+    .footer ul { display: grid; gap: 9px; }
+    .footer li a { font-size: 14px; color: var(--text-2); transition: color 0.15s; }
+    .footer li a:hover { color: var(--text); }
+    .footer .brand { font-size: 16px; }
+    .footer .about { margin-top: 14px; color: var(--text-2); font-size: 14px; max-width: 320px; }
+    .footer .about + .mono { margin-top: 12px; color: var(--text-3); }
+    .studio { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+    .studio .label { font-size: 13px; color: var(--text-2); }
+    .ctrl { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 20px; letter-spacing: -0.02em; color: var(--text); }
+    .ctrl-key {
+      display: inline-grid; place-items: center;
+      min-width: 54px; height: 34px; padding: 0 9px;
+      border: 1.5px solid rgba(255, 255, 255, 0.85); border-radius: 8px;
+      font-size: 15px; font-weight: 700; line-height: 1;
+      box-shadow: 0 3px 0 rgba(255, 255, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .ctrl:hover .ctrl-key { transform: translateY(2px); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+    .studio .site { font-family: var(--mono); font-size: 13px; color: var(--text-2); display: inline-flex; align-items: center; gap: 6px; }
+    .studio .site:hover { color: var(--text); }
+    .studio .site svg { width: 13px; height: 13px; }
+    .studio .desc { color: var(--text-3); font-size: 13px; max-width: 280px; }
+    .footer-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--text-3); font-size: 13px; }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 1000px) {
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .stat:nth-child(4) { border-left: 0; }
+      .stat:nth-child(-n+3) { border-bottom: 1px solid var(--border); }
+      .docs { grid-template-columns: repeat(2, 1fr); }
+      .platforms { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .feature { grid-template-columns: 1fr; gap: 28px; }
+      .feature.flip .feature-text { order: 0; }
+      .console { grid-template-columns: 1fr; gap: 28px; }
+      .console .console-text { order: -1; }
+    }
+    @media (max-width: 820px) {
+      .nav-links { display: none; }
+    }
+    @media (max-width: 640px) {
+      :root { --gutter: 16px; }
+      .hero { padding-top: 64px; }
+      .hero-cta .btn { width: 100%; justify-content: center; }
+      .hero-note span { display: block; }
+      .hero-note span + span::before { content: none; }
+      .frame-wrap { margin-top: 44px; }
+      .frame-wrap::before { left: 0; right: 0; }
+      .frame-bar .url { max-width: none; }
+      .section { padding: 72px 0; }
+      .grid-3, .steps, .two-up, .modes, .docs, .platforms { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat { border-left: 0; }
+      .stat:nth-child(odd) { border-right: 1px solid var(--border); }
+      .stat:nth-child(-n+4) { border-bottom: 1px solid var(--border); }
+      .stat b { font-size: 26px; }
+      .cta { padding: 56px 20px; border-radius: 22px; }
+      .cta .hero-cta .btn { width: 100%; justify-content: center; }
+      .copy-row { width: 100%; }
+      .copy-row code { flex: 1; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .nav-actions .btn span { display: none; }
+      .nav-actions .btn { padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="Founder's Dilemma, torna all'inizio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        </span>
+        Founder's Dilemma
+      </a>
+      <nav class="nav-links" aria-label="Sezioni della pagina">
+        <a href="#gioco">Il gioco</a>
+        <a href="#round">Come funziona</a>
+        <a href="#aula">In aula</a>
+        <a href="#corso">Per il corso</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="icon-link" href="https://github.com/kurisuchanxxx/foundersdilemma" target="_blank" rel="noopener" aria-label="Repository su GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+        </a>
+        <a class="btn primary" href="play/">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
+          <span>Gioca ora</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="container">
+        <span class="pill"><span class="dot" aria-hidden="true"></span><b>Versione 2.1</b> gratis nel browser, senza account</span>
+        <h1>Fonda una startup. <span class="soft">Affronta il dilemma del fondatore.</span></h1>
+        <p class="lead">Founder's Dilemma è un business game di startup venturing per l'aula universitaria. I team cercano il product-market fit, assumono, raccolgono capitali e scelgono tra ricchezza e controllo. Da soli contro i bot o in classe, round dopo round.</p>
+        <div class="hero-cta">
+          <a class="btn primary lg" href="play/">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
+            Gioca nel browser
+          </a>
+          <a class="btn secondary lg" href="https://github.com/kurisuchanxxx/foundersdilemma" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+            Codice e materiali su GitHub
+          </a>
+        </div>
+        <p class="hero-note"><span>Nessuna installazione</span><span>Funziona anche offline e da smartphone</span><span>Italiano e inglese</span></p>
+
+        <div class="frame-wrap">
+          <figure class="frame">
+            <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">kurisuchanxxx.github.io/foundersdilemma/play</span></div>
+            <img src="img/hero.webp" width="2880" height="1800" alt="Il cruscotto di Founder's Dilemma: slancio, runway, salute dell'azienda, product-market fit, salute finanziaria, crescita e unit economics, con i grafici di cassa e fatturato mensile di una startup SaaS B2B all'ottavo round" fetchpriority="high" />
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <div class="stats">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat"><b>10</b><span>round per partita, da 4 a 16</span></div>
+          <div class="stat"><b>8</b><span>settori con economie diverse</span></div>
+          <div class="stat"><b>6</b><span>archetipi di fondatore</span></div>
+          <div class="stat"><b>16</b><span>dilemmi del fondatore</span></div>
+          <div class="stat"><b>61</b><span>schede nel glossario integrato</span></div>
+          <div class="stat"><b>3</b><span>modalità: solo, hot-seat, classe</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COSA SI IMPARA ===== -->
+    <section class="section" id="gioco">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">Cosa si impara</div>
+          <h2>Ogni meccanica del gioco è un concetto del corso.</h2>
+          <p>Il gioco rende sperimentabile quello che a lezione resta astratto. Ogni sistema rimanda a una scheda della sezione Impara dell'app, con formule e riferimenti bibliografici.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div>
+            <h3>Lean startup e customer discovery</h3>
+            <p>MVP, interviste ai clienti, smoke test, pivot. La discovery costa tempo di sviluppo ma accelera l'apprendimento.</p>
+            <div class="ref mono">Ries · Blank</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <h3>Product-market fit</h3>
+            <p>Un punteggio PMF che cresce con chiarezza del problema, qualità e trazione. Il test di Sean Ellis: il 40% di utenti "molto delusi" senza il prodotto.</p>
+            <div class="ref mono">Ellis · Andreessen</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+            <h3>Diffusione dell'innovazione</h3>
+            <p>Segmenti di Rogers, chasm alla maggioranza anticipatrice, testa di ponte: nicchia, mercato ampio o clienti premium.</p>
+            <div class="ref mono">Rogers · Moore</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
+            <h3>Unit economics e prezzo</h3>
+            <p>CAC, LTV, churn, payback, margine lordo, elasticità. Abbonamento, freemium o a consumo, con la disponibilità a pagare stimata.</p>
+            <div class="ref mono">Ramanujam · Tacke</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></div>
+            <h3>Finanza della startup</h3>
+            <p>Bandi, prestiti, crowdfunding, SAFE, round prezzati, option pool, waterfall. Investitori con posti e capitale limitati, contesi tra i team.</p>
+            <div class="ref mono">Feld · Mendelson</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h3>Team e fondatori</h3>
+            <p>Archetipi dei fondatori, divisione delle quote, vesting e cliff, aste per i talenti contro gli altri team.</p>
+            <div class="ref mono">Wasserman</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M5 20h14"/></svg></div>
+            <h3>Il dilemma del fondatore</h3>
+            <p>Sedici dilemmi senza risposta giusta, il controllo del consiglio di amministrazione e la classifica finale Ricco o Re.</p>
+            <div class="ref mono">Wasserman</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></div>
+            <h3>Strategia e concorrenza</h3>
+            <p>Concorrenti esterni che reagiscono alle tue mosse, partnership e acquisizioni tra i team della classe.</p>
+            <div class="ref mono">Porter · Brandenburger e Nalebuff</div>
+          </article>
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg></div>
+            <h3>Etica</h3>
+            <p>Dark pattern, dati dei clienti, promesse agli investitori. Eventi di mercato, reputazione e scelte con conseguenze che arrivano dopo.</p>
+            <div class="ref mono">Casi di startup ethics</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== COME FUNZIONA UN ROUND ===== -->
+    <section class="section tight" id="round">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">Come funziona</div>
+          <h2>Un round, quattro passi.</h2>
+          <p>Ogni round simula tre o sei mesi di vita dell'azienda. Il ciclo decidere, osservare, discutere e rivedere la strategia segue il modello dell'apprendimento esperienziale.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <div class="n">01</div>
+            <h3>Decidi</h3>
+            <p>Budget tra R&amp;S, marketing e operations. Prezzo e modello. Canale go-to-market, approccio allo sviluppo, assunzioni, pitch agli investitori e il dilemma del round.</p>
+          </div>
+          <div class="step reveal">
+            <div class="n">02</div>
+            <h3>Il motore simula</h3>
+            <p>Clienti, ricavi, cassa, PMF, diluizione e valutazione. Il motore è deterministico: con lo stesso seed la partita si ripete identica e si confronta tra classi.</p>
+          </div>
+          <div class="step reveal">
+            <div class="n">03</div>
+            <h3>Leggi i risultati</h3>
+            <p>Report del round, commento del mentor, news di mercato e classifica. XP, sfide e coppe tengono alta l'attenzione tra un round e l'altro.</p>
+          </div>
+          <div class="step reveal">
+            <div class="n">04</div>
+            <h3>Discuti</h3>
+            <p>Il debriefing collega i numeri alla teoria. La console del docente propone gli spunti di discussione, le esportazioni CSV servono per la valutazione.</p>
+          </div>
+        </div>
+        <div class="frame-wrap steps-visual reveal">
+          <figure class="frame">
+            <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Decisioni · Anno 3 · S1</span></div>
+            <img src="img/decisions.webp" width="2880" height="1800" loading="lazy" alt="La schermata Decisioni: budget mensili per R&S, marketing e operations, modello di prezzo e la proiezione what-if con cassa, runway, clienti e PMF attesi a fine round" />
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DENTRO IL GIOCO ===== -->
+    <section class="section tight" id="dentro">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">Dentro il gioco</div>
+          <h2>I numeri di una startup vera, senza il rischio di una startup vera.</h2>
+          <p>Fallire, diluirsi troppo o perdere il controllo del consiglio in una simulazione costa un voto parziale, non i risparmi di una vita.</p>
+        </div>
+
+        <div class="feature reveal">
+          <div class="feature-text">
+            <h3>Il product-market fit si misura, non si dichiara.</h3>
+            <p>Chiarezza del problema, adattamento della soluzione, trazione del mercato e velocità di apprendimento compongono il punteggio PMF. Cresce con la customer discovery e i feedback dei clienti, non con il marketing.</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Test di Sean Ellis</b> con la quota di utenti "molto delusi".</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Debito tecnico e qualità</b> che pesano su churn, bug e velocità.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Legge di Brooks</b>: i team grandi perdono efficienza nel coordinamento.</span></li>
+            </ul>
+          </div>
+          <div class="frame-wrap">
+            <figure class="frame sm">
+              <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Prodotto e PMF</span></div>
+              <img src="img/product.webp" width="2880" height="1800" loading="lazy" alt="La vista Prodotto e product-market fit: punteggio PMF 58, utenti molto delusi al 39%, barre di chiarezza del problema, adattamento della soluzione, trazione e apprendimento, salute del prodotto e traiettoria nel tempo" />
+            </figure>
+          </div>
+        </div>
+
+        <div class="feature flip reveal">
+          <div class="feature-text">
+            <h3>Il mercato ha una curva di adozione.</h3>
+            <p>Innovatori, early adopter, maggioranza anticipatrice e ritardataria. Quando il settore supera il 16% di penetrazione serve un PMF sufficiente per superare il chasm. CAC, LTV, churn e payback si aggiornano ogni round.</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Otto settori</b>, da SaaS B2B a HealthTech e infrastruttura AI, con economie diverse.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Concorrenti esterni</b> che lanciano versioni, chiudono round e reagiscono.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Quattro canali go-to-market</b>, ognuno con il suo churn e il suo effetto sul brand.</span></li>
+            </ul>
+          </div>
+          <div class="frame-wrap">
+            <figure class="frame sm">
+              <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Mercato</span></div>
+              <img src="img/market.webp" width="2880" height="1800" loading="lazy" alt="La vista Mercato: mercato indirizzabile, penetrazione del settore, curva di adozione per segmenti di Rogers, unit economics con prezzo, margine, CAC, LTV e payback" />
+            </figure>
+          </div>
+        </div>
+
+        <div class="feature reveal">
+          <div class="feature-text">
+            <h3>Ogni euro raccolto costa quote o controllo.</h3>
+            <p>Bandi, prestiti, crowdfunding, SAFE e round prezzati con investitori che valutano i numeri dell'ultimo round. La cap table mostra la diluizione, il consiglio di amministrazione può cambiare mano.</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Simulatore del waterfall</b> nella complessità Avanzata: chi incassa cosa a qualsiasi valore di exit.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Option pool, preferenze di liquidazione, round ponte</b> e offerte di acquisizione.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Investitori contesi</b>: posti e capitale limitati per tutta la classe.</span></li>
+            </ul>
+          </div>
+          <div class="frame-wrap">
+            <figure class="frame sm">
+              <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Finanziamenti</span></div>
+              <img src="img/funding.webp" width="2880" height="1800" loading="lazy" alt="La vista Finanziamenti: valutazione, quota dei fondatori, cap table, storico con prestito, SAFE e bando, e il simulatore del waterfall di uscita" />
+            </figure>
+          </div>
+        </div>
+
+        <div class="feature flip reveal">
+          <div class="feature-text">
+            <h3>Sedici dilemmi senza una risposta giusta.</h3>
+            <p>Un conflitto tra co-fondatori, il consiglio che vuole un CEO professionista, un growth hack con i dark pattern, i dati dei clienti per addestrare il prodotto, il taglio del team. Ogni scelta ha effetti su morale, reputazione e controllo, spesso nei round successivi.</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Tratti dalla ricerca sui fondatori</b> di Wasserman e dai casi di startup ethics.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Materiale per il debriefing</b>: ogni dilemma rimanda a un concetto del corso.</span></li>
+            </ul>
+          </div>
+          <div class="frame-wrap">
+            <figure class="frame sm">
+              <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Decisioni · Dilemma</span></div>
+              <img src="img/dilemma.webp" width="2880" height="1800" loading="lazy" alt="Un dilemma del fondatore: addestrare sui dati dei clienti, con le opzioni usare i dati in silenzio oppure chiedere prima il consenso" />
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== COINVOLGIMENTO ===== -->
+    <section class="section tight" id="coinvolgimento">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">Coinvolgimento</div>
+          <h2>Uno strato di gioco che non tocca la classifica economica.</h2>
+          <p>XP, livelli, sfide e coppe tengono alta l'attenzione tra un round e l'altro. Gli XP non cambiano mai chi vince: la classifica resta sulla ricchezza dei fondatori.</p>
+        </div>
+        <div class="two-up">
+          <article class="card reveal">
+            <figure class="frame sm">
+              <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Risultati del round</span></div>
+              <img src="img/recap.webp" width="2880" height="1800" loading="lazy" alt="Il recap animato di fine round: XP guadagnati, salita di livello con coriandoli, sfide completate e podio della sfida di squadra" />
+            </figure>
+            <div class="text">
+              <h3>Recap animato a fine round</h3>
+              <p>Tre sfide per round (facile, media, difficile), serie di round consecutivi premiate e livelli da Sognatore da garage a Leggenda delle startup.</p>
+            </div>
+          </article>
+          <article class="card reveal">
+            <figure class="frame sm">
+              <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Decisioni · Rete dei fondatori</span></div>
+              <img src="img/network.webp" width="2880" height="1800" loading="lazy" alt="La rete dei fondatori: verso ogni altro team si può fare uno shout-out, una mentorship, uno sfottò o provare a soffiare un talento" />
+            </figure>
+            <div class="text">
+              <h3>Rete dei fondatori</h3>
+              <p>Fino a due azioni per round verso gli altri team: shout-out, mentorship, sfottò e tentativi di soffiare talenti. Le relazioni ricordano e tutto finisce nelle news.</p>
+            </div>
+          </article>
+        </div>
+        <div class="chips reveal">
+          <span class="chip"><b>Team da 1 a 4 fondatori</b> con avatar cartoon o foto</span>
+          <span class="chip"><b>Logo studio</b> e galleria di 24 marchi</span>
+          <span class="chip"><b>Sfida di squadra</b> ogni round, con podio e coppa</span>
+          <span class="chip"><b>Traguardi</b> e reputazione verso investitori, media, talenti e clienti</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== IN AULA ===== -->
+    <section class="section" id="aula">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">In aula</div>
+          <h2>Pensato per la classe. Nessun server, nessun account.</h2>
+          <p>Da 12 a 60 studenti in 4-8 team. I bot completano il mercato se i team sono pochi. I dati restano sui computer della classe.</p>
+        </div>
+        <div class="modes">
+          <article class="mode reveal">
+            <div class="tag">Modalità 01</div>
+            <h3>Solo contro bot</h3>
+            <p>Un team contro concorrenti AI con tre stili: lean, steady, blitz. Per lo studio individuale, i compiti a casa e la partita di prova prima del corso.</p>
+          </article>
+          <article class="mode reveal">
+            <div class="tag">Modalità 02</div>
+            <h3>Hot-seat</h3>
+            <p>Un solo computer o il proiettore. I team si alternano, una schermata di privacy nasconde i dati finché il team non li apre, il docente avanza i round da una console protetta da PIN.</p>
+          </article>
+          <article class="mode reveal">
+            <div class="tag">Modalità 03</div>
+            <h3>Classe con file</h3>
+            <p>Ogni team sul proprio portatile. Il docente condivide il file di partita, ogni team rimanda un piccolo file di decisioni, il docente li importa e avanza il round.</p>
+          </article>
+        </div>
+        <div class="console reveal">
+          <div class="frame-wrap">
+            <figure class="frame">
+              <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Console docente</span></div>
+              <img src="img/instructor.webp" width="2880" height="1800" loading="lazy" alt="La console del docente in modalità Classe: timer del round, team pronti, evento a sorpresa, file della classe, tabella dei team con cassa, runway, MRR, PMF e valutazione, notizie e spunti per la discussione" />
+            </figure>
+          </div>
+          <div class="console-text">
+            <h3 style="font-size: clamp(22px, 2.6vw, 28px); letter-spacing: -0.03em; line-height: 1.15;">La console del docente</h3>
+            <ul style="margin-top: 20px; display: grid; gap: 12px;">
+              <li style="display: flex; gap: 10px; color: var(--text-2); font-size: 15px;"><svg style="width: 16px; height: 16px; flex: none; margin-top: 4px; color: var(--good);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b style="color: var(--text);">Timer del round</b> e vista proiettore per tutta la classe.</span></li>
+              <li style="display: flex; gap: 10px; color: var(--text-2); font-size: 15px;"><svg style="width: 16px; height: 16px; flex: none; margin-top: 4px; color: var(--good);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b style="color: var(--text);">Eventi a sorpresa</b> da inserire nel mercato in qualsiasi momento.</span></li>
+              <li style="display: flex; gap: 10px; color: var(--text-2); font-size: 15px;"><svg style="width: 16px; height: 16px; flex: none; margin-top: 4px; color: var(--good);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b style="color: var(--text);">Spunti di discussione</b> per il debriefing di ogni round.</span></li>
+              <li style="display: flex; gap: 10px; color: var(--text-2); font-size: 15px;"><svg style="width: 16px; height: 16px; flex: none; margin-top: 4px; color: var(--good);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b style="color: var(--text);">Esportazioni CSV</b> di storico, classifica e decisioni per la valutazione.</span></li>
+              <li style="display: flex; gap: 10px; color: var(--text-2); font-size: 15px;"><svg style="width: 16px; height: 16px; flex: none; margin-top: 4px; color: var(--good);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b style="color: var(--text);">Stesso seed, stesso mercato</b>: due classi giocano esattamente la stessa partita.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RICCO O RE ===== -->
+    <section class="section tight" id="debriefing">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">Debriefing finale</div>
+          <h2>Ricco o Re?</h2>
+          <p>A fine partita il debriefing mette tutto sullo stesso grafico: a destra della linea i fondatori mantengono la maggioranza dei voti, più in alto le loro quote valgono di più. Pochi team riescono in entrambe le cose. È il dilemma del fondatore di Wasserman, misurato.</p>
+        </div>
+        <div class="frame-wrap reveal" style="margin-top: 48px;">
+          <figure class="frame">
+            <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">Risultati finali e debriefing</span></div>
+            <img src="img/results.webp" width="2880" height="1800" loading="lazy" alt="I risultati finali: podio, classifica finale con ricchezza dei fondatori, valutazione, quota, fatturato e clienti, il grafico Ricco o Re e la valutazione nel tempo. Pulsanti per stampare il report e scaricare i CSV" />
+          </figure>
+        </div>
+        <div class="chips reveal">
+          <span class="chip"><b>Report del team</b> stampabile, con post-mortem</span>
+          <span class="chip"><b>Percorso di ogni team</b>: lancio, PMF, primi capitali, dilemmi affrontati</span>
+          <span class="chip"><b>Valutazione nel tempo</b> round per round</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PER IL CORSO ===== -->
+    <section class="section" id="corso">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">Per il corso</div>
+          <h2>Il pacchetto per proporre il modulo all'università.</h2>
+          <p>Sei documenti pronti: formato consigliato di 6 incontri da 3 ore, circa 3 ECTS con lo studio individuale, obiettivi formativi secondo i descrittori di Dublino, rubriche di valutazione e il modello di simulazione documentato.</p>
+        </div>
+        <div class="docs">
+          <a class="doc reveal" href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/01-proposta-modulo.md" target="_blank" rel="noopener">
+            <span class="num">01</span>
+            <div><h3>Proposta di modulo</h3><p>Obiettivi formativi, CFU, struttura, valutazione, requisiti e costi. Anche in inglese.</p></div>
+            <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
+          </a>
+          <a class="doc reveal" href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/02-piano-sessioni.md" target="_blank" rel="noopener">
+            <span class="num">02</span>
+            <div><h3>Piano delle sessioni</h3><p>Sei incontri con teoria, round di gioco e domande di debriefing. Varianti da 1 giorno e da 2 settimane.</p></div>
+            <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
+          </a>
+          <a class="doc reveal" href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/03-guida-docente.md" target="_blank" rel="noopener">
+            <span class="num">03</span>
+            <div><h3>Guida per il docente</h3><p>Preparazione, conduzione in aula, ciclo dei file e problemi frequenti.</p></div>
+            <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
+          </a>
+          <a class="doc reveal" href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/04-manuale-studente.md" target="_blank" rel="noopener">
+            <span class="num">04</span>
+            <div><h3>Manuale dello studente</h3><p>Regole, decisioni, consigli e il primo round passo per passo.</p></div>
+            <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
+          </a>
+          <a class="doc reveal" href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/05-valutazione-e-rubriche.md" target="_blank" rel="noopener">
+            <span class="num">05</span>
+            <div><h3>Valutazione e rubriche</h3><p>Pesi, rubriche, modelli di decision memo e di report finale.</p></div>
+            <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
+          </a>
+          <a class="doc reveal" href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/06-modello-di-simulazione.md" target="_blank" rel="noopener">
+            <span class="num">06</span>
+            <div><h3>Il modello di simulazione</h3><p>Formule, parametri e collegamento con la teoria. Per docenti e revisori.</p></div>
+            <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
+          </a>
+        </div>
+
+        <div class="platforms">
+          <div class="platform reveal">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Browser</h3>
+            <p>Online su GitHub Pages oppure come un unico file HTML che si apre con un doppio clic, anche offline. Comodo da caricare su Moodle.</p>
+          </div>
+          <div class="platform reveal">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>macOS</h3>
+            <p>App nativa universale per Apple silicon e Intel, da macOS 11 in poi.</p>
+          </div>
+          <div class="platform reveal">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>Windows e Linux</h3>
+            <p>Installer per Windows 10 e 11, AppImage e .deb per Linux. Disponibili nelle Releases del repository.</p>
+          </div>
+          <div class="platform reveal">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Dati in locale</h3>
+            <p>I salvataggi restano sul computer e si esportano come file. Nessun dato personale raccolto, nessun server da gestire.</p>
+          </div>
+        </div>
+        <p class="fineprint reveal">Codice aperto con licenza PolyForm Noncommercial 1.0.0, materiali del corso con licenza Creative Commons BY-NC-SA 4.0. Si può usare, studiare e adattare per scopi non commerciali; per usi commerciali va contattato l'autore.</p>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="section tight">
+      <div class="container">
+        <div class="cta reveal">
+          <h2>Prova una partita in solitario. Il primo round dura dieci minuti.</h2>
+          <p>Un tour guidato spiega ogni schermata al primo avvio. Se poi vuoi portarlo in aula, i materiali sono già pronti.</p>
+          <div class="hero-cta">
+            <a class="btn primary lg" href="play/">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
+              Gioca nel browser
+            </a>
+            <a class="btn secondary lg" href="https://github.com/kurisuchanxxx/foundersdilemma/releases" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              App per macOS e Windows
+            </a>
+          </div>
+          <div class="copy-row">
+            <code id="play-url">kurisuchanxxx.github.io/foundersdilemma/play</code>
+            <button type="button" id="copy-btn" aria-label="Copia il link per giocare">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Copia il link</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#top">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+            </span>
+            Founder's Dilemma
+          </a>
+          <p class="about">Business game di startup venturing per l'aula universitaria. Motore di simulazione deterministico in TypeScript, interfaccia in italiano e inglese.</p>
+          <p class="mono">v2.1.0 · macOS · Windows · Linux · Web</p>
+        </div>
+        <div>
+          <h4>Gioco</h4>
+          <ul>
+            <li><a href="play/">Gioca nel browser</a></li>
+            <li><a href="https://github.com/kurisuchanxxx/foundersdilemma/releases" target="_blank" rel="noopener">Scarica le app</a></li>
+            <li><a href="https://github.com/kurisuchanxxx/foundersdilemma" target="_blank" rel="noopener">Codice su GitHub</a></li>
+            <li><a href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/LICENSE.md" target="_blank" rel="noopener">Licenza</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Per il corso</h4>
+          <ul>
+            <li><a href="https://github.com/kurisuchanxxx/foundersdilemma/tree/main/docs/corso" target="_blank" rel="noopener">Materiali per il corso</a></li>
+            <li><a href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/01-module-proposal-en.md" target="_blank" rel="noopener">Module proposal (English)</a></li>
+            <li><a href="https://github.com/kurisuchanxxx/foundersdilemma/blob/main/docs/corso/06-modello-di-simulazione.md" target="_blank" rel="noopener">Il modello di simulazione</a></li>
+            <li><a href="https://github.com/kurisuchanxxx/foundersdilemma#english" target="_blank" rel="noopener">English summary</a></li>
+          </ul>
+        </div>
+        <div class="studio">
+          <span class="label">Un progetto di</span>
+          <a class="ctrl" href="https://ctrlstudio.it" target="_blank" rel="noopener" aria-label="Ctrl Studio, apri il sito">
+            <span class="ctrl-key" aria-hidden="true">Ctrl</span><span>Studio.</span>
+          </a>
+          <p class="desc">Studio digitale di Ancona: siti web, automazioni, gestionali e strategia digitale per PMI, studi professionali e startup.</p>
+          <a class="site" href="https://ctrlstudio.it" target="_blank" rel="noopener">ctrlstudio.it <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Christian Ray Lantieri · Ctrl Studio.</span>
+        <span>Codice PolyForm Noncommercial 1.0.0 · Materiali CC BY-NC-SA 4.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var nav = document.getElementById("nav");
+      var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 8); };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      var items = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+        items.forEach(function (el) { io.observe(el); });
+      } else {
+        items.forEach(function (el) { el.classList.add("in"); });
+      }
+
+      var btn = document.getElementById("copy-btn");
+      var label = btn.querySelector("span");
+      btn.addEventListener("click", function () {
+        var url = "https://kurisuchanxxx.github.io/foundersdilemma/play/";
+        var done = function () {
+          btn.classList.add("done"); label.textContent = "Copiato";
+          setTimeout(function () { btn.classList.remove("done"); label.textContent = "Copia il link"; }, 1800);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done, function () { window.prompt("Copia il link:", url); });
+        } else {
+          window.prompt("Copia il link:", url);
+        }
+      });
+    })();
+  </script>
+</body>
 </html>
