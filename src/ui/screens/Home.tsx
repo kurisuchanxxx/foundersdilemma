@@ -6,7 +6,7 @@ import { useFmt } from "../i18n";
 import { deleteSave, listSaves, parseGame, readSave, useStore, type SaveMeta } from "../store";
 import { LearnContent } from "../views/Learn";
 
-export const APP_VERSION = "2.0.0";
+export const APP_VERSION = "2.1.0";
 
 export function Home() {
   const f = useFmt();

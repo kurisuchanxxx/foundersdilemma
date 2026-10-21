@@ -5,6 +5,7 @@ import {
   GRANTS,
   GTM_INFO,
   HOURS_INFO,
+  INTERACTION_DEFS,
   LENDERS,
   MAX_PARTNERSHIPS,
   PARTNERSHIP_ROUNDS,
@@ -43,6 +44,7 @@ import { useActiveCompany, useGame, useDraft } from "../hooks";
 import { useFmt, type Fmt } from "../i18n";
 import { exportDecisionFile } from "../classroom";
 import { useStore, type DecisionTab } from "../store";
+import { NetworkTab } from "./Network";
 
 type Tab = DecisionTab;
 
@@ -84,7 +86,8 @@ export function Decisions() {
     { id: "growth", label: f.tx("Reputation", "Reputazione"), icon: "Megaphone" },
     { id: "finance", label: f.tx("Finance & exit", "Finanza ed exit"), icon: "HandCoins", dot: c.termSheets.length + c.acquisitionOffers.length > 0 },
   ];
-  if (otherTeams.length > 0) tabs.push({ id: "teams", label: f.tx("Other teams", "Altri team"), icon: "Handshake", dot: c.partnershipOffers.length > 0 });
+  if (otherTeams.length > 0) tabs.push({ id: "teams", label: f.tx("Deals", "Accordi"), icon: "Handshake", dot: c.partnershipOffers.length > 0 });
+  tabs.push({ id: "network", label: f.tx("Founder network", "Rete dei fondatori"), icon: "HeartHandshake" });
   if (c.dilemma) tabs.push({ id: "dilemma", label: f.tx("Dilemma", "Dilemma"), icon: "Scale", dot: !draft.dilemmaChoice });
   tabs.push({ id: "review", label: f.tx("Review & submit", "Riepilogo e invio"), icon: "ListChecks" });
 
@@ -111,6 +114,7 @@ export function Decisions() {
             {tab === "growth" && <GrowthTab d={draft} set={set} />}
             {tab === "finance" && <FinanceTab c={c} d={draft} set={set} />}
             {tab === "teams" && <TeamsTab c={c} d={draft} set={set} />}
+            {tab === "network" && <NetworkTab c={c} d={draft} set={set} />}
             {tab === "dilemma" && c.dilemma && <DilemmaTab c={c} d={draft} set={set} />}
           </fieldset>
           {tab === "review" && <ReviewTab c={c} d={draft} preview={preview} onEdit={setTab} />}
@@ -869,11 +873,16 @@ function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview
     [f.tx("Hiring offers", "Offerte di assunzione"), String(d.offers.length), "people"],
     [f.tx("Reputation action", "Azione di reputazione"), f.L(REPUTATION_ACTIONS[d.reputationAction].label), "growth"],
     [f.tx("Pitches", "Pitch"), String(d.pitches.length), "finance"],
+    [
+      f.tx("Founder network", "Rete dei fondatori"),
+      d.interactions.length > 0 ? d.interactions.map((i) => `${f.L(INTERACTION_DEFS[i.kind].title)} → ${game.companies.find((o) => o.id === i.targetId)?.name ?? "?"}`).join(", ") : f.tx("none", "nessuna"),
+      "network",
+    ],
   ];
   const teamName = (id: string) => game.companies.find((o) => o.id === id)?.name ?? "?";
   if (d.partnershipProposals.length + d.acceptPartnershipIds.length > 0 || d.acquisitionBid)
     rows.push([
-      f.tx("Other teams", "Altri team"),
+      f.tx("Deals", "Accordi"),
       [
         ...d.partnershipProposals.map((id) => `${f.tx("partnership proposed to", "partnership proposta a")} ${teamName(id)}`),
         ...d.acceptPartnershipIds.map((id) => `${f.tx("partnership accepted with", "partnership accettata con")} ${c.partnershipOffers.find((o) => o.id === id)?.fromName ?? "?"}`),

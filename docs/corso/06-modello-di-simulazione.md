@@ -233,7 +233,7 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 
 ## 11. Interazione tra team
 
-Nella scheda **Altri team** delle decisioni (`engine/deals.ts`):
+Nella scheda **Accordi** delle decisioni (`engine/deals.ts`):
 
 - **Partnership**: un team propone, l'altro accetta nel round successivo. Dura 3 round e dà a entrambe le aziende CAC × 0,92 e churn × 0,95 se sono dello stesso settore (alleanza), CAC × 0,88 e passaparola × 1,15 se sono di settori diversi (co-marketing), più 0,02 di brand. Al massimo 2 partnership attive per azienda.
 - **Acquisizione**: un team offre una cifra in contanti (almeno metà della valutazione dell'altra azienda e non oltre la propria cassa); l'altro team decide nel round successivo in Finanza ed exit. Se accetta, il prezzo è distribuito ai suoi soci con il waterfall e la sua partita finisce. Chi compra paga subito, riceve tutte le persone (senza equity, con un periodo di inserimento e morale −0,03), la qualità di prodotto migliore e una parte del brand; se l'azienda acquisita è dello stesso settore anche l'85% dei clienti, metà della lista d'attesa e la chiarezza del problema. Se al momento del sì il compratore non ha più la cassa, l'offerta decade.
@@ -269,17 +269,17 @@ Lo script `npm run balance` gioca 60 partite con 6 aziende bot ciascuna (imposta
 
 | Gruppo | Falliti | Exit | Salvati | PMF ≥ 60 raggiunto | Valutazione mediana | Ricchezza fondatori mediana | Quota fondatori |
 |---|---|---|---|---|---|---|---|
-| Tutte (360) | 6% | 18% | 13% | 43% | 12,2 M€ | 5,4 M€ | 44% |
-| Bot lean | 5% | 22% | 8% | 89% | 11,5 M€ | 6,1 M€ | 56% |
-| Bot steady | 6% | 28% | 10% | 41% | 17,5 M€ | 7,9 M€ | 51% |
-| Bot blitz | 8% | 5% | 22% | 0% | 11,2 M€ | 3,4 M€ | 31% |
+| Tutte (360) | 6% | 19% | 11% | 44% | 14,4 M€ | 6,9 M€ | 47% |
+| Bot lean | 6% | 21% | 11% | 86% | 10,8 M€ | 5,9 M€ | 55% |
+| Bot steady | 3% | 33% | 7% | 48% | 18,1 M€ | 10,0 M€ | 57% |
+| Bot blitz | 11% | 3% | 14% | 0% | 18,4 M€ | 5,8 M€ | 32% |
 
 Letture utili in aula:
 - La strategia **lean** raggiunge il PMF molto più spesso e fallisce meno: il gioco premia la disciplina della lean startup.
 - La strategia **blitz** cresce e raccoglie di più ma non raggiunge mai il PMF, si diluisce di più e lascia meno ricchezza ai fondatori: è il costo dello *scalare prima del fit*.
 - I settori B2B con multipli alti (DeepTech, AI, SaaS) generano più exit; consumer, e-commerce e fintech hanno più fallimenti e salvataggi per margini sottili o churn alto.
-- Con investitori dai posti limitati i salvataggi aumentano soprattutto per chi brucia molto (blitz 22%): quando tutti chiedono soldi insieme, chi ha i numeri peggiori resta fuori.
-- La nicchia iniziale dei bot lean porta il PMF all'89%: la testa di ponte accelera l'apprendimento.
+- Con investitori dai posti limitati soffre soprattutto chi brucia molto (blitz: 11% di fallimenti e 14% di salvataggi): quando tutti chiedono soldi insieme, chi ha i numeri peggiori resta fuori.
+- La nicchia iniziale dei bot lean porta il PMF all'86%: la testa di ponte accelera l'apprendimento.
 - I fallimenti si concentrano nei round 7-8, quando i round diventano semestrali e la cassa si consuma più in fretta per round: un buon momento per discutere di runway.
 
 Il gioco è volutamente *indulgente* (pochi fallimenti), perché una squadra fallita impara meno dei round successivi. Per aule più esperte si può scegliere la difficoltà *Realistica*.

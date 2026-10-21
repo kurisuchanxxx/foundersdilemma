@@ -4,6 +4,7 @@ import type { Company, GameState, RoundReport, Snapshot } from "../types";
 import { foundersVoting } from "./captable";
 import { applyBundle } from "./effects";
 import { paperFounderWealth } from "./exit";
+import { achievementXp, awardXp } from "./gamify";
 import { PMF_THRESHOLD } from "./product";
 
 function unlock(state: GameState, c: Company, id: string, round: number, report: RoundReport): void {
@@ -12,6 +13,7 @@ function unlock(state: GameState, c: Company, id: string, round: number, report:
   if (!def) return;
   c.achievements.push({ id, round });
   applyBundle(state, c, def.reward, def.name, round);
+  awardXp(c, achievementXp(), round, "achievement", def.name);
   report.lines.push({ kind: "good", text: fill(lt("Achievement unlocked: {n}", "Traguardo sbloccato: {n}"), { n: def.name }) });
 }
 

@@ -1,5 +1,6 @@
-import { SECTORS, foundersOwnership, pmfStage, roundLabel, seanEllisShare, type Company } from "../../core";
+import { SECTORS, currentShowdown, foundersOwnership, lastResolvedShowdown, pmfStage, roundLabel, seanEllisShare, type Company } from "../../core";
 import { LineChart } from "../components/charts";
+import { ChallengeRow, FounderStrip, LevelChip, ShowdownPanel, XpBar } from "../components/Gamify";
 import { Icon } from "../components/Icon";
 import { Badge, Callout, Card, InfoTip, Logo, Progress, Stat } from "../components/ui";
 import { change, lastSnapshot, prevSnapshot, useActiveCompany, useGame } from "../hooks";
@@ -56,7 +57,10 @@ export function Dashboard() {
               <Badge tone="accent">
                 <Icon name={s.icon} size={11} /> {f.L(s.name)}
               </Badge>
-              <span className="small faint">{c.founders.filter((x) => x.active).map((x) => x.name).join(" · ")}</span>
+              <LevelChip xp={c.xp} />
+            </div>
+            <div className="mt-8">
+              <FounderStrip company={c} size={26} />
             </div>
           </div>
         </div>
@@ -108,6 +112,11 @@ export function Dashboard() {
         <Card tour="pmf">
           <Stat label="Product-market fit" icon="Target" concept="pmf" value={`${Math.round(c.pmf.score)}`} sub={`${stageLabel(f, c.pmf.score)} · ${f.pct(seanEllisShare(c.pmf.score))} ${f.tx("very disappointed", "molto delusi")}`} />
         </Card>
+      </div>
+
+      <div className="grid cols-2">
+        <ChallengesCard c={c} />
+        <ShowdownCard c={c} />
       </div>
 
       <div className="grid cols-2">
@@ -194,6 +203,71 @@ export function Dashboard() {
         </Card>
       </div>
     </div>
+  );
+}
+
+function ChallengesCard({ c }: { c: Company }) {
+  const f = useFmt();
+  const game = useGame();
+  const lastRound = game.round - 1;
+  const last = c.challengeLog.filter((o) => o.round === lastRound);
+  const done = last.filter((o) => o.completed).length;
+  const applicable = last.filter((o) => o.applicable).length;
+  return (
+    <Card title={f.tx("Round challenges", "Sfide del round")} icon="Flag" tour="challenges" action={<span className="small faint">{f.tx("bonus XP", "XP bonus")}</span>}>
+      {game.finished ? (
+        <p className="muted">{f.tx("The game is over: no more challenges.", "La partita è finita: niente più sfide.")}</p>
+      ) : game.challenges.length === 0 ? (
+        <p className="muted">{f.tx("Challenges appear at the start of each round.", "Le sfide compaiono all'inizio di ogni round.")}</p>
+      ) : (
+        <div>
+          {game.challenges.map((ch) => (
+            <ChallengeRow key={ch.id} challenge={ch} />
+          ))}
+        </div>
+      )}
+      {last.length > 0 && (
+        <div className="row between small mt-16 wrap gap-4">
+          <span className="muted">
+            {f.tx("Last round", "Round scorso")}: <b>{done}</b> / {applicable} {f.tx("completed", "completate")}
+          </span>
+          {c.challengeStreak > 0 && (
+            <span className="chip good">
+              <Icon name="Flame" size={12} /> {f.tx("streak", "serie")} {c.challengeStreak}
+            </span>
+          )}
+        </div>
+      )}
+      <div className="mt-16">
+        <XpBar company={c} />
+      </div>
+    </Card>
+  );
+}
+
+function ShowdownCard({ c }: { c: Company }) {
+  const f = useFmt();
+  const game = useGame();
+  const open = currentShowdown(game);
+  const last = lastResolvedShowdown(game);
+  return (
+    <Card title={f.tx("Team showdown", "Sfida di squadra")} icon="Swords" action={c.cups > 0 ? <span className="chip good"><Icon name="Trophy" size={12} /> {c.cups} {f.tx(c.cups === 1 ? "cup" : "cups", c.cups === 1 ? "coppa" : "coppe")}</span> : null}>
+      <div className="col gap-16">
+        {open && !game.finished ? (
+          <ShowdownPanel showdown={open} game={game} highlight={c.id} />
+        ) : (
+          <p className="muted small">{f.tx("A new race against the other teams is announced every round.", "Ogni round viene annunciata una nuova gara contro gli altri team.")}</p>
+        )}
+        {last && (
+          <div>
+            <div className="tiny faint" style={{ textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>
+              {f.tx("Last result", "Ultimo risultato")} · {f.L(roundLabel(game.config, last.round))}
+            </div>
+            <ShowdownPanel showdown={last} game={game} highlight={c.id} />
+          </div>
+        )}
+      </div>
+    </Card>
   );
 }
 

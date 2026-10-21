@@ -650,8 +650,8 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Startup dello stesso spazio possono condividere costi, integrare i prodotti o fare marketing insieme pur competendo per i clienti. Le aziende complementari (mercati diversi, stessi clienti) sono i partner più semplici.",
     ),
     inGame: lt(
-      "In the Other teams tab you can propose a partnership to another team, which answers next round. It lasts three rounds and gives both companies: same sector, CAC -8% and churn -5%; different sectors, CAC -12% and word of mouth +15%. At most two at a time.",
-      "Nella scheda Altri team potete proporre una partnership a un altro team, che risponde nel round successivo. Dura tre round e dà a entrambe le aziende: stesso settore, CAC -8% e churn -5%; settori diversi, CAC -12% e passaparola +15%. Al massimo due alla volta.",
+      "In the Deals tab you can propose a partnership to another team, which answers next round. It lasts three rounds and gives both companies: same sector, CAC -8% and churn -5%; different sectors, CAC -12% and word of mouth +15%. At most two at a time.",
+      "Nella scheda Accordi potete proporre una partnership a un altro team, che risponde nel round successivo. Dura tre round e dà a entrambe le aziende: stesso settore, CAC -8% e churn -5%; settori diversi, CAC -12% e passaparola +15%. Al massimo due alla volta.",
     ),
     refs: ["A. Brandenburger, B. Nalebuff, Co-opetition (1996)"],
   },

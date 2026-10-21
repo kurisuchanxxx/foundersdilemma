@@ -59,7 +59,7 @@ export function standingsCsv(state: GameState, lang: Lang = "en"): string {
 export function decisionsCsv(state: GameState): string {
   const rows: Array<Array<string | number | null>> = [[
     "company", "round", "rd_budget", "marketing_budget", "ops_budget", "price", "gtm", "dev_approach", "discovery", "tech_debt_action",
-    "launch_now", "founder_hours", "reputation_action", "offers", "fires", "pitches", "grant", "loan", "dilemma_choice", "accepted_acquisition",
+    "launch_now", "founder_hours", "reputation_action", "offers", "fires", "pitches", "grant", "loan", "dilemma_choice", "accepted_acquisition", "interactions",
     "target_segment", "pricing_model", "partnership_proposals", "accepted_partnerships", "acquisition_bid",
   ]];
   const nameOf = (id: string) => state.companies.find((o) => o.id === id)?.name ?? id;
@@ -72,6 +72,7 @@ export function decisionsCsv(state: GameState): string {
         d.pitches.map((p) => `${p.investorId}:${Math.round(p.amount)}@${Math.round(p.valuation)}`).join(" "),
         d.grantApplication, d.loanRequest ? `${d.loanRequest.lenderId}:${Math.round(d.loanRequest.amount)}` : null,
         d.dilemmaChoice, d.acceptAcquisitionId ? 1 : 0,
+        (d.interactions ?? []).map((i) => `${i.kind}:${nameOf(i.targetId)}`).join(" "),
         d.targetSegment ?? null, d.pricingModel ?? null,
         (d.partnershipProposals ?? []).map(nameOf).join(" "), (d.acceptPartnershipIds ?? []).length,
         d.acquisitionBid ? `${nameOf(d.acquisitionBid.targetId)}:${Math.round(d.acquisitionBid.amount)}` : null,

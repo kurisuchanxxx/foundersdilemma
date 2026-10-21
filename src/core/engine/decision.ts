@@ -2,6 +2,7 @@ import { investorDef, lenderDef, grantDef } from "../data/investors";
 import { SECTORS } from "../data/sectors";
 import { lt, type LText } from "../text";
 import type { Company, Decision, GameState, GtmChannel, ReputationAction } from "../types";
+import { sanitizeInteractions } from "./interactions";
 import { headcount } from "./util";
 
 export const REPUTATION_ACTIONS: Record<ReputationAction, { cost: number; distraction: number; label: LText; description: LText }> = {
@@ -74,6 +75,7 @@ export function defaultDecision(c: Company): Decision {
     acquisitionBid: null,
     partnershipProposals: [],
     acceptPartnershipIds: [],
+    interactions: [],
   };
 }
 
@@ -101,6 +103,7 @@ export function carryOverDecision(c: Company): Decision {
     acquisitionBid: null,
     partnershipProposals: [],
     acceptPartnershipIds: [],
+    interactions: [],
   };
 }
 
@@ -152,6 +155,7 @@ export function sanitizeDecision(state: GameState, c: Company, input: Decision):
     .filter((id) => others.some((o) => o.id === id) && !c.partnerships.some((p) => p.partnerId === id && p.untilRound >= state.round))
     .slice(0, 1);
   d.acceptPartnershipIds = (d.acceptPartnershipIds ?? []).filter((id) => c.partnershipOffers.some((o) => o.id === id && o.validRound >= state.round));
+  d.interactions = sanitizeInteractions(state, c, d.interactions);
   return d;
 }
 
