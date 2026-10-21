@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Icon } from "./components/Icon";
-import { INTRO_REVEAL_MS, IntroCurtain, markIntroPlayed, shouldPlayIntro } from "./components/Intro";
+import { INTRO_REVEAL_MS, IntroCurtain, shouldPlayIntro } from "./components/Intro";
 import { GameLayout } from "./screens/GameLayout";
 import { Home } from "./screens/Home";
 import { JoinClassroom } from "./screens/JoinClassroom";
@@ -28,14 +28,7 @@ export default function App() {
   return (
     <>
       {screen === "home" && <Home entranceDelay={intro ? INTRO_REVEAL_MS - 200 : 0} />}
-      {intro && screen === "home" && (
-        <IntroCurtain
-          onDone={() => {
-            markIntroPlayed();
-            setIntro(false);
-          }}
-        />
-      )}
+      {intro && screen === "home" && <IntroCurtain onDone={() => setIntro(false)} />}
       {screen === "setup" && <Setup />}
       {screen === "join" && <JoinClassroom />}
       {screen === "game" && <GameLayout />}

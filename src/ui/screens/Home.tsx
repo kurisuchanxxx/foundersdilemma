@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { openTextFiles } from "../../platform/files";
 import { Icon } from "../components/Icon";
 import { Modal, Segmented } from "../components/ui";
@@ -7,9 +7,6 @@ import { deleteSave, listSaves, parseGame, readSave, useStore, type SaveMeta } f
 import { LearnContent } from "../views/Learn";
 
 export const APP_VERSION = "2.1.0";
-
-/** The same tinted background film as the landing page (falls back to a soft bloom when offline). */
-const HERO_VIDEO = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260808_064556_051587f1-74a1-4336-8c05-4dde3594ed05.mp4";
 
 function MenuRow({ icon, label, sub, onClick, disabled, primary }: { icon: string; label: string; sub?: ReactNode; onClick: () => void; disabled?: boolean; primary?: boolean }) {
   return (
@@ -40,19 +37,9 @@ export function Home({ entranceDelay = 0 }: { entranceDelay?: number }) {
   const [showLoad, setShowLoad] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [videoOk, setVideoOk] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const refresh = () => void listSaves().then(setSaves);
   useEffect(refresh, []);
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true;
-    v.play().catch(() => {
-      /* autoplay refused: the bloom stays */
-    });
-  }, []);
 
   const latest = saves[0];
 
@@ -81,8 +68,10 @@ export function Home({ entranceDelay = 0 }: { entranceDelay?: number }) {
 
   return (
     <div className="home-screen enter" style={{ "--hs-delay": `${entranceDelay}ms` } as React.CSSProperties}>
-      <div className="home-bloom" aria-hidden="true" />
-      {videoOk && <video ref={videoRef} className="home-bg" src={HERO_VIDEO} autoPlay muted loop playsInline disablePictureInPicture aria-hidden="true" onError={() => setVideoOk(false)} />}
+      <div className="home-glow" aria-hidden="true" />
+      <div className="home-stars far" aria-hidden="true" />
+      <div className="home-stars" aria-hidden="true" />
+      <div className="home-grid" aria-hidden="true" />
 
       <header className="home-header">
         <span className="home-brand">

@@ -1,28 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { useFmt } from "../i18n";
 
-const INTRO_KEY = "fd-intro-played";
 /** How long the curtain stays closed before it opens (the home entrance is timed against it). */
 export const INTRO_REVEAL_MS = 1700;
 const INTRO_TOTAL_MS = 2800;
 
-/** The launch intro plays once per browser session, never with reduced motion, and can be skipped with ?nointro. */
+/** The launch intro plays every time the app is opened, never with reduced motion, and can be skipped with ?nointro. */
 export function shouldPlayIntro(): boolean {
   if (typeof window === "undefined") return false;
   try {
     if (new URLSearchParams(window.location.search).has("nointro")) return false;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return false;
-    return sessionStorage.getItem(INTRO_KEY) === null;
+    return true;
   } catch {
     return true;
-  }
-}
-
-export function markIntroPlayed(): void {
-  try {
-    sessionStorage.setItem(INTRO_KEY, "1");
-  } catch {
-    /* ignore */
   }
 }
 
