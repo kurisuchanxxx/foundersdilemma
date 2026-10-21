@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { allHumansSubmitted, roundLabel, type Company } from "../../core";
 import { Coach } from "../components/Coach";
+import { Brand } from "../components/Brand";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { XpBar } from "../components/Gamify";
 import { Icon } from "../components/Icon";
@@ -68,9 +69,8 @@ export function GameLayout() {
     <div className="app">
       <aside className="sidebar">
         <div className="sidebar-head">
-          <div className="row gap-8" style={{ marginBottom: 12 }}>
-            <Icon name="Rocket" size={18} className="accent" />
-            <div style={{ fontWeight: 700 }}>Founder's Dilemma</div>
+          <div style={{ marginBottom: 12, padding: "2px 2px 0" }}>
+            <Brand size={22} />
           </div>
           {company && <CompanySwitcher company={company} humans={humans} onPick={setActive} locked={isTeamCopy || mode === "solo"} />}
           {company && (

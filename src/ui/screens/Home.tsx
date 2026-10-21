@@ -1,12 +1,15 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { openTextFiles } from "../../platform/files";
+import { Brand } from "../components/Brand";
 import { Icon } from "../components/Icon";
-import { Modal, Segmented } from "../components/ui";
+import { Modal } from "../components/ui";
 import { useFmt } from "../i18n";
 import { deleteSave, listSaves, parseGame, readSave, useStore, type SaveMeta } from "../store";
 import { LearnContent } from "../views/Learn";
 
 export const APP_VERSION = "2.1.0";
+/** The public site: the game's header links back to its sections, like the landing's own navigation. */
+const SITE_URL = "https://kurisuchanxxx.github.io/foundersdilemma/";
 
 function MenuRow({ icon, label, sub, onClick, disabled, primary }: { icon: string; label: string; sub?: ReactNode; onClick: () => void; disabled?: boolean; primary?: boolean }) {
   return (
@@ -74,35 +77,41 @@ export function Home({ entranceDelay = 0 }: { entranceDelay?: number }) {
       <div className="home-grid" aria-hidden="true" />
 
       <header className="home-header">
-        <span className="home-brand">
-          <span className="disc">
-            <Icon name="Rocket" size={15} />
-          </span>
-          <span>Founder's Dilemma</span>
-        </span>
+        <a className="home-brand" href={`${SITE_URL}?lang=${lang}`} aria-label="Founder's Dilemma">
+          <Brand />
+        </a>
+        <nav className="home-nav" aria-label={f.tx("Site sections", "Sezioni del sito")}>
+          <a href={`${SITE_URL}?lang=${lang}`}>Home</a>
+          <a href={`${SITE_URL}?lang=${lang}#gioco`}>{f.tx("The game", "Il gioco")}</a>
+          <a href={`${SITE_URL}?lang=${lang}#aula`}>{f.tx("In class", "In aula")}</a>
+          <a href={`${SITE_URL}?lang=${lang}#corso`}>{f.tx("For the course", "Per il corso")}</a>
+        </nav>
         <span className="home-version">
           <span className="label">{f.tx("Version", "Versione")}</span>
-          <span className="value">{APP_VERSION} · macOS · Windows · Web</span>
+          <span className="value">{APP_VERSION.replace(/\.0$/, "")} &nbsp;•&nbsp; macOS · Windows · Web</span>
         </span>
-        <span className="home-controls">
-          <Segmented
-            value={lang}
-            options={[
-              { value: "it", label: "Italiano" },
-              { value: "en", label: "English" },
-            ]}
-            onChange={setLang}
-          />
-          <Segmented
-            value={theme}
-            options={[
-              { value: "auto", label: <Icon name="Settings2" size={14} />, title: "Auto" },
-              { value: "light", label: <Icon name="Sun" size={14} />, title: "Light" },
-              { value: "dark", label: <Icon name="Moon" size={14} />, title: "Dark" },
-            ]}
-            onChange={setTheme}
-          />
+        <span className="lang-switch" role="radiogroup" aria-label={f.tx("Language", "Lingua")}>
+          <button type="button" role="radio" aria-checked={lang === "en"} aria-pressed={lang === "en"} aria-label="English" onClick={() => setLang("en")}>
+            EN
+          </button>
+          <button type="button" role="radio" aria-checked={lang === "it"} aria-pressed={lang === "it"} aria-label="Italiano" onClick={() => setLang("it")}>
+            IT
+          </button>
         </span>
+        <span className="lang-switch theme-switch" role="radiogroup" aria-label={f.tx("Theme", "Tema")}>
+          <button type="button" role="radio" aria-checked={theme === "auto"} aria-pressed={theme === "auto"} title="Auto" aria-label="Auto" onClick={() => setTheme("auto")}>
+            <Icon name="Settings2" size={14} />
+          </button>
+          <button type="button" role="radio" aria-checked={theme === "light"} aria-pressed={theme === "light"} title="Light" aria-label="Light" onClick={() => setTheme("light")}>
+            <Icon name="Sun" size={14} />
+          </button>
+          <button type="button" role="radio" aria-checked={theme === "dark"} aria-pressed={theme === "dark"} title="Dark" aria-label="Dark" onClick={() => setTheme("dark")}>
+            <Icon name="Moon" size={14} />
+          </button>
+        </span>
+        <button type="button" className="home-signup" onClick={() => (latest ? void open(latest) : openSetup())}>
+          {f.tx("Play now", "Gioca ora")}
+        </button>
       </header>
 
       <main className="home-hero">

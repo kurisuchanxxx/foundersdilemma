@@ -1150,76 +1150,136 @@ table.table {
   pointer-events: none;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 30%, transparent 70%, rgba(0, 0, 0, 0.4));
 }
+/* brand mark (shared with the in-game sidebar) */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+}
+.brand-name {
+  font-size: 15px;
+  font-weight: 460;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+/* header laid out like the landing page: brand, section links, version panel, language, theme, white button */
 .home-header {
   position: absolute;
   left: var(--hs-gutter);
   right: var(--hs-gutter);
   top: var(--hs-top);
+  height: 48px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 0;
   z-index: 5;
-  flex-wrap: wrap;
+  white-space: nowrap;
 }
 .home-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.3px;
+  color: #fff;
+  text-decoration: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+.home-brand .brand-name {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
-.home-brand .disc {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #fff;
-  color: #000;
-  display: grid;
-  place-items: center;
-  flex: none;
+.home-nav {
+  display: flex;
+  gap: clamp(28px, 2.9vw, 43px);
+  margin-left: clamp(32px, 3.03vw, 48px);
+}
+.home-nav a {
+  position: relative;
+  font-size: 16px;
+  font-weight: 430;
+  letter-spacing: -0.36px;
+  color: rgba(229, 229, 230, 0.77);
+  text-decoration: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  transition: color 0.15s;
+}
+.home-nav a:hover {
+  color: #fff;
 }
 .home-version {
   margin-left: auto;
-  padding-left: 10px;
+  height: 48px;
+  padding-left: 8px;
   border-left: 2px solid rgba(230, 230, 230, 0.52);
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 1px;
   line-height: 1.3;
-  white-space: nowrap;
 }
 .home-version .label {
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 420;
   color: rgba(240, 240, 240, 0.77);
 }
 .home-version .value {
-  font-size: 13.5px;
+  font-size: 15px;
+  font-weight: 440;
   color: rgba(255, 255, 255, 0.93);
 }
-.home-controls {
-  display: flex;
-  gap: 8px;
+.lang-switch {
+  display: inline-flex;
   align-items: center;
-}
-.home-screen .segmented {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
+  gap: 2px;
   padding: 3px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(14px) saturate(108%);
-  -webkit-backdrop-filter: blur(14px) saturate(108%);
-}
-.home-screen .segmented button {
-  color: rgba(229, 229, 230, 0.8);
+  height: 42px;
+  margin-left: clamp(16px, 1.6vw, 24px);
   border-radius: 7px;
-  padding: 6px 12px;
-  font-weight: 450;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(145deg, rgba(24, 22, 20, 0.72), rgba(5, 12, 14, 0.8));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.8);
 }
-.home-screen .segmented button.on {
+.lang-switch button {
+  height: 34px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 460;
+  letter-spacing: 0.2px;
+  color: rgba(229, 229, 230, 0.72);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lang-switch button[aria-pressed="true"] {
   background: #fff;
   color: #101010;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.theme-switch button {
+  padding: 0 9px;
+}
+.home-signup {
+  margin-left: clamp(16px, 1.6vw, 24px);
+  width: 109px;
+  height: 42px;
+  border: 0;
+  border-radius: 7px;
+  background: #fff;
+  color: #101010;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 460;
+  letter-spacing: -0.34px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 1px 5px rgba(0, 0, 0, 0.34);
+  transition: filter 0.14s ease;
+}
+.home-signup:hover {
+  filter: brightness(1.08);
 }
 .home-hero {
   position: relative;
@@ -1418,12 +1478,35 @@ table.table {
 
 /* entrance motion (timed after the intro curtain when it plays) */
 .home-screen.enter .home-brand,
+.home-screen.enter .home-nav a,
 .home-screen.enter .home-version,
-.home-screen.enter .home-controls,
+.home-screen.enter .lang-switch,
+.home-screen.enter .home-signup,
 .home-screen.enter .home-copy,
 .home-screen.enter .home-cta-row,
 .home-screen.enter .home-panel {
   opacity: 0;
+}
+.home-screen.enter .home-nav a {
+  animation: hs-nav 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.home-screen.enter .home-nav a:nth-child(1) {
+  animation-delay: calc(var(--hs-delay) + 130ms);
+}
+.home-screen.enter .home-nav a:nth-child(2) {
+  animation-delay: calc(var(--hs-delay) + 175ms);
+}
+.home-screen.enter .home-nav a:nth-child(3) {
+  animation-delay: calc(var(--hs-delay) + 220ms);
+}
+.home-screen.enter .home-nav a:nth-child(4) {
+  animation-delay: calc(var(--hs-delay) + 265ms);
+}
+.home-screen.enter .lang-switch {
+  animation: hs-action 520ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--hs-delay) + 200ms) both;
+}
+.home-screen.enter .home-signup {
+  animation: hs-action 520ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--hs-delay) + 220ms) both;
 }
 .home-screen.enter .line-reveal {
   transform: translate3d(0, 110%, 0) skewY(2deg);
@@ -1434,9 +1517,7 @@ table.table {
 .home-screen.enter .home-version {
   animation: hs-nav 520ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--hs-delay) + 180ms) both;
 }
-.home-screen.enter .home-controls {
-  animation: hs-action 520ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--hs-delay) + 220ms) both;
-}
+
 .home-screen.enter .line-one .line-reveal {
   animation: hs-line 800ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--hs-delay) + 300ms) both;
 }
@@ -1523,19 +1604,30 @@ table.table {
   .home-panel {
     justify-self: stretch;
   }
-  .home-version {
+  .home-version,
+  .home-nav,
+  .home-signup {
     display: none;
   }
-  .home-header {
-    gap: 10px;
+  .lang-switch {
+    margin-left: 10px;
   }
-  .home-controls {
+  .lang-switch:first-of-type {
     margin-left: auto;
   }
 }
+@media (min-width: 861px) and (max-width: 1180px) {
+  .home-nav {
+    display: none;
+  }
+}
 @media (max-width: 480px) {
-  .home-screen .segmented button {
-    padding: 5px 9px;
+  .lang-switch {
+    height: 38px;
+  }
+  .lang-switch button {
+    height: 30px;
+    padding: 0 8px;
     font-size: 12px;
   }
   .pill {
