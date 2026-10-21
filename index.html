@@ -2,9 +2,9 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#09090b" />
+  <meta name="theme-color" content="#000000" />
   <title>Founder's Dilemma · Business game di startup venturing</title>
   <meta name="description" content="Founder's Dilemma è un business game di startup venturing per l'aula universitaria: i team fondano una startup, cercano il product-market fit, raccolgono capitali e affrontano i dilemmi del fondatore. Gratis, nel browser, senza server." />
   <link rel="canonical" href="https://kurisuchanxxx.github.io/foundersdilemma/" />
@@ -26,7 +26,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&family=Instrument+Serif:ital@1&display=swap" />
 
   <script type="application/ld+json">
   {
@@ -44,136 +44,308 @@
   </script>
 
   <style>
+    html, body { background: #000000 !important; color: #ffffff; }
+
     :root {
       color-scheme: dark;
-      --bg: #09090b;
-      --bg-2: #0e0e11;
-      --surface: #131316;
-      --surface-2: #1a1a1e;
-      --border: rgba(255, 255, 255, 0.08);
-      --border-2: rgba(255, 255, 255, 0.14);
-      --text: #f5f5f7;
+      --bg: #000000;
+      --bg-2: #050506;
+      --surface: #0d0d10;
+      --surface-2: #141417;
+      --border: rgba(255, 255, 255, 0.16);
+      --border-soft: rgba(255, 255, 255, 0.12);
+      --border-2: rgba(255, 255, 255, 0.16);
+      --text: #ffffff;
       --text-2: #a4a4ac;
       --text-3: #70707a;
+      --muted: #9a9a9a;
+      --stat: #d8d8d8;
       --accent: #0a84ff;
       --accent-2: #5ab0ff;
       --accent-soft: rgba(10, 132, 255, 0.14);
       --good: #30d158;
-      --warn: #ffb020;
       --radius: 18px;
       --radius-sm: 12px;
-      --font: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
-      --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "Instrument Serif", "Times New Roman", Times, serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       --container: 1120px;
       --gutter: 24px;
+
+      --logo: 15.5px;
+      --logo-mark: 22px;
+      --nav: 14px;
+      --nav-h: 40px;
+      --btn: 13.5px;
+      --btn-h: 40px;
+      --hero-btn-h: 42px;
+      --h1: 48px;
+      --lede: 15.5px;
+      --badge: 12.5px;
+      --stat-size: 13.5px;
+      --header-y: 22px;
+      --header-x: 40px;
+      --stats-x: 72px;
+      --stats-y: 36px;
+      --hero-gap: 85px;
+      --copy-max: 860px;
+      --lede-max: 470px;
+      --nav-pad: 18px;
+      --badge-mb: 22px;
+      --lede-mt: 18px;
+      --actions-mt: 26px;
+      --actions-gap: 10px;
+      --stat-icon: 20px;
+      --stat-icon-w: 38px;
+      --stat-icon-h: 21px;
     }
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+    html, body { background: #000000; background: var(--bg, #000000); color: #ffffff; color: var(--text, #ffffff); }
     body {
-      margin: 0;
       font-family: var(--font);
       font-size: 16px;
       line-height: 1.55;
-      color: var(--text);
-      background: var(--bg);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
       overflow-x: clip;
+      position: relative;
     }
     a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     img { display: block; max-width: 100%; height: auto; }
-    h1, h2, h3, h4, p { margin: 0; }
     h1, h2, h3 { letter-spacing: -0.025em; font-weight: 650; }
-    ul { margin: 0; padding: 0; list-style: none; }
-    button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
-    :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
+    ul { list-style: none; }
+    :focus-visible { outline: 2px solid rgba(255, 255, 255, 0.8); outline-offset: 3px; border-radius: 6px; }
 
     .container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
     .mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; }
     .muted { color: var(--text-2); }
     .faint { color: var(--text-3); }
 
-    /* ---------- buttons ---------- */
-    .btn {
-      display: inline-flex; align-items: center; gap: 9px;
-      padding: 12px 20px; border-radius: 999px;
-      font-weight: 600; font-size: 15px; line-height: 1;
-      border: 1px solid transparent; white-space: nowrap;
-      transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    /* ---------- grain ---------- */
+    .grain {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.055;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      mix-blend-mode: overlay;
     }
-    .btn svg { width: 17px; height: 17px; flex: none; }
-    .btn:active { transform: translateY(1px); }
-    .btn.primary { background: var(--accent); color: #fff; box-shadow: 0 8px 30px rgba(10, 132, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18); }
-    .btn.primary:hover { background: #2a94ff; }
-    .btn.secondary { background: rgba(255, 255, 255, 0.06); border-color: var(--border-2); color: var(--text); }
-    .btn.secondary:hover { background: rgba(255, 255, 255, 0.1); }
-    .btn.ghost { color: var(--text-2); padding: 10px 14px; }
-    .btn.ghost:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
-    .btn.lg { padding: 15px 26px; font-size: 16px; }
 
-    /* ---------- nav ---------- */
-    .nav {
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
-      background: rgba(9, 9, 11, 0.72);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s;
+    /* ---------- hero shell ---------- */
+    .hero-shell { position: relative; background: #000; isolation: isolate; overflow: hidden; }
+    .hero-photo { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: #000; animation: in-photo 1.4s ease both; }
+    .hero-photo video { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+    .hero-photo.is-in { animation: none; opacity: 1; transform: none; clip-path: none; filter: none; }
+    .page {
+      position: relative; z-index: 1;
+      display: grid; grid-template-rows: auto 1fr auto;
+      min-height: 100vh; min-height: 100dvh;
     }
-    .nav.scrolled { border-bottom-color: var(--border); }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
-    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 650; font-size: 15px; letter-spacing: -0.01em; }
-    .brand-mark {
-      width: 30px; height: 30px; border-radius: 9px; background: var(--accent);
-      display: grid; place-items: center; color: #fff;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 14px rgba(10, 132, 255, 0.35);
+
+    /* ---------- header ---------- */
+    .header {
+      position: relative; z-index: 50;
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      padding: var(--header-y) var(--header-x) 10px;
     }
-    .brand-mark svg { width: 17px; height: 17px; }
-    .nav-links { display: flex; gap: 4px; }
-    .nav-links a { padding: 8px 12px; border-radius: 8px; font-size: 14px; color: var(--text-2); transition: color 0.15s, background 0.15s; }
-    .nav-links a:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
-    .nav-actions { display: flex; align-items: center; gap: 8px; }
-    .nav-actions .btn { padding: 9px 16px; font-size: 14px; }
-    .icon-link { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; color: var(--text-2); transition: color 0.15s, background 0.15s; }
-    .icon-link:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
-    .icon-link svg { width: 20px; height: 20px; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 9px; justify-self: start;
+      font-size: var(--logo); font-weight: 600; letter-spacing: -0.03em; color: #fff; white-space: nowrap;
+    }
+    .logo svg { width: var(--logo-mark); height: var(--logo-mark); flex: none; }
+    .logo-suffix { font-weight: 400; }
+    .site-nav { display: flex; align-items: center; gap: 8px; justify-self: center; }
+    .nav-pill {
+      position: relative; overflow: hidden; display: inline-flex; align-items: center;
+      height: var(--nav-h); padding: 0 var(--nav-pad); border-radius: 7px;
+      border: 1px solid rgba(198, 198, 198, 0.55);
+      background: linear-gradient(105deg, #050505 0%, #2a2a2a 48%, #4a4a4a 100%);
+      color: #f3f3f3; font-size: var(--nav); font-weight: 400; letter-spacing: -0.01em; white-space: nowrap;
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .nav-pill::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.16) 50%, transparent 70%);
+      transform: translateX(-120%); transition: transform 0.6s ease;
+    }
+    .nav-pill:hover {
+      border-color: rgba(235, 235, 235, 0.9);
+      background: linear-gradient(105deg, #111111 0%, #3a3a3a 45%, #6a6a6a 100%);
+      box-shadow: 0 0 18px rgba(200, 210, 230, 0.18);
+    }
+    .nav-pill:hover::before { transform: translateX(120%); }
+    .header-cta { justify-self: end; }
+
+    .burger {
+      display: none; place-items: center; width: 42px; height: 42px; border-radius: 6px;
+      border: 1px solid var(--border); background: rgba(8, 8, 8, 0.55); z-index: 60;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .burger:hover { border-color: rgba(255, 255, 255, 0.32); background: rgba(255, 255, 255, 0.05); }
+    .burger-bars { display: grid; gap: 5px; }
+    .burger-bars span { display: block; width: 16px; height: 1.5px; border-radius: 1px; background: #fff; transition: transform 0.25s ease, opacity 0.2s ease; }
+    body.menu-open .burger-bars span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    body.menu-open .burger-bars span:nth-child(2) { opacity: 0; }
+    body.menu-open .burger-bars span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .menu-backdrop { display: none; }
+
+    /* ---------- buttons (liquid glass) ---------- */
+    .btn {
+      position: relative; isolation: isolate; overflow: hidden;
+      display: inline-flex; align-items: center; justify-content: center;
+      height: var(--btn-h); padding: 0 16px; border-radius: 6px;
+      font-size: var(--btn); font-weight: 500; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; cursor: pointer;
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease, filter 0.35s ease;
+    }
+    .btn::after {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.45) 48%, transparent 76%);
+      transform: translateX(-130%); transition: transform 0.65s ease;
+    }
+    .btn:hover::after { transform: translateX(130%); }
+    .btn-solid {
+      background: linear-gradient(180deg, #ffffff 0%, #e7e7e7 48%, #cfcfcf 100%);
+      color: #111; border: 1px solid #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+    .btn-solid:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #f3f6ff 42%, #d5def2 100%);
+      border-color: #f2f6ff;
+      box-shadow: inset 0 1px 0 #fff, 0 0 22px rgba(186, 208, 255, 0.35), 0 8px 18px rgba(255, 255, 255, 0.12);
+    }
+    .hero-btn.btn-solid:hover { box-shadow: inset 0 1px 0 #fff, 0 0 26px rgba(186, 208, 255, 0.4), 0 8px 18px rgba(255, 255, 255, 0.14); }
+    .btn-ghost {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.45) 50%, rgba(160, 175, 200, 0.08));
+      color: #fff; border: 1px solid rgba(198, 198, 198, 0.45);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .btn-ghost:hover {
+      background: linear-gradient(135deg, rgba(210, 225, 255, 0.18), rgba(0, 0, 0, 0.35) 48%, rgba(180, 195, 220, 0.16));
+      border-color: rgba(220, 230, 255, 0.75);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 20px rgba(170, 200, 255, 0.22);
+    }
+    .hero-ghost {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.5) 46%, rgba(150, 170, 200, 0.1));
+      border: 1px solid rgba(198, 198, 198, 0.55);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    }
+    .hero-ghost:hover { border-color: rgba(220, 230, 255, 0.8); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 24px rgba(170, 200, 255, 0.28); }
+    .hero-btn { height: var(--hero-btn-h); padding: 0 18px; }
 
     /* ---------- hero ---------- */
-    .hero { position: relative; padding: 96px 0 40px; text-align: center; overflow: hidden; }
-    .hero-bg {
-      position: absolute; inset: 0; pointer-events: none; z-index: 0;
-      background:
-        radial-gradient(60% 45% at 50% 0%, rgba(10, 132, 255, 0.22), transparent 70%),
-        radial-gradient(30% 25% at 50% 10%, rgba(90, 176, 255, 0.12), transparent 70%);
+    .hero { display: flex; align-items: flex-end; justify-content: center; padding: 8px 24px var(--hero-gap); min-height: 0; }
+    .hero-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: var(--copy-max); width: 100%; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: var(--badge-mb); padding: 9px 15px; border: 0; border-radius: 5px;
+      background: linear-gradient(90deg, #7d7d7d 0%, #2a2a2a 52%, #0a0a0a 100%);
+      color: #f2f2f2; font-size: var(--badge); font-weight: 400; letter-spacing: -0.01em;
     }
-    .hero-grid {
-      position: absolute; inset: 0; pointer-events: none; z-index: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-      background-size: 56px 56px;
-      -webkit-mask-image: radial-gradient(70% 55% at 50% 0%, #000 20%, transparent 100%);
-      mask-image: radial-gradient(70% 55% at 50% 0%, #000 20%, transparent 100%);
-    }
-    .hero .container { position: relative; z-index: 1; }
-    .pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 12px 6px 8px; border-radius: 999px;
-      border: 1px solid var(--border-2); background: rgba(255, 255, 255, 0.04);
-      font-size: 13px; color: var(--text-2);
-    }
-    .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px rgba(48, 209, 88, 0.18); }
-    .pill b { color: var(--text); font-weight: 600; }
-    .hero h1 {
-      font-size: clamp(40px, 7.2vw, 80px); line-height: 1.02; letter-spacing: -0.04em;
-      margin: 26px auto 0; max-width: 14ch;
-    }
-    .hero h1 .soft { color: var(--text-2); }
-    .hero .lead { font-size: clamp(17px, 2vw, 21px); color: var(--text-2); max-width: 640px; margin: 24px auto 0; line-height: 1.5; }
-    .hero-cta { display: flex; justify-content: center; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
-    .hero-note { margin-top: 18px; color: var(--text-3); font-size: 13px; }
-    .hero-note span + span::before { content: "·"; margin: 0 8px; color: var(--text-3); }
+    .badge-star { width: 18px; height: 20px; flex: none; color: #fff; filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.45)); animation: in-star 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both; }
+    .headline { display: flex; flex-direction: column; align-items: center; font-family: var(--font); font-size: var(--h1); font-weight: 500; letter-spacing: -0.045em; line-height: 1.12; color: #fff; }
+    .headline-line { display: block; overflow: hidden; padding: 0.06em 0.15em 0.14em; }
+    .headline-line .appear { display: inline-block; }
+    .headline em { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 1.08em; letter-spacing: -0.03em; color: #9a9a9a; animation: in-em 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both; }
+    .lede { max-width: var(--lede-max); margin-top: var(--lede-mt); color: #9a9a9a; font-size: var(--lede); font-weight: 400; line-height: 1.55; letter-spacing: -0.015em; }
+    .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--actions-gap); margin-top: var(--actions-mt); }
 
-    /* ---------- browser frame ---------- */
+    /* ---------- stats footer of the hero ---------- */
+    .stats {
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+      padding: 0 var(--stats-x) var(--stats-y);
+      padding-bottom: max(var(--stats-y), env(safe-area-inset-bottom));
+      color: #d8d8d8;
+    }
+    .stat { display: inline-flex; align-items: center; gap: 14px; font-size: var(--stat-size); letter-spacing: -0.015em; white-space: nowrap; }
+    .stat-icon { width: var(--stat-icon); height: var(--stat-icon); flex: none; color: #e8e8e8; }
+    .stat-icon-wide { width: var(--stat-icon-w); height: var(--stat-icon-h); flex: none; }
+
+    /* ---------- entrance motion ---------- */
+    .appear { opacity: 1; animation-duration: 1.05s; animation-fill-mode: both; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); animation-delay: var(--d, 0.08s); }
+    .appear--scale { animation-name: in-scale; }
+    .appear--soft { animation-name: in-soft; }
+    .appear--mask { animation-name: in-mask; }
+    .appear--pop { animation-name: in-pop; }
+    .appear--btn { animation-name: in-btn; }
+    .appear--side { animation-name: in-side; }
+    .appear--stat { animation-name: in-stat; }
+    .lede.appear { animation-duration: 1.25s; }
+    .appear.is-in { animation: none; opacity: 1; transform: none; clip-path: none; filter: none; }
+    @keyframes in-scale { from { opacity: 0; transform: scale(0.84); } to { opacity: 1; transform: scale(1); } }
+    @keyframes in-soft { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes in-mask { from { opacity: 0; transform: translateY(40%); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes in-pop { 0% { opacity: 0; transform: scale(0.9); } 70% { opacity: 1; transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes in-btn { from { opacity: 0; transform: translateY(18px) scale(0.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes in-side { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes in-stat { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes in-star { 0% { transform: scale(0.2) rotate(-50deg); } 65% { transform: scale(1.2) rotate(8deg); } 100% { transform: scale(1) rotate(0); } }
+    @keyframes in-em { from { opacity: 0.35; filter: blur(4px); } to { opacity: 1; filter: blur(0); } }
+    @keyframes in-photo { from { opacity: 0; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+      .appear, .hero-photo, .headline em, .badge-star { opacity: 1; transform: none; clip-path: none; filter: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ---------- hero responsive ---------- */
+    @media (min-width: 1280px) and (max-width: 1599px) {
+      :root { --h1: 54px; --lede: 16px; --header-x: 48px; --stats-x: 80px; --copy-max: 900px; }
+    }
+    @media (min-width: 1600px) {
+      :root { --logo: 17px; --logo-mark: 24px; --nav: 15px; --nav-h: 44px; --btn: 15px; --btn-h: 44px; --hero-btn-h: 48px; --h1: 64px; --lede: 18px; --badge: 13.5px; --stat-size: 15px; --header-y: 28px; --header-x: 64px; --stats-x: 96px; --stats-y: 44px; --copy-max: 980px; --lede-max: 540px; --nav-pad: 20px; --badge-mb: 26px; --lede-mt: 22px; --actions-mt: 30px; --actions-gap: 12px; --stat-icon: 22px; --stat-icon-w: 45px; --stat-icon-h: 24px; }
+    }
+    @media (min-width: 1920px) {
+      :root { --logo: 18px; --logo-mark: 26px; --nav: 16px; --nav-h: 48px; --btn: 16px; --btn-h: 48px; --hero-btn-h: 52px; --h1: 76px; --lede: 20px; --badge: 14.5px; --stat-size: 16px; --header-y: 32px; --header-x: 80px; --stats-x: 120px; --stats-y: 52px; --copy-max: 1120px; --lede-max: 620px; --nav-pad: 22px; --stat-icon-w: 48px; --stat-icon-h: 26px; }
+      .site-nav { gap: 10px; }
+      .btn { padding: 0 22px; }
+      .badge { padding: 10px 15px; }
+    }
+    @media (min-width: 2560px) {
+      :root { --h1: 88px; --lede: 22px; --header-x: 120px; --stats-x: 160px; --copy-max: 1280px; --lede-max: 680px; }
+    }
+    @media (min-width: 901px) and (max-width: 1279px) {
+      :root { --logo: 15px; --nav: 13px; --nav-h: 36px; --btn: 13px; --btn-h: 38px; --hero-btn-h: 40px; --h1: 42px; --lede: 15px; --badge: 12px; --stat-size: 12.5px; --header-y: 16px; --header-x: 28px; --stats-x: 36px; --stats-y: 28px; --hero-gap: 64px; --copy-max: 760px; --lede-max: 440px; --nav-pad: 14px; --badge-mb: 16px; --lede-mt: 14px; --actions-mt: 20px; }
+    }
+    @media (min-width: 901px) and (max-height: 850px) {
+      :root { --header-y: 14px; --stats-y: 24px; --hero-gap: 48px; --h1: 40px; --badge-mb: 12px; --lede-mt: 12px; --actions-mt: 16px; }
+    }
+    @media (min-width: 901px) and (max-height: 720px) {
+      :root { --h1: 34px; --lede: 14px; --hero-gap: 32px; --stats-y: 18px; --nav-h: 30px; --btn-h: 34px; --hero-btn-h: 36px; --badge-mb: 8px; }
+    }
+    @media (min-width: 901px) {
+      .page { height: 100vh; height: 100dvh; overflow: hidden; }
+    }
+    @media (max-width: 900px) {
+      :root { --logo: 16px; --btn: 15px; --btn-h: 46px; --hero-btn-h: 48px; --h1: 36px; --lede: 16.5px; --badge: 13.5px; --stat-size: 15px; --header-y: 16px; --header-x: 18px; --stats-x: 20px; --stats-y: 28px; --hero-gap: 36px; }
+      .page { min-height: 100vh; min-height: 100svh; }
+      .header { grid-template-columns: 1fr auto auto; gap: 8px; padding-top: max(var(--header-y), env(safe-area-inset-top)); padding-left: max(var(--header-x), env(safe-area-inset-left)); padding-right: max(var(--header-x), env(safe-area-inset-right)); }
+      .logo, .header-cta, .burger { position: relative; z-index: 80; }
+      .burger { display: grid; }
+      .menu-backdrop {
+        display: block; position: fixed; inset: 0; z-index: 40; background: rgba(8, 8, 8, 0.42);
+        opacity: 0; visibility: hidden; transition: opacity 0.28s ease, visibility 0.28s ease, backdrop-filter 0.28s ease;
+      }
+      body.menu-open .menu-backdrop { opacity: 1; visibility: visible; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+      .site-nav {
+        position: fixed; inset: 0; z-index: 45; flex-direction: column; justify-content: center; align-items: stretch; gap: 12px;
+        padding: 96px 22px 32px; padding-top: max(96px, calc(env(safe-area-inset-top) + 88px)); background: transparent;
+        opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity 0.28s ease, visibility 0.28s ease, transform 0.28s ease;
+      }
+      body.menu-open .site-nav { opacity: 1; visibility: visible; transform: none; }
+      .site-nav .nav-pill { width: 100%; height: 56px; justify-content: center; font-size: 19px; border-radius: 10px; }
+      body.menu-open { overflow: hidden; }
+      .hero { padding: 20px 20px 64px; }
+      .hero-copy, .lede { max-width: 100%; }
+      .stats { flex-direction: column; align-items: center; gap: 16px; }
+      .stat { white-space: normal; text-align: left; }
+    }
+    @media (max-width: 560px) {
+      :root { --h1: 34px; --lede: 16px; --header-x: 16px; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { width: 100%; }
+    }
+
+/* ---------- browser frame ---------- */
     .frame-wrap { position: relative; margin: 64px auto 0; max-width: 1080px; }
     .frame-wrap::before {
       content: ""; position: absolute; inset: -8% -6% auto; height: 70%; z-index: 0; pointer-events: none;
@@ -209,15 +381,8 @@
     .frame.sm .frame-bar .dots i { width: 9px; height: 9px; }
     .frame.sm .url { font-size: 11px; padding: 3px 10px; }
 
-    /* ---------- stats ---------- */
-    .stats { margin-top: 72px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
-    .stat { padding: 26px 16px; text-align: center; border-left: 1px solid var(--border); }
-    .stat:first-child { border-left: 0; }
-    .stat b { display: block; font-size: 30px; font-weight: 650; letter-spacing: -0.03em; line-height: 1.1; }
-    .stat span { display: block; margin-top: 6px; font-size: 13px; color: var(--text-2); }
-
-    /* ---------- sections ---------- */
+    
+/* ---------- sections ---------- */
     .section { padding: 110px 0; }
     .section.tight { padding-top: 70px; }
     .section-head { max-width: 680px; }
@@ -319,7 +484,7 @@
     .cta > * { position: relative; }
     .cta h2 { font-size: clamp(30px, 4.6vw, 52px); letter-spacing: -0.035em; line-height: 1.06; max-width: 16ch; margin: 0 auto; }
     .cta p { margin: 18px auto 0; color: var(--text-2); font-size: 17px; max-width: 520px; }
-    .cta .hero-cta { margin-top: 32px; }
+    .cta .cta-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
     .copy-row { margin-top: 26px; display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--border-2); border-radius: 12px; background: rgba(0, 0, 0, 0.35); overflow: hidden; max-width: 100%; }
     .copy-row code { font-family: var(--mono); font-size: 13px; color: var(--text-2); padding: 11px 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .copy-row button { padding: 11px 14px; border-left: 1px solid var(--border-2); font-size: 13px; font-weight: 600; color: var(--text); background: rgba(255, 255, 255, 0.04); display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
@@ -355,7 +520,8 @@
     .studio .desc { color: var(--text-3); font-size: 13px; max-width: 280px; }
     .footer-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--text-3); font-size: 13px; }
 
-    /* reveal */
+    
+/* reveal */
     .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.in { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) {
@@ -367,9 +533,6 @@
     @media (max-width: 1000px) {
       .grid-3 { grid-template-columns: repeat(2, 1fr); }
       .steps { grid-template-columns: repeat(2, 1fr); }
-      .stats-grid { grid-template-columns: repeat(3, 1fr); }
-      .stat:nth-child(4) { border-left: 0; }
-      .stat:nth-child(-n+3) { border-bottom: 1px solid var(--border); }
       .docs { grid-template-columns: repeat(2, 1fr); }
       .platforms { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -379,107 +542,111 @@
       .console .console-text { order: -1; }
     }
     @media (max-width: 820px) {
-      .nav-links { display: none; }
     }
     @media (max-width: 640px) {
       :root { --gutter: 16px; }
-      .hero { padding-top: 64px; }
-      .hero-cta .btn { width: 100%; justify-content: center; }
-      .hero-note span { display: block; }
-      .hero-note span + span::before { content: none; }
-      .frame-wrap { margin-top: 44px; }
+      
       .frame-wrap::before { left: 0; right: 0; }
       .frame-bar .url { max-width: none; }
       .section { padding: 72px 0; }
       .grid-3, .steps, .two-up, .modes, .docs, .platforms { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .stat { border-left: 0; }
-      .stat:nth-child(odd) { border-right: 1px solid var(--border); }
-      .stat:nth-child(-n+4) { border-bottom: 1px solid var(--border); }
-      .stat b { font-size: 26px; }
       .cta { padding: 56px 20px; border-radius: 22px; }
-      .cta .hero-cta .btn { width: 100%; justify-content: center; }
+      .cta 
       .copy-row { width: 100%; }
       .copy-row code { flex: 1; }
       .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-      .nav-actions .btn span { display: none; }
-      .nav-actions .btn { padding: 9px 12px; }
     }
+  
   </style>
 </head>
-<body>
+<body style="background:#000;color:#fff">
+  <div class="grain" aria-hidden="true"></div>
 
-  <!-- ===== NAV ===== -->
-  <header class="nav" id="nav">
-    <div class="container nav-inner">
-      <a class="brand" href="#top" aria-label="Founder's Dilemma, torna all'inizio">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
-        </span>
-        Founder's Dilemma
-      </a>
-      <nav class="nav-links" aria-label="Sezioni della pagina">
-        <a href="#gioco">Il gioco</a>
-        <a href="#round">Come funziona</a>
-        <a href="#aula">In aula</a>
-        <a href="#corso">Per il corso</a>
-      </nav>
-      <div class="nav-actions">
-        <a class="icon-link" href="https://github.com/kurisuchanxxx/foundersdilemma" target="_blank" rel="noopener" aria-label="Repository su GitHub" title="GitHub">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+  <section class="hero-shell" aria-label="Founder's Dilemma">
+    <div class="hero-photo" aria-hidden="true">
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260818_072341_50851634-bbc3-4c33-9acc-7647d4db44aa.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="page">
+      <div class="menu-backdrop" id="menu-backdrop" aria-hidden="true"></div>
+
+      <header class="header">
+        <a class="logo appear appear--scale" href="#top" aria-label="Founder's Dilemma" style="--d:0.08s">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+          <span>Founder's <span class="logo-suffix">Dilemma</span></span>
         </a>
-        <a class="btn primary" href="play/">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
-          <span>Gioca ora</span>
-        </a>
+        <nav class="site-nav" id="site-nav" aria-label="Sezioni della pagina">
+          <a class="nav-pill appear appear--scale" href="#gioco" style="--d:0.16s">Il gioco</a>
+          <a class="nav-pill appear appear--soft" href="#round" style="--d:0.28s">Come funziona</a>
+          <a class="nav-pill appear appear--scale" href="#aula" style="--d:0.40s">In aula</a>
+          <a class="nav-pill appear appear--soft" href="#corso" style="--d:0.52s">Per il corso</a>
+        </nav>
+        <a class="btn btn-solid header-cta appear appear--scale" href="play/" style="--d:0.34s">Gioca ora</a>
+        <button class="burger appear appear--scale" type="button" id="burger" aria-controls="site-nav" aria-expanded="false" aria-label="Apri il menu" style="--d:0.34s">
+          <span class="burger-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </header>
+
+      <div class="hero" id="top">
+        <div class="hero-copy">
+          <span class="badge appear appear--pop" style="--d:0.22s">
+            <svg class="badge-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6C12.55 2.6 12.88 3.15 13.08 4.7c.62 4.7 1.52 5.6 6.22 6.22 1.55.2 2.1.53 2.1 1.08s-.55.88-2.1 1.08c-4.7.62-5.6 1.52-6.22 6.22-.2 1.55-.53 2.1-1.08 2.1s-.88-.55-1.08-2.1c-.62-4.7-1.52-5.6-6.22-6.22C3.15 12.88 2.6 12.55 2.6 12s.55-.88 2.1-1.08c4.7-.62 5.6-1.52 6.22-6.22C11.12 3.15 11.45 2.6 12 2.6Z"/></svg>
+            Business game di startup venturing
+          </span>
+          <h1 class="headline">
+            <span class="headline-line"><span class="appear appear--mask" style="--d:0.42s">Fonda una startup. Affronta</span></span>
+            <span class="headline-line"><span class="appear appear--mask" style="--d:0.62s">il <em>dilemma del fondatore</em>.</span></span>
+          </h1>
+          <p class="lede appear appear--soft" style="--d:0.82s">Un business game per l'aula universitaria: product-market fit, capitali, assunzioni e scelte senza risposta giusta, round dopo round. Gratis, nel browser, senza server.</p>
+          <div class="hero-actions">
+            <a class="btn btn-solid hero-btn appear appear--btn" href="play/" style="--d:0.96s">Gioca nel browser</a>
+            <a class="btn btn-ghost hero-ghost hero-btn appear appear--side" href="#gioco" style="--d:1.10s">Scopri come funziona</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats" aria-label="In breve">
+        <div class="stat appear appear--stat" style="--d:1.12s">
+          <svg class="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <defs>
+              <linearGradient id="st-g1" x1="3" y1="2" x2="14" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0.38" stop-color="#ffffff"/><stop offset="0.62" stop-color="#3a3a3a"/></linearGradient>
+              <linearGradient id="st-g2" x1="3" y1="2" x2="14" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0.38" stop-color="#3a3a3a"/><stop offset="0.62" stop-color="#ffffff"/></linearGradient>
+            </defs>
+            <rect x="3.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#st-g1)"/>
+            <rect x="13.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#st-g2)"/>
+            <rect x="9.2" y="10.9" width="5.6" height="2.2" rx="1.1" fill="#4a4a4a"/>
+          </svg>
+          <span>16 dilemmi, 8 settori, 10 round per partita</span>
+        </div>
+        <div class="stat appear appear--stat" style="--d:1.28s">
+          <svg class="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.4" y="2.4" width="19.2" height="19.2" rx="6.2" fill="#ffffff"/>
+            <path d="M12 7.1v7.4" fill="none" stroke="#111" stroke-width="1.85" stroke-linecap="round"/>
+            <path d="M8.15 12.35L12 16.2l3.85-3.85" fill="none" stroke="#111" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Gratis, nel browser o in un solo file HTML offline</span>
+        </div>
+        <div class="stat appear appear--stat" style="--d:1.44s">
+          <svg class="stat-icon-wide" viewBox="0 0 40 22" aria-hidden="true">
+            <circle cx="10.2" cy="11" r="9.2" fill="#2b2b2b"/>
+            <path d="M6.2 10.4l1.3-2.7 1.3 2.1z" fill="#f4f4f4"/><path d="M14.2 10.4l-1.3-2.7-1.3 2.1z" fill="#f4f4f4"/>
+            <ellipse cx="10.2" cy="12.1" rx="4.15" ry="3.7" fill="#f4f4f4"/>
+            <circle cx="8.9" cy="11.9" r="0.7" fill="#1a1a1a"/><circle cx="11.5" cy="11.9" r="0.7" fill="#1a1a1a"/>
+            <circle cx="20.2" cy="11" r="9.2" fill="#ffffff"/>
+            <circle cx="17.6" cy="9.6" r="1.7" fill="#111"/><circle cx="22.8" cy="9.6" r="1.7" fill="#111"/>
+            <ellipse cx="20.2" cy="12.3" rx="0.9" ry="0.6" fill="#111"/>
+            <path d="M17.5 14.5q2.7 2.3 5.4 0" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="30.2" cy="11" r="9.2" fill="#f26b1d"/>
+            <text x="30.2" y="15.1" font-size="12.5" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" fill="#ffffff">F</text>
+          </svg>
+          <span>Team da 1 a 4 fondatori, classi fino a 60 studenti</span>
+        </div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main id="top">
-
-    <!-- ===== HERO ===== -->
-    <section class="hero">
-      <div class="hero-bg" aria-hidden="true"></div>
-      <div class="hero-grid" aria-hidden="true"></div>
-      <div class="container">
-        <span class="pill"><span class="dot" aria-hidden="true"></span><b>Versione 2.1</b> gratis nel browser, senza account</span>
-        <h1>Fonda una startup. <span class="soft">Affronta il dilemma del fondatore.</span></h1>
-        <p class="lead">Founder's Dilemma è un business game di startup venturing per l'aula universitaria. I team cercano il product-market fit, assumono, raccolgono capitali e scelgono tra ricchezza e controllo. Da soli contro i bot o in classe, round dopo round.</p>
-        <div class="hero-cta">
-          <a class="btn primary lg" href="play/">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
-            Gioca nel browser
-          </a>
-          <a class="btn secondary lg" href="https://github.com/kurisuchanxxx/foundersdilemma" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
-            Codice e materiali su GitHub
-          </a>
-        </div>
-        <p class="hero-note"><span>Nessuna installazione</span><span>Funziona anche offline e da smartphone</span><span>Italiano e inglese</span></p>
-
-        <div class="frame-wrap">
-          <figure class="frame">
-            <div class="frame-bar" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">kurisuchanxxx.github.io/foundersdilemma/play</span></div>
-            <img src="img/hero.webp" width="2880" height="1800" alt="Il cruscotto di Founder's Dilemma: slancio, runway, salute dell'azienda, product-market fit, salute finanziaria, crescita e unit economics, con i grafici di cassa e fatturato mensile di una startup SaaS B2B all'ottavo round" fetchpriority="high" />
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== STATS ===== -->
-    <div class="stats">
-      <div class="container">
-        <div class="stats-grid">
-          <div class="stat"><b>10</b><span>round per partita, da 4 a 16</span></div>
-          <div class="stat"><b>8</b><span>settori con economie diverse</span></div>
-          <div class="stat"><b>6</b><span>archetipi di fondatore</span></div>
-          <div class="stat"><b>16</b><span>dilemmi del fondatore</span></div>
-          <div class="stat"><b>61</b><span>schede nel glossario integrato</span></div>
-          <div class="stat"><b>3</b><span>modalità: solo, hot-seat, classe</span></div>
-        </div>
-      </div>
-    </div>
+  <main>
 
     <!-- ===== COSA SI IMPARA ===== -->
     <section class="section" id="gioco">
@@ -845,15 +1012,9 @@
         <div class="cta reveal">
           <h2>Prova una partita in solitario. Il primo round dura dieci minuti.</h2>
           <p>Un tour guidato spiega ogni schermata al primo avvio. Se poi vuoi portarlo in aula, i materiali sono già pronti.</p>
-          <div class="hero-cta">
-            <a class="btn primary lg" href="play/">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
-              Gioca nel browser
-            </a>
-            <a class="btn secondary lg" href="https://github.com/kurisuchanxxx/foundersdilemma/releases" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              App per macOS e Windows
-            </a>
+          <div class="cta-actions">
+            <a class="btn btn-solid hero-btn" href="play/">Gioca nel browser</a>
+            <a class="btn btn-ghost hero-ghost hero-btn" href="https://github.com/kurisuchanxxx/foundersdilemma/releases" target="_blank" rel="noopener">App per macOS e Windows</a>
           </div>
           <div class="copy-row">
             <code id="play-url">kurisuchanxxx.github.io/foundersdilemma/play</code>
@@ -915,12 +1076,45 @@
     </div>
   </footer>
 
-  <script>
+    <script>
     (function () {
-      var nav = document.getElementById("nav");
-      var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 8); };
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
+      var body = document.body;
+      var appear = Array.prototype.slice.call(document.querySelectorAll(".appear"));
+      var photo = document.querySelector(".hero-photo");
+      appear.forEach(function (el) {
+        el.addEventListener("animationend", function () { el.classList.add("is-in"); }, { once: true });
+      });
+      if (photo) photo.addEventListener("animationend", function () { photo.classList.add("is-in"); }, { once: true });
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          var running = false;
+          if (typeof Element.prototype.getAnimations === "function") {
+            appear.forEach(function (el) {
+              el.getAnimations().forEach(function (a) { if (a.playState === "running" || a.playState === "finished") running = true; });
+            });
+          }
+          if (!running) {
+            appear.forEach(function (el) { el.classList.add("is-in"); });
+            if (photo) photo.classList.add("is-in");
+          }
+        });
+      });
+
+      var burger = document.getElementById("burger");
+      var nav = document.getElementById("site-nav");
+      var backdrop = document.getElementById("menu-backdrop");
+      var setMenu = function (open) {
+        body.classList.toggle("menu-open", open);
+        burger.setAttribute("aria-expanded", open ? "true" : "false");
+        burger.setAttribute("aria-label", open ? "Chiudi il menu" : "Apri il menu");
+      };
+      burger.addEventListener("click", function () { setMenu(!body.classList.contains("menu-open")); });
+      backdrop.addEventListener("click", function () { setMenu(false); });
+      nav.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+      var mq = window.matchMedia("(min-width: 901px)");
+      var onChange = function (e) { if (e.matches) setMenu(false); };
+      if (mq.addEventListener) mq.addEventListener("change", onChange); else mq.addListener(onChange);
 
       var items = document.querySelectorAll(".reveal");
       if ("IntersectionObserver" in window) {
@@ -934,13 +1128,13 @@
         items.forEach(function (el) { el.classList.add("in"); });
       }
 
-      var btn = document.getElementById("copy-btn");
-      var label = btn.querySelector("span");
-      btn.addEventListener("click", function () {
+      var copyBtn = document.getElementById("copy-btn");
+      var label = copyBtn.querySelector("span");
+      copyBtn.addEventListener("click", function () {
         var url = "https://kurisuchanxxx.github.io/foundersdilemma/play/";
         var done = function () {
-          btn.classList.add("done"); label.textContent = "Copiato";
-          setTimeout(function () { btn.classList.remove("done"); label.textContent = "Copia il link"; }, 1800);
+          copyBtn.classList.add("done"); label.textContent = "Copiato";
+          setTimeout(function () { copyBtn.classList.remove("done"); label.textContent = "Copia il link"; }, 1800);
         };
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(url).then(done, function () { window.prompt("Copia il link:", url); });
