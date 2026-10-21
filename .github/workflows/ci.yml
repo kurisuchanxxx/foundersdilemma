@@ -33,6 +33,7 @@ jobs:
           for i in $(seq 1 30); do curl -sf http://localhost:1420/ > /dev/null && break; sleep 1; done
           node tests/e2e/smoke.mjs http://localhost:1420/ test-results/screens
           node tests/e2e/classroom.mjs http://localhost:1420/ test-results/classroom
+          node tests/e2e/engagement.mjs http://localhost:1420/ test-results/engagement
       - name: Screenshots
         if: always()
         uses: actions/upload-artifact@v4

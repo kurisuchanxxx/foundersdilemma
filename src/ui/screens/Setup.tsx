@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import {
   ARCHETYPES,
   ARCHETYPE_IDS,
+  EXTRA_FOUNDER_WEIGHT,
+  MAX_FOUNDERS,
   SCORING_LABEL,
   SECTORS,
   SECTOR_IDS,
@@ -14,7 +16,9 @@ import {
   type SectorId,
 } from "../../core";
 import { COLORS, LOGOS } from "../../core/engine/setup";
+import { Avatar, AvatarBuilder, AvatarStack } from "../components/Avatar";
 import { Icon } from "../components/Icon";
+import { LogoStudio } from "../components/LogoArt";
 import { Badge, Card, Logo, OptionCard, Segmented, SliderField, Toggle } from "../components/ui";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
@@ -29,8 +33,9 @@ function newTeam(i: number): CompanySetup {
     sector,
     logo: LOGOS[(i * 7) % LOGOS.length],
     color: COLORS[i % COLORS.length],
+    logoArt: null,
     riskProfile: "medium",
-    founders: [{ name: "", archetype: ARCHETYPE_IDS[i % ARCHETYPE_IDS.length] }],
+    founders: [{ name: "", archetype: ARCHETYPE_IDS[i % ARCHETYPE_IDS.length], avatar: null }],
     equitySplit: 0.5,
     founderVesting: true,
     teamMembers: [],
@@ -47,6 +52,7 @@ export function Setup() {
   const [bots, setBots] = useState(3);
   const [teams, setTeams] = useState<CompanySetup[]>(() => Array.from({ length: 12 }, (_, i) => newTeam(i)));
   const [step, setStep] = useState(0);
+  const [avatarFor, setAvatarFor] = useState<number | null>(null);
 
   const maxTotal = 12;
   const setMode = (mode: GameConfig["mode"]) => {
@@ -272,10 +278,11 @@ export function Setup() {
           <div className="stack">
             <div className="row gap-12">
               <Logo company={team} size={52} />
-              <div>
+              <div className="grow">
                 <h1>{humans > 1 ? `${f.tx("Team", "Team")} ${step}` : f.tx("Your startup", "La tua startup")}</h1>
                 <p className="muted">{f.tx("Founding decisions you cannot change later.", "Decisioni fondative che non potrai cambiare dopo.")}</p>
               </div>
+              <AvatarStack founders={team.founders.map((fd, k) => ({ name: fd.name || `${f.tx("Founder", "Fondatore")} ${k + 1}`, avatar: fd.avatar }))} size={36} />
             </div>
             <Card title={f.tx("Company", "Azienda")} icon="Building2">
               <div className="grid cols-2">
@@ -290,11 +297,11 @@ export function Setup() {
                 </div>
                 {config.mode !== "solo" && (
                   <div className="field" style={{ gridColumn: "1 / -1" }}>
-                    <div className="field-label">{f.tx("Team members (students)", "Membri del team (studenti)")}</div>
+                    <div className="field-label">{f.tx("Other team members (optional)", "Altri membri del team (opzionale)")}</div>
                     <input
                       className="input"
                       value={team.teamMembers.join(", ")}
-                      placeholder={f.tx("Names separated by commas (used in reports)", "Nomi separati da virgole (usati nei report)")}
+                      placeholder={f.tx("Students who are not playing a founder, separated by commas (used in reports)", "Studenti che non impersonano un fondatore, separati da virgole (usati nei report)")}
                       onChange={(e) => updateTeam({ teamMembers: e.target.value.split(",").map((x) => x.trimStart()) })}
                     />
                   </div>
@@ -314,45 +321,94 @@ export function Setup() {
               <SectorDetails sector={team.sector} />
             </Card>
 
-            <Card title={f.tx("Founders", "Fondatori")} icon="UsersRound">
+            <Card
+              title={f.tx("Founders", "Fondatori")}
+              icon="UsersRound"
+              action={
+                <span className="small faint">
+                  {team.founders.length} / {MAX_FOUNDERS}
+                </span>
+              }
+            >
               <div className="col gap-16">
-                {team.founders.map((fd, k) => (
-                  <div key={k} className="col gap-12">
-                    <div className="row between">
-                      <h3>{k === 0 ? f.tx("Founder", "Fondatore") : f.tx("Co-founder", "Co-fondatore")}</h3>
-                      {k === 1 && (
-                        <button className="btn sm ghost" onClick={() => updateTeam({ founders: team.founders.slice(0, 1) })}>
-                          <Icon name="X" size={14} />
-                          {f.tx("Remove co-founder", "Rimuovi co-fondatore")}
-                        </button>
-                      )}
-                    </div>
-                    <input
-                      className="input"
-                      placeholder={f.tx("Name", "Nome")}
-                      value={fd.name}
-                      onChange={(e) => updateTeam({ founders: team.founders.map((x, j) => (j === k ? { ...x, name: e.target.value } : x)) })}
-                    />
-                    <div className="grid cols-3" style={{ gap: 8 }}>
-                      {ARCHETYPE_IDS.map((a) => (
-                        <OptionCard
-                          key={a}
-                          on={fd.archetype === a}
-                          onClick={() => updateTeam({ founders: team.founders.map((x, j) => (j === k ? { ...x, archetype: a as Archetype } : x)) })}
-                          icon={ARCHETYPES[a].icon}
-                          title={f.L(ARCHETYPES[a].name)}
-                          desc={<ArchetypeMults archetype={a} />}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-                {team.founders.length === 1 ? (
-                  <button className="btn" onClick={() => updateTeam({ founders: [...team.founders, { name: "", archetype: team.founders[0].archetype === "hacker" ? "hustler" : "hacker" }] })}>
+                <p className="small muted">
+                  {f.tx(
+                    "Each student can play a founder: give them a name, an archetype and an avatar (cartoon or photo). Teams of one to four.",
+                    "Ogni studente può impersonare un fondatore: dategli un nome, un archetipo e un avatar (cartoon o foto). Team da uno a quattro.",
+                  )}
+                </p>
+                <div className="grid cols-2" style={{ gap: 12 }}>
+                  {team.founders.map((fd, k) => {
+                    const label = k === 0 ? f.tx("Founder", "Fondatore") : `${f.tx("Co-founder", "Co-fondatore")} ${k + 1}`;
+                    const display = fd.name || `${f.tx("Founder", "Fondatore")} ${k + 1}`;
+                    return (
+                      <div key={k} className="founder-card col gap-12">
+                        <div className="row gap-12 top">
+                          <button type="button" className="avatar-btn" onClick={() => setAvatarFor(k)} aria-label={`${f.tx("Edit avatar of", "Modifica l'avatar di")} ${display}`} title={f.tx("Avatar or photo", "Avatar o foto")}>
+                            <Avatar avatar={fd.avatar ?? null} name={display} size={60} />
+                            <span className="avatar-edit">
+                              <Icon name="Camera" size={12} />
+                            </span>
+                          </button>
+                          <div className="grow col gap-4">
+                            <div className="row between">
+                              <h3>{label}</h3>
+                              {k > 0 && (
+                                <button className="btn sm ghost" onClick={() => updateTeam({ founders: team.founders.filter((_, j) => j !== k) })} aria-label={f.tx("Remove", "Rimuovi")}>
+                                  <Icon name="X" size={14} />
+                                </button>
+                              )}
+                            </div>
+                            <input
+                              className="input"
+                              placeholder={f.tx("Name", "Nome")}
+                              value={fd.name}
+                              onChange={(e) => updateTeam({ founders: team.founders.map((x, j) => (j === k ? { ...x, name: e.target.value } : x)) })}
+                            />
+                            <button type="button" className="btn sm ghost" style={{ alignSelf: "flex-start" }} onClick={() => setAvatarFor(k)}>
+                              <Icon name="Camera" size={13} />
+                              {fd.avatar?.kind === "photo" ? f.tx("Change photo", "Cambia foto") : f.tx("Avatar or photo", "Avatar o foto")}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="grid cols-3" style={{ gap: 6, gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+                          {ARCHETYPE_IDS.map((a) => (
+                            <OptionCard
+                              key={a}
+                              on={fd.archetype === a}
+                              onClick={() => updateTeam({ founders: team.founders.map((x, j) => (j === k ? { ...x, archetype: a as Archetype } : x)) })}
+                              icon={ARCHETYPES[a].icon}
+                              title={<span className="small">{f.L(ARCHETYPES[a].name)}</span>}
+                            />
+                          ))}
+                        </div>
+                        <ArchetypeMults archetype={fd.archetype} />
+                      </div>
+                    );
+                  })}
+                </div>
+                {team.founders.length < MAX_FOUNDERS && (
+                  <button
+                    className="btn"
+                    onClick={() => {
+                      const used = new Set(team.founders.map((x) => x.archetype));
+                      const next = ARCHETYPE_IDS.find((a) => !used.has(a)) ?? "hustler";
+                      updateTeam({ founders: [...team.founders, { name: "", archetype: next, avatar: null }] });
+                    }}
+                  >
                     <Icon name="UserPlus" size={16} />
-                    {f.tx("Add a co-founder", "Aggiungi un co-fondatore")}
+                    {team.founders.length === 1 ? f.tx("Add a co-founder", "Aggiungi un co-fondatore") : f.tx("Add another founder", "Aggiungi un altro fondatore")}
                   </button>
-                ) : (
+                )}
+                {team.founders.length >= 3 && (
+                  <p className="small faint">
+                    {f.tx(
+                      `Equity is split equally between ${team.founders.length} founders. The third and fourth founder add ${Math.round(EXTRA_FOUNDER_WEIGHT * 100)}% of a founder's capacity each (coordination takes time), so larger teams are not automatically stronger.`,
+                      `Le quote sono divise in parti uguali tra ${team.founders.length} fondatori. Il terzo e il quarto fondatore aggiungono ciascuno il ${Math.round(EXTRA_FOUNDER_WEIGHT * 100)}% della capacità di un fondatore (coordinarsi richiede tempo), quindi i team più grandi non sono automaticamente più forti.`,
+                    )}
+                  </p>
+                )}
+                {team.founders.length === 2 && (
                   <SliderField
                     label={f.tx("Equity split between founders", "Divisione delle quote tra i fondatori")}
                     value={Math.round(team.equitySplit * 100)}
@@ -387,24 +443,11 @@ export function Setup() {
               <p className="small faint mt-8">{f.tx("Bold companies meet more surprises, good and bad, and get bigger rewards from lucky events.", "Le aziende audaci incontrano più sorprese, belle e brutte, e ottengono premi maggiori dagli eventi fortunati.")}</p>
             </Card>
 
-            <Card title={f.tx("Logo", "Logo")} icon="Palette">
-              <div className="row wrap gap-4">
-                {LOGOS.map((l) => (
-                  <button key={l} className={`option-card ${team.logo === l ? "on" : ""}`} style={{ width: 44, height: 44, padding: 0, justifyContent: "center", alignItems: "center" }} onClick={() => updateTeam({ logo: l })} aria-label={l}>
-                    <Icon name={l} size={20} />
-                  </button>
-                ))}
-              </div>
-              <div className="row wrap gap-4 mt-16">
-                {COLORS.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => updateTeam({ color: c })}
-                    aria-label={c}
-                    style={{ width: 28, height: 28, borderRadius: 14, background: c, border: team.color === c ? "3px solid var(--text)" : "3px solid transparent", cursor: "pointer" }}
-                  />
-                ))}
-              </div>
+            <Card title={f.tx("Logo & brand", "Logo e brand")} icon="Palette">
+              <p className="small muted" style={{ marginBottom: 12 }}>
+                {f.tx("Pick an icon, choose a ready-made mark from the gallery, compose your own from pieces and colours, or upload your logo.", "Scegli un'icona, prendi un marchio pronto dalla galleria, componi il tuo con pezzi e colori, oppure carica il vostro logo.")}
+              </p>
+              <LogoStudio brand={team} onChange={(p) => updateTeam(p)} />
             </Card>
 
             <div className="row" style={{ justifyContent: "flex-end" }}>
@@ -446,6 +489,7 @@ export function Setup() {
                         {f.L(SECTORS[t.sector].name)} · {t.founders.map((x) => f.L(ARCHETYPES[x.archetype].name)).join(" + ")}
                       </div>
                     </div>
+                    <AvatarStack founders={t.founders.map((fd, k) => ({ name: fd.name || `${f.tx("Founder", "Fondatore")} ${k + 1}`, avatar: fd.avatar }))} size={28} />
                     <button className="btn sm ghost" onClick={() => setStep(i + 1)}>
                       <Icon name="Pencil" size={14} />
                     </button>
@@ -462,6 +506,14 @@ export function Setup() {
           </div>
         )}
       </div>
+      {avatarFor !== null && team && team.founders[avatarFor] && (
+        <AvatarBuilder
+          avatar={team.founders[avatarFor].avatar ?? null}
+          name={team.founders[avatarFor].name || `${f.tx("Founder", "Fondatore")} ${avatarFor + 1}`}
+          onChange={(a) => updateTeam({ founders: team.founders.map((x, j) => (j === avatarFor ? { ...x, avatar: a } : x)) })}
+          onClose={() => setAvatarFor(null)}
+        />
+      )}
     </div>
   );
 }

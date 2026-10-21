@@ -7,7 +7,7 @@ import {
   defaultConfig,
   draftFor,
   effectiveModifiers,
-  migrateState,
+  normalizeState,
   startGame,
   strategyEffects,
   submitDecision,
@@ -214,7 +214,7 @@ describe("saved games", () => {
         delete d.acquisitionBid;
       }
     }
-    const migrated = migrateState(old as GameState);
+    const migrated = normalizeState(old as GameState);
     expect(migrated.version).toBe(STATE_VERSION);
     expect(migrated.companies[0].segment).toBe("broad");
     expect(migrated.markets.saas.rivals.length).toBe(2);

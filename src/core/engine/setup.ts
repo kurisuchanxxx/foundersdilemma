@@ -1,7 +1,9 @@
+import { defaultAvatar, sanitizeTraits } from "../data/avatars";
 import { ARCHETYPE_IDS } from "../data/founders";
+import { LOGO_TEMPLATES, sanitizeLogoArt } from "../data/logos";
 import { SECTORS, SECTOR_IDS } from "../data/sectors";
 import { createRng, randomSeedLabel, type Rng } from "../rng";
-import type { BotStyle, Company, CompanySetup, GameConfig, GameState, SectorId, SectorMarketState } from "../types";
+import type { BotStyle, Company, CompanySetup, FounderAvatar, GameConfig, GameState, SectorId, SectorMarketState } from "../types";
 import { createCapTable } from "./captable";
 import { defaultDecision } from "./decision";
 import { initialCandidates } from "./hiring";
@@ -63,14 +65,22 @@ export function botSetups(count: number, taken: CompanySetup[], rng: Rng): Compa
     const a1 = rng.pick(ARCHETYPE_IDS);
     const solo = rng.chance(0.35);
     const a2 = rng.pick(ARCHETYPE_IDS.filter((a) => a !== a1));
+    const f1 = solo ? rng.pick(BOT_FOUNDERS) : BOT_FOUNDERS[(i * 2) % BOT_FOUNDERS.length];
+    const f2 = BOT_FOUNDERS[(i * 2 + 1) % BOT_FOUNDERS.length];
     out.push({
       name,
       productName,
       sector,
       logo: rng.pick(LOGOS),
       color: COLORS[(taken.length + i) % COLORS.length],
+      logoArt: rng.chance(0.65) ? { kind: "template", template: rng.pick(LOGO_TEMPLATES).id } : null,
       riskProfile: rng.pick(["low", "medium", "medium", "high"] as const),
-      founders: solo ? [{ name: rng.pick(BOT_FOUNDERS), archetype: a1 }] : [{ name: BOT_FOUNDERS[(i * 2) % BOT_FOUNDERS.length], archetype: a1 }, { name: BOT_FOUNDERS[(i * 2 + 1) % BOT_FOUNDERS.length], archetype: a2 }],
+      founders: solo
+        ? [{ name: f1, archetype: a1, avatar: defaultAvatar(`${name}:${f1}`) }]
+        : [
+            { name: f1, archetype: a1, avatar: defaultAvatar(`${name}:${f1}`) },
+            { name: f2, archetype: a2, avatar: defaultAvatar(`${name}:${f2}`) },
+          ],
       equitySplit: 0.5,
       founderVesting: rng.chance(0.7),
       teamMembers: [],
@@ -81,10 +91,35 @@ export function botSetups(count: number, taken: CompanySetup[], rng: Rng): Compa
   return out;
 }
 
+export const MAX_FOUNDERS = 4;
+
+/** Keeps a valid avatar (trait indexes in range, photo as a reasonably small data URL). */
+export function sanitizeAvatar(a: FounderAvatar | null | undefined, seed: string): FounderAvatar | null {
+  if (!a || typeof a !== "object") return null;
+  if (a.kind === "traits") return { kind: "traits", traits: sanitizeTraits(a.traits, seed) };
+  if (a.kind === "photo") return typeof a.data === "string" && a.data.startsWith("data:image/") && a.data.length < 300_000 ? { kind: "photo", data: a.data } : null;
+  return null;
+}
+
+/** Equity shares of the founders: explicit shares, the two-founder split, or an equal split. */
+export function founderShares(setup: Pick<CompanySetup, "founders" | "equitySplit" | "equityShares">): number[] {
+  const n = Math.min(MAX_FOUNDERS, Math.max(1, setup.founders.length));
+  const explicit = setup.equityShares;
+  if (explicit && explicit.length === n && explicit.every((v) => Number.isFinite(v) && v > 0)) {
+    const total = explicit.reduce((a, b) => a + b, 0);
+    if (total > 0) return explicit.map((v) => v / total);
+  }
+  if (n === 2) {
+    const a = Math.min(0.95, Math.max(0.05, Number.isFinite(setup.equitySplit) ? setup.equitySplit : 0.5));
+    return [a, 1 - a];
+  }
+  return Array.from({ length: n }, () => 1 / n);
+}
+
 function createCompany(state: GameState, setup: CompanySetup): Company {
   const s = SECTORS[setup.sector];
-  const founders = setup.founders.slice(0, 2);
-  const shares = founders.length === 2 ? [setup.equitySplit, 1 - setup.equitySplit] : [1];
+  const founders = setup.founders.slice(0, MAX_FOUNDERS);
+  const shares = founderShares({ ...setup, founders });
   const { capTable, holderIds } = createCapTable(
     state,
     founders.map((f, i) => ({ name: f.name || `Founder ${i + 1}`, share: shares[i] })),
@@ -97,11 +132,20 @@ function createCompany(state: GameState, setup: CompanySetup): Company {
     sector: setup.sector,
     logo: setup.logo,
     color: setup.color,
+    logoArt: sanitizeLogoArt(setup.logoArt),
     riskProfile: setup.riskProfile,
     isBot: setup.isBot,
     botStyle: setup.isBot ? setup.botStyle ?? "steady" : null,
     teamMembers: setup.teamMembers.filter((m) => m.trim().length > 0),
-    founders: founders.map((f, i) => ({ id: nextId(state, "f"), name: f.name || `Founder ${i + 1}`, archetype: f.archetype, active: true, holderId: holderIds[i], leftRound: null })),
+    founders: founders.map((f, i) => ({
+      id: nextId(state, "f"),
+      name: f.name || `Founder ${i + 1}`,
+      archetype: f.archetype,
+      avatar: sanitizeAvatar(f.avatar, `${setup.name}:${f.name || i}`),
+      active: true,
+      holderId: holderIds[i],
+      leftRound: null,
+    })),
     founderVesting: setup.founderVesting,
     status: "active",
     exit: null,
@@ -171,6 +215,11 @@ function createCompany(state: GameState, setup: CompanySetup): Company {
     },
     segment: "broad",
     pricingModel: "subscription",
+    xp: 0,
+    cups: 0,
+    challengeStreak: 0,
+    challengeLog: [],
+    xpLog: [],
   };
   c.fitPotential = Math.round(createRng(state.config.seed, "fit", c.id).range(0.72, 1.08) * 100) / 100;
   c.price = defaultDecision(c).price;
@@ -207,6 +256,10 @@ export function createGame(config: GameConfig, setups: CompanySetup[], botCount 
     reports: [],
     firsts: { pmf: null, profitable: null },
     idSeq: 0,
+    challenges: [],
+    showdowns: [],
+    interactions: [],
+    relations: {},
   };
   const all = [...setups, ...botSetups(botCount, setups, rng)];
   for (const s of all) state.companies.push(createCompany(state, s));
@@ -219,19 +272,31 @@ export function createGame(config: GameConfig, setups: CompanySetup[], botCount 
  * Brings a game saved by an older version up to date (new fields get their defaults), so
  * classroom files and saves keep working after an update.
  */
-export function migrateState(state: GameState): GameState {
+export function normalizeState(state: GameState): GameState {
+  state.challenges ??= [];
+  state.showdowns ??= [];
+  state.interactions ??= [];
+  state.relations ??= {};
   for (const id of SECTOR_IDS) {
     const m = state.markets[id] ?? (state.markets[id] = { npcCompetitors: SECTORS[id].npcCompetitors, hype: 1, rivals: [] });
     if (!m.rivals) m.rivals = initialRivals(state.config.seed, id);
   }
   if (!state.investorBook) state.investorBook = {};
   for (const c of state.companies) {
+    c.logoArt = sanitizeLogoArt(c.logoArt);
+    c.xp ??= 0;
+    c.cups ??= 0;
+    c.challengeStreak ??= 0;
+    c.challengeLog ??= [];
+    c.xpLog ??= [];
+    for (const f of c.founders) f.avatar = sanitizeAvatar(f.avatar, `${c.name}:${f.name}`);
     if (!c.segment) c.segment = "broad";
     if (!c.pricingModel) c.pricingModel = "subscription";
     if (!c.partnershipOffers) c.partnershipOffers = [];
     if (!c.partnerships) c.partnerships = [];
     for (const d of [c.decision, c.lastDecision]) {
       if (!d) continue;
+      d.interactions ??= [];
       d.targetSegment ??= c.segment;
       d.pricingModel ??= c.pricingModel;
       d.acquisitionBid ??= null;
@@ -239,6 +304,6 @@ export function migrateState(state: GameState): GameState {
       d.acceptPartnershipIds ??= [];
     }
   }
-  state.version = STATE_VERSION;
+  if (state.version < STATE_VERSION) state.version = STATE_VERSION;
   return state;
 }

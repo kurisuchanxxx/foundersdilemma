@@ -36,7 +36,8 @@ Ma il voto non dipende soprattutto dal piazzamento: contano la qualità delle de
 | **Fondatori e team** | Ore settimanali dei fondatori; vacanza; offsite del team; offerte ai candidati (stipendio ed equity) e risposte ai loro rilanci; licenziamenti | 80 ore a settimana aumentano l'output ma anche lo stress: il burnout costa caro |
 | **Reputazione** | Nessuna azione, PR, conferenza, community | Costa poco e cresce lentamente, ma aiuta acquisizione, assunzioni e investitori |
 | **Finanza ed exit** | Pitch agli investitori, bandi, prestiti, crowdfunding; accettare o rifiutare term sheet e offerte di acquisizione (anche da altri team) | Ogni euro raccolto ha un prezzo: quote, seggi nel CdA, interessi, preferenze di liquidazione. Gli investitori finanziano poche aziende per round: se altri team fanno pitch allo stesso investitore, vince il più forte |
-| **Altri team** | Proporre o accettare partnership; fare un'offerta in contanti per acquisire un'altra azienda | La risposta arriva nel round successivo. Una partnership dura tre round e aiuta entrambi; un'acquisizione si paga con la vostra cassa |
+| **Accordi** | Proporre o accettare partnership; fare un'offerta in contanti per acquisire un'altra azienda | La risposta arriva nel round successivo. Una partnership dura tre round e aiuta entrambi; un'acquisizione si paga con la vostra cassa |
+| **Rete dei fondatori** | Fino a due azioni verso gli altri team: shout-out, mentorship, sfottò, tentativi di soffiare talenti | Tutto è pubblico e finisce nelle news; le relazioni tra team ricordano quello che è successo |
 | **Dilemma** (quando c'è) | Una scelta difficile: co-fondatori in conflitto, un grande cliente che chiede personalizzazioni, dark pattern, pivot... | Non esiste una risposta giusta: ogni opzione ha conseguenze, alcune differite |
 | **Riepilogo e invio** | Controllo finale e avvisi | In modalità Classe il pulsante blocca le decisioni ed esporta il file da consegnare al docente |
 

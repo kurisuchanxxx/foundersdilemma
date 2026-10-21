@@ -77,7 +77,7 @@ Il debriefing è il momento in cui si impara davvero. Una struttura in tre passi
 Le meccaniche di interazione danno ottimi spunti di debriefing:
 
 - **Investitori contesi**: quando due team fanno pitch allo stesso investitore e uno resta fuori, il report lo dice esplicitamente. È il momento per parlare di *dry powder* e di come gli investitori confrontano le opportunità.
-- **Partnership e acquisizioni tra team** (scheda *Altri team*): fate raccontare la trattativa. Chi ha proposto, chi ha accettato e perché? In un'acquisizione, il prezzo era giusto rispetto al waterfall dei venditori e alla cassa del compratore?
+- **Partnership e acquisizioni tra team** (scheda *Accordi*): fate raccontare la trattativa. Chi ha proposto, chi ha accettato e perché? In un'acquisizione, il prezzo era giusto rispetto al waterfall dei venditori e alla cassa del compratore?
 - **Concorrenti esterni**: le loro mosse compaiono nelle notizie a inizio round. Chiedete ai team del settore colpito come hanno reagito (prezzo, valore, nicchia).
 
 Evitate di premiare solo il primo in classifica: valorizzate le decisioni ben argomentate anche quando l'esito è stato sfortunato (la simulazione contiene incertezza di proposito).
