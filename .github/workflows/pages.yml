@@ -2,6 +2,7 @@ name: Web version on GitHub Pages
 
 # Publishes the browser version to the gh-pages branch, which GitHub Pages serves at
 # https://<owner>.github.io/<repository>/ (Settings > Pages > Deploy from a branch: gh-pages).
+# The static landing page in ./landing is published next to it, at /landing/.
 on:
   push:
     branches: [main]
@@ -25,6 +26,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Landing page (served at /landing/)
+        run: cp -r landing dist/landing
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
