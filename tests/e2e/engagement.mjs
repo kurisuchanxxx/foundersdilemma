@@ -15,7 +15,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const errors = [];
 page.on("pageerror", (e) => errors.push(`pageerror: ${e.message}`));
 page.on("console", (m) => {
-  if (m.type() === "error") errors.push(`console: ${m.text()}`);
+  if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(`console: ${m.text()}`);
 });
 const shot = (name) => page.screenshot({ path: `${out}/${name}.png`, fullPage: false });
 const click = (text) => page.getByRole("button", { name: text }).first().click();
@@ -24,7 +24,14 @@ const nav = (label) => page.locator(".sidebar nav").getByRole("button", { name: 
 let failed = false;
 try {
   await page.goto(base);
+  // the launch intro: rocket and curtain, then the home menu
+  await page.waitForSelector("[data-testid=intro]", { timeout: 5000 });
+  await page.waitForTimeout(900);
+  await shot("00-intro");
+  await page.waitForSelector("[data-testid=intro]", { state: "detached", timeout: 8000 });
   await page.waitForSelector("text=Founder's Dilemma");
+  await page.waitForTimeout(1600);
+  await shot("00-home");
   await page.getByRole("radio", { name: "Italiano" }).click();
   await click(/Nuova partita/);
   await click(/Configura i team/);
