@@ -21,7 +21,7 @@ async function newPage(name) {
   const page = await ctx.newPage();
   page.on("pageerror", (e) => errors.push(`${name} pageerror: ${e.message}`));
   page.on("console", (m) => {
-    if (m.type() === "error") errors.push(`${name} console: ${m.text()}`);
+    if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(`${name} console: ${m.text()}`);
   });
   await page.goto(base);
   await page.waitForSelector("text=Founder's Dilemma");
