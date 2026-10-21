@@ -2,7 +2,7 @@
 
 **Business game di startup venturing per l'aula universitaria.** I team fondano una startup, cercano il product-market fit, assumono, raccolgono capitali e affrontano i dilemmi del fondatore (ricco o re?), da soli contro i bot oppure in classe, round dopo round.
 
-Gira su **macOS** (Apple silicon e Intel), **Windows** e, come file unico, in **qualsiasi browser**. Interfaccia in italiano e inglese.
+Gira su **macOS** (Apple silicon e Intel), **Windows** e, come file unico, in **qualsiasi browser**. Interfaccia in inglese (predefinita) e in italiano; la scelta si cambia dalla schermata iniziale e resta salvata. Il link `play/?lang=it` apre direttamente in italiano.
 
 **Gioca subito online: [kurisuchanxxx.github.io/foundersdilemma/play](https://kurisuchanxxx.github.io/foundersdilemma/play/)** (nessuna installazione, funziona anche da smartphone).
 

@@ -184,8 +184,23 @@ export function parseGame(raw: string): GameState | null {
 
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
 
+/** English by default. A `?lang=it` link (from the landing page) wins and is remembered; otherwise the saved preference. */
+function initialLang(): Lang {
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get("lang");
+    if (fromUrl === "it" || fromUrl === "en") {
+      prefSet("lang", fromUrl);
+      return fromUrl;
+    }
+  } catch {
+    /* no window */
+  }
+  const saved = prefGet("lang");
+  return saved === "it" ? "it" : "en";
+}
+
 export const useStore = create<StoreState>((set, get) => ({
-  lang: (prefGet("lang") as Lang) || (typeof navigator !== "undefined" && navigator.language?.startsWith("it") ? "it" : "en"),
+  lang: initialLang(),
   theme: (prefGet("theme") as Theme) || "dark",
   screen: "home",
   game: null,
