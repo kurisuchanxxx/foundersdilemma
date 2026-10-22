@@ -115,7 +115,8 @@ export function LineChart({ series, height = 220, xFormat, yFormat, area, yMin, 
         ))}
         {lo < 0 && hi > 0 && <line className="axis-line" x1={pad.l} x2={W - pad.r} y1={sy(0)} y2={sy(0)} />}
         {xs.map((x, i) =>
-          i % xTickEvery === 0 || i === xs.length - 1 ? (
+          // the last label always shows; a regular one too close to it is skipped
+          i === xs.length - 1 || (i % xTickEvery === 0 && xs.length - 1 - i >= xTickEvery * 0.6) ? (
             <text key={x} x={sx(x)} y={H - 6} textAnchor="middle">
               {xFormat(x)}
             </text>

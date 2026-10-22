@@ -15,7 +15,7 @@ const STYLE: Record<BotStyle, { runway: number; priceFactor: number; ask: number
   blitz: { runway: 7, priceFactor: 0.82, ask: 1.2, salary: 1.15, equity: 1.5, hours: 80, acquisitionPremium: 1.8 },
 };
 
-const DILEMMA_CHOICES: Record<string, Record<BotStyle, string>> = {
+export const DILEMMA_CHOICES: Record<string, Record<BotStyle, string>> = {
   big_client_custom: { lean: "decline", steady: "accept", blitz: "accept" },
   poaching: { lean: "equity", steady: "equity", blitz: "counter" },
   cofounder_conflict: { lean: "mediate", steady: "mediate", blitz: "ignore" },
@@ -32,6 +32,17 @@ const DILEMMA_CHOICES: Record<string, Record<BotStyle, string>> = {
   layoffs: { lean: "layoffs", steady: "paycut", blitz: "keep" },
   acquihire_offer: { lean: "accept", steady: "decline", blitz: "decline" },
   annual_prepay: { lean: "offer", steady: "offer", blitz: "no" },
+  inflated_metrics: { lean: "honest", steady: "honest", blitz: "inflate" },
+  late_payer: { lean: "negotiate", steady: "accept", blitz: "accept" },
+  public_tender: { lean: "skip", steady: "bid", blitz: "skip" },
+  ransomware: { lean: "restore", steady: "restore", blitz: "pay" },
+  license_gray_zone: { lean: "wait", steady: "partner", blitz: "launch" },
+  platform_risk: { lean: "diversify", steady: "absorb", blitz: "passon" },
+  pilot_purgatory: { lean: "paid", steady: "paid", blitz: "free" },
+  controversial_client: { lean: "policy", steady: "policy", blitz: "accept" },
+  star_misconduct: { lean: "investigate", steady: "investigate", blitz: "protect" },
+  delaware_flip: { lean: "stay", steady: "flip", blitz: "flip" },
+  inventory_moq: { lean: "small", steady: "bulk", blitz: "bulk" },
 };
 
 function approxWtp(c: Company): number {

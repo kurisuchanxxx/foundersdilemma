@@ -9,7 +9,10 @@ import { addProfessionalCeo, cofounderLeaves, fireEmployee, resignEmployee } fro
 import { nextId } from "./util";
 
 /** Dilemmas that can only happen once per company. */
-const ONE_SHOT = new Set(["pivot_or_persevere", "remote_or_office", "open_source_core", "sustainability", "ceo_replacement", "acquihire_offer"]);
+const ONE_SHOT = new Set([
+  "pivot_or_persevere", "remote_or_office", "open_source_core", "sustainability", "ceo_replacement", "acquihire_offer",
+  "inflated_metrics", "ransomware", "license_gray_zone", "platform_risk", "controversial_client", "star_misconduct", "delaware_flip",
+]);
 
 export function generateDilemma(state: GameState, c: Company, round: number, netBurn: number, runway: number, rng: Rng): DilemmaInstance | null {
   if (c.status !== "active" || round < 2 || round > state.config.totalRounds) return null;
@@ -64,7 +67,9 @@ export function resolveDilemma(state: GameState, c: Company, choice: string | nu
   if (opt.gamble) {
     const branch = rng.chance(opt.gamble.probability) ? opt.gamble.success : opt.gamble.failure;
     applyBundle(state, c, branch.effects, d.title, round);
-    outcome = lt(`${outcome.en} ${branch.text.en}`, `${outcome.it} ${branch.text.it}`);
+    const text = fill(branch.text, d.context);
+    outcome = lt(`${outcome.en} ${text.en}`, `${outcome.it} ${text.it}`);
+    if (branch.special) applySpecial(state, c, d, opt, branch.special, round, rng, report);
   }
   if (opt.risk) {
     c.pendingRisks.push({
@@ -210,6 +215,14 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
     case "annualPrepay":
       c.cash += Number(d.context.cashValue ?? 0);
       return false;
+    case "scaled": {
+      if (sp.addCustomers) {
+        c.customers += Number(d.context.customers ?? 0);
+        c.mrr = c.customers * c.price;
+      }
+      if (sp.cashSign) c.cash += sp.cashSign * Number(d.context.cashValue ?? 0);
+      return false;
+    }
   }
   return false;
 }
