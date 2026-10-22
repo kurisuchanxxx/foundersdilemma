@@ -237,7 +237,7 @@ describe("pricing", () => {
           // a sensible plan (the steady bot's), only the price changes
           c.botStyle = "steady";
           const d = botDecision(state, c, createRng("PRICE", state.round));
-          c.botStyle = undefined;
+          c.botStyle = null;
           d.price = priceAt === "max" ? SECTORS[sector].priceMax : estimateWtp(state, c);
           submitDecision(state, c.id, d);
           advanceRound(state);
