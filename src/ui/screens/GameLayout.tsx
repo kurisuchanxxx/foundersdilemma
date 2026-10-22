@@ -5,7 +5,9 @@ import { Brand } from "../components/Brand";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { XpBar } from "../components/Gamify";
 import { Icon } from "../components/Icon";
-import { Logo, Modal, Progress } from "../components/ui";
+import { IntroCurtain } from "../components/Intro";
+import { SimulationOverlay } from "../components/Transitions";
+import { FlashValue, Logo, Modal, Progress } from "../components/ui";
 import { useActiveCompany, useGame } from "../hooks";
 import { useFmt } from "../i18n";
 import { useStore, type View } from "../store";
@@ -39,6 +41,9 @@ export function GameLayout() {
   const reportRound = useStore((s) => s.reportRound);
   const advance = useStore((s) => s.advance);
   const drafts = useStore((s) => s.drafts);
+  const simulating = useStore((s) => s.simulating);
+  const launching = useStore((s) => s.launching);
+  const finishLaunch = useStore((s) => s.finishLaunch);
   const [pinOk, setPinOk] = useState(false);
   const mode = game.config.mode;
   const humans = game.companies.filter((c) => !c.isBot);
@@ -125,6 +130,7 @@ export function GameLayout() {
               <PassScreen company={company} onReveal={() => reveal(company.id)} />
             ) : (
               <ErrorBoundary resetKey={view}>
+                <div key={view} className="view-enter">
                 {view === "dashboard" && <Dashboard />}
                 {view === "decisions" && <Decisions />}
                 {view === "team" && <Team />}
@@ -138,12 +144,17 @@ export function GameLayout() {
                 {view === "settings" && <SettingsView />}
                 {view === "instructor" && <Instructor />}
                 {view === "results" && <Results />}
+                </div>
               </ErrorBoundary>
             )}
           </div>
         </div>
       </main>
-      {reportRound !== null && <RoundReportModal round={reportRound} />}
+      {simulating && <SimulationOverlay config={game.config} round={simulating.round} months={simulating.months} toEnd={simulating.toEnd} />}
+      {reportRound !== null && !simulating && <RoundReportModal round={reportRound} />}
+      {launching && (
+        <IntroCurtain compact title={company?.name ?? "Founder's Dilemma"} subtitle={f.tx("Liftoff. Round 1 starts now.", "Si parte. Comincia il round 1.")} onDone={finishLaunch} />
+      )}
       <Coach />
     </div>
   );
@@ -225,15 +236,15 @@ function TopBar({ company, label, onAdvance, draftsPending }: { company: Company
         <div className="row gap-16" style={{ marginRight: 8 }} data-tour="topbar-stats">
           <div className="stat">
             <div className="stat-label">{f.tx("Cash", "Cassa")}</div>
-            <div className={`num ${company.cash < 0 ? "bad" : ""}`} style={{ fontWeight: 650 }}>
+            <FlashValue className={`num ${company.cash < 0 ? "bad" : ""}`} style={{ fontWeight: 650 }}>
               {f.money(company.cash)}
-            </div>
+            </FlashValue>
           </div>
           <div className="stat">
             <div className="stat-label">Runway</div>
-            <div className={`num ${last && last.runway < 6 ? "bad" : ""}`} style={{ fontWeight: 650 }}>
+            <FlashValue className={`num ${last && last.runway < 6 ? "bad" : ""}`} style={{ fontWeight: 650 }}>
               {last ? f.months(last.runway) : "—"}
-            </div>
+            </FlashValue>
           </div>
         </div>
       )}
@@ -249,7 +260,7 @@ function TopBar({ company, label, onAdvance, draftsPending }: { company: Company
         </button>
       )}
       {!game.finished && mode === "solo" && company?.submitted && (
-        <button className="btn primary" onClick={onAdvance}>
+        <button className="btn primary pulse" onClick={onAdvance}>
           <Icon name="FastForward" size={16} />
           {f.tx("Advance to next period", "Avanza al periodo successivo")}
         </button>

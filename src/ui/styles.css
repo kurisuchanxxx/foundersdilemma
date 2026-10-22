@@ -2593,3 +2593,403 @@ table.table {
     animation: none !important;
   }
 }
+
+/* ---------- motion pass: views, cards, controls, overlays ---------- */
+.view-enter {
+  animation: view-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.view-enter > .stack > *,
+.wizard-step > .stack > * {
+  animation: item-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.view-enter > .stack > *:nth-child(1),
+.wizard-step > .stack > *:nth-child(1) {
+  animation-delay: 30ms;
+}
+.view-enter > .stack > *:nth-child(2),
+.wizard-step > .stack > *:nth-child(2) {
+  animation-delay: 75ms;
+}
+.view-enter > .stack > *:nth-child(3),
+.wizard-step > .stack > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+.view-enter > .stack > *:nth-child(4),
+.wizard-step > .stack > *:nth-child(4) {
+  animation-delay: 165ms;
+}
+.view-enter > .stack > *:nth-child(5),
+.wizard-step > .stack > *:nth-child(5) {
+  animation-delay: 210ms;
+}
+.view-enter > .stack > *:nth-child(6),
+.wizard-step > .stack > *:nth-child(6) {
+  animation-delay: 255ms;
+}
+.view-enter > .stack > *:nth-child(7),
+.wizard-step > .stack > *:nth-child(7) {
+  animation-delay: 300ms;
+}
+.view-enter > .stack > *:nth-child(n + 8),
+.wizard-step > .stack > *:nth-child(n + 8) {
+  animation-delay: 340ms;
+}
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+}
+.wizard-step {
+  animation: step-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+
+/* controls */
+.btn {
+  transition: background 0.12s, opacity 0.12s, transform 0.1s, box-shadow 0.15s;
+}
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.btn.primary:hover:not(:disabled) {
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.btn.pulse {
+  animation: cta-pulse 2.2s ease-in-out infinite;
+}
+@keyframes cta-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  60% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+.option-card {
+  transition: border-color 0.12s, transform 0.12s, box-shadow 0.15s, background 0.12s;
+}
+.option-card:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+.option-card:active:not(:disabled) {
+  transform: scale(0.985);
+}
+.option-card.on {
+  animation: select-pop 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes select-pop {
+  50% {
+    transform: scale(1.015);
+  }
+}
+.card.selectable {
+  transition: border-color 0.12s, background 0.12s, transform 0.12s, box-shadow 0.15s;
+}
+.card.selectable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+}
+.nav-item {
+  transition: background 0.18s, transform 0.1s, color 0.18s;
+}
+.nav-item:active {
+  transform: scale(0.98);
+}
+.nav-item.active {
+  animation: nav-pop 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes nav-pop {
+  50% {
+    transform: scale(1.02);
+  }
+}
+.nav-item .badge.warn {
+  animation: badge-pulse 1.8s ease-in-out infinite;
+}
+@keyframes badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+.toggle .track::after {
+  transition: left 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tabs button {
+  transition: color 0.15s, background 0.15s;
+}
+.table tbody tr {
+  transition: background 0.12s;
+}
+.table tbody tr:hover td {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+.view-enter .table tbody tr {
+  animation: item-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.view-enter .table tbody tr:nth-child(2) {
+  animation-delay: 35ms;
+}
+.view-enter .table tbody tr:nth-child(3) {
+  animation-delay: 70ms;
+}
+.view-enter .table tbody tr:nth-child(4) {
+  animation-delay: 105ms;
+}
+.view-enter .table tbody tr:nth-child(5) {
+  animation-delay: 140ms;
+}
+.view-enter .table tbody tr:nth-child(6) {
+  animation-delay: 175ms;
+}
+.view-enter .table tbody tr:nth-child(n + 7) {
+  animation-delay: 210ms;
+}
+
+/* modals and toasts */
+.modal-backdrop {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: fade 0.2s;
+}
+.modal {
+  animation: modal-in 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+}
+.toast {
+  position: relative;
+  overflow: hidden;
+  animation: toast-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.98);
+  }
+}
+.toast-life {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.45;
+  animation: toast-life 4s linear forwards;
+}
+@keyframes toast-life {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
+
+/* values and progress */
+.progress > div {
+  transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.stat-value.flash,
+.flash {
+  animation: value-flash 0.9s ease-out;
+  transform-origin: left center;
+}
+@keyframes value-flash {
+  0% {
+    color: var(--accent-text);
+    transform: scale(1.05);
+    text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: chart-draw 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards;
+}
+@keyframes chart-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.chart-area {
+  animation: fade 0.8s 0.6s both;
+}
+.chart-end {
+  animation: pop 0.3s 1.1s both;
+}
+html.theme-fade,
+html.theme-fade * {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease !important;
+}
+
+/* simulating the period */
+.sim-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(4, 6, 12, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fade 0.2s;
+}
+.sim-card {
+  width: min(440px, 100%);
+  text-align: center;
+  padding: 28px 24px 22px;
+  border-radius: 20px;
+  background: linear-gradient(165deg, #10131a, #090b11);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(10, 132, 255, 0.12);
+  color: #fff;
+  font-family: "Geist", var(--font);
+  animation: modal-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sim-rocket {
+  display: inline-block;
+  animation: sim-shake 0.25s ease-in-out infinite;
+  filter: drop-shadow(0 0 14px rgba(90, 176, 255, 0.5));
+}
+@keyframes sim-shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1px, 1px) rotate(-1deg);
+  }
+  75% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+}
+.sim-title {
+  font-family: "Archivo", "Geist", var(--font);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-top: 10px;
+}
+.sim-sub {
+  color: rgba(229, 229, 230, 0.7);
+  font-size: 14px;
+  margin-top: 4px;
+}
+.sim-months {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.sim-month {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 12px;
+  color: rgba(229, 229, 230, 0.5);
+  transition: background 0.25s, color 0.25s, transform 0.25s;
+}
+.sim-month.on {
+  background: #fff;
+  color: #101010;
+  transform: scale(1.06);
+}
+.sim-bar {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  margin-top: 16px;
+}
+.sim-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #fff, #9ad0ff);
+  animation: intro-bar linear forwards;
+}
+.sim-hint {
+  font-size: 12px;
+  color: rgba(229, 229, 230, 0.5);
+  margin-top: 10px;
+}
+
+/* compact launch curtain (new game) */
+.intro.compact .intro-rocket {
+  animation-duration: 1300ms;
+  animation-delay: 250ms;
+}
+.intro.compact .intro-bar i {
+  animation-duration: 1300ms;
+  animation-delay: 250ms;
+}
+.intro.compact .intro-glow {
+  animation-delay: 400ms;
+  animation-duration: 1s;
+}
+.intro.compact .intro-trail {
+  animation-delay: 350ms;
+}
+.intro-word-sub {
+  display: block;
+  font-family: "Geist", var(--font);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(229, 229, 230, 0.7);
+  margin-top: 8px;
+  text-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-enter,
+  .view-enter > .stack > *,
+  .wizard-step,
+  .wizard-step > .stack > *,
+  .view-enter .table tbody tr,
+  .chart-line,
+  .chart-area,
+  .chart-end,
+  .toast,
+  .modal,
+  .sim-card,
+  .sim-rocket,
+  .btn.pulse,
+  .nav-item .badge.warn,
+  .option-card.on,
+  .nav-item.active,
+  .stat-value.flash,
+  .flash {
+    animation: none !important;
+  }
+  .chart-line {
+    stroke-dasharray: none;
+  }
+}
