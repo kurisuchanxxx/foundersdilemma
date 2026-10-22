@@ -12,10 +12,14 @@ import {
   submitDecision,
   waterfall,
   totalShares,
+  estimateWtp,
+  SECTORS,
 } from "../src/core";
 import type { CompanySetup, GameState } from "../src/core";
 import { createRng } from "../src/core/rng";
 import { applyEquityRound, createCapTable, departHolder, grantOptions, vestedShares } from "../src/core/engine/captable";
+import { botDecision } from "../src/core/engine/bots";
+import { priceConversion } from "../src/core/engine/market";
 
 function human(name = "Team Alpha", sector: CompanySetup["sector"] = "saas"): CompanySetup {
   return {
@@ -208,5 +212,40 @@ describe("simulation", () => {
     }
     expect(c.product.launched).toBe(true);
     expect(c.customers).toBeGreaterThan(0);
+  });
+});
+
+describe("pricing", () => {
+  it("has a revenue-maximising price near the willingness to pay, even for inelastic sectors", () => {
+    for (const elasticity of [0.36, 0.6, 0.9, 1.4]) {
+      const revenue = (r: number) => r * priceConversion(100, 100 * r, elasticity);
+      let best = 0.2;
+      for (let r = 0.2; r <= 10; r += 0.01) if (revenue(r) > revenue(best)) best = r;
+      expect(best).toBeLessThan(1.5);
+      expect(revenue(3)).toBeLessThan(revenue(1) * 0.5);
+      expect(revenue(10)).toBeLessThan(revenue(1) * 0.2);
+    }
+  });
+
+  it("does not reward the maximum price over pricing at the willingness to pay", () => {
+    for (const sector of ["saas", "deeptech", "aiinfra", "healthtech"] as const) {
+      const wealth = (priceAt: "wtp" | "max") => {
+        const state = createGame({ ...defaultConfig(), seed: `PRICE-${sector}` }, [human("Pricer", sector)], 2);
+        startGame(state);
+        const c = state.companies[0];
+        while (!state.finished && c.status === "active") {
+          // a sensible plan (the steady bot's), only the price changes
+          c.botStyle = "steady";
+          const d = botDecision(state, c, createRng("PRICE", state.round));
+          c.botStyle = undefined;
+          d.price = priceAt === "max" ? SECTORS[sector].priceMax : estimateWtp(state, c);
+          submitDecision(state, c.id, d);
+          advanceRound(state);
+        }
+        playToEnd(state);
+        return standings(state).find((s) => s.companyId === c.id)!.founderWealth;
+      };
+      expect(wealth("max")).toBeLessThan(wealth("wtp"));
+    }
   });
 });

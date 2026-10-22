@@ -16,7 +16,7 @@ export function Market() {
   const seg = segmentFor(pen);
   const rivals = game.companies.filter((o) => o.sector === c.sector && o.id !== c.id);
   const sectorCustomers = game.companies.filter((o) => o.sector === c.sector && o.status === "active").reduce((a, o) => a + o.customers, 0);
-  const wtp = estimateWtp(c) * mods.wtp;
+  const wtp = estimateWtp(game, c);
   const payback = c.cac > 0 ? c.cac / Math.max(0.01, c.price * s.grossMargin) : 0;
   const segs = Object.keys(SEGMENTS) as Segment[];
   const fx = strategyEffects(c);

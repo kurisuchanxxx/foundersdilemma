@@ -95,7 +95,7 @@ dopo il lancio: PMF = 0,85 × PMF + 15 × qualità della retention
 
 **Chasm** (Moore): nelle due maggioranze, con PMF sotto 55, il CAC è moltiplicato per 1,5.
 
-**Disponibilità a pagare** = prezzo di riferimento × (0,6 + 0,8 × (metà qualità + metà PMF)) × (1 + 0,1 × brand) × eventi × segmento. La **conversione al prezzo** è (WTP / prezzo)^elasticità: sotto la WTP le vendite aumentano fino a +60%, sopra crollano rapidamente.
+**Disponibilità a pagare** = prezzo di riferimento × (0,6 + 0,8 × (metà qualità + metà PMF)) × (1 + 0,1 × brand) × eventi × segmento di adozione × strategia (nicchia, premium, freemium, a consumo). È la stessa stima che il gioco mostra nelle decisioni e nella vista Mercato. La **conversione al prezzo** dipende dal rapporto r = prezzo / WTP: sotto la WTP vale 1 + ((1/r)^elasticità − 1) / 2, cioè le vendite aumentano al massimo del 60%; sopra la WTP vale r^−(elasticità + 1,5 × (r − 1)), cioè l'elasticità cresce con lo scarto. Anche nei settori poco sensibili al prezzo (B2B, DeepTech) esiste quindi un prezzo che massimizza i ricavi poco sopra la WTP: chi chiede il doppio perde gran parte dei clienti, chi chiede il massimo quasi tutti. La conversione al prezzo frena allo stesso modo marketing a pagamento, inbound, passaparola e lista d'attesa; nella vendita diretta i venditori possono scontare, ma non chiudere contratti molto sopra la WTP.
 
 **CAC** = CAC base × segmento × chasm × adeguatezza del canale × concorrenza × (1,3 − 0,5 × PMF/100) × (1 − 0,25 × brand) × reputazione media × eventi ÷ (efficacia del marketing × conversione al prezzo × effetti di rete). La concorrenza aumenta del 6% per ogni altro team lanciato nel settore e del 2% per ogni concorrente esterno.
 

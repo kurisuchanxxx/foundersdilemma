@@ -1,9 +1,9 @@
-import { GTM_INFO, type SectorDef } from "../data/sectors";
+import { GTM_INFO, SECTORS, type SectorDef } from "../data/sectors";
 import { lt, type LText } from "../text";
-import type { Company, GameState, SectorId } from "../types";
+import type { Company, GameState, ModifierEffects, SectorId } from "../types";
 import type { SimCtx } from "./context";
 import { strategyEffects } from "./strategy";
-import { clamp, clamp01 } from "./util";
+import { clamp, clamp01, effectiveModifiers } from "./util";
 
 // ---------------------------------------------------------------------------------------
 // Adoption curve (Rogers) and the "chasm" (Moore)
@@ -64,10 +64,30 @@ function networkScale(sector: SectorDef, customers: number): number {
   return 1 + 0.6 * sector.networkEffect * Math.min(1, Math.log10(1 + customers / 1000) / 3);
 }
 
-/** Conversion boost/penalty from pricing: overpricing hurts a lot, underpricing helps only a little. */
+/** Monthly willingness to pay of the customers the company is selling to right now (segment, strategy and events included). */
+export function willingnessToPay(state: GameState, c: Company, mods: Required<ModifierEffects>): number {
+  const s = SECTORS[c.sector];
+  const seg = SEGMENTS[segmentFor(sectorPenetration(state, s, mods.demand))];
+  let wtp = s.refPrice * (0.6 + 0.8 * (0.5 * c.product.quality + (0.5 * c.pmf.score) / 100)) * (1 + 0.1 * c.brand) * mods.wtp * seg.wtp;
+  if (c.flags.openSource) wtp *= 0.85;
+  if (s.networkEffect >= 0.5 && c.customers < s.tam * 0.002) wtp *= 0.85;
+  return wtp;
+}
+
+/** The same willingness to pay at the current round, for advice, bots and the interface. */
+export function estimateWtp(state: GameState, c: Company): number {
+  return willingnessToPay(state, c, effectiveModifiers(state, c, c.sector, state.round));
+}
+
+/**
+ * Conversion boost/penalty from pricing: underpricing helps only a little (up to +60%), overpricing hurts more
+ * and more. Above the willingness to pay the elasticity grows with the gap, so even inelastic B2B markets have
+ * a revenue-maximising price not far above the WTP instead of rewarding the highest possible price.
+ */
 export function priceConversion(wtp: number, price: number, elasticity: number): number {
-  const ratio = Math.pow(wtp / Math.max(0.01, price), elasticity);
-  return ratio >= 1 ? Math.min(1.6, 1 + (ratio - 1) * 0.5) : Math.max(0.05, ratio);
+  const r = Math.max(0.01, price) / Math.max(0.01, wtp);
+  if (r <= 1) return Math.min(1.6, 1 + (Math.pow(1 / r, elasticity) - 1) * 0.5);
+  return Math.max(0.01, Math.pow(r, -(elasticity + 1.5 * (r - 1))));
 }
 
 export function competitionFactor(state: GameState, c: Company): number {
@@ -86,9 +106,7 @@ export function quote(state: GameState, x: SimCtx, price: number): MarketQuote {
   const scale = networkScale(s, c.customers);
   const coldStart = s.networkEffect >= 0.5 && c.customers < s.tam * 0.002;
 
-  let wtp = s.refPrice * (0.6 + 0.8 * (0.5 * c.product.quality + (0.5 * c.pmf.score) / 100)) * (1 + 0.1 * c.brand) * x.mods.wtp * seg.wtp;
-  if (c.flags.openSource) wtp *= 0.85;
-  if (coldStart) wtp *= 0.85;
+  const wtp = willingnessToPay(state, c, x.mods);
   const fx = strategyEffects(c);
   const priceFactor = priceConversion(wtp, price, s.elasticity * fx.elasticity) * (1 + x.cap.traits.conversion);
 
@@ -161,14 +179,17 @@ export function marketMonth(state: GameState, sector: SectorDef, ctxs: SimCtx[])
     const coverage = dep > 0 ? 1 - dep + dep * Math.min(1, x.cap.salesPts / (10 * dep)) : 1;
     const paid = (M / q.cac) * saturation * coverage;
     const salesPts = x.cap.salesPts <= 12 ? x.cap.salesPts : 12 + Math.sqrt(x.cap.salesPts - 12) * 3.5;
+    // Salespeople can negotiate a discount into a deal, but cannot close prices far above what buyers value.
+    const dealPrice = q.priceFactor >= 1 ? Math.sqrt(Math.min(q.priceFactor, 1.5)) : q.priceFactor;
     const outbound =
       sector.dealsPerSalesPoint > 0
-        ? salesPts * sector.dealsPerSalesPoint * fx.outbound * (x.d.gtm === "salesLed" ? 1.6 : 0.6) * Math.sqrt(Math.min(q.priceFactor, 1.5)) * (0.6 + (0.8 * c.pmf.score) / 100) * x.mods.sales * (1 - myPen)
+        ? salesPts * sector.dealsPerSalesPoint * fx.outbound * (x.d.gtm === "salesLed" ? 1.6 : 0.6) * dealPrice * (0.6 + (0.8 * c.pmf.score) / 100) * x.mods.sales * (1 - myPen)
         : 0;
     const npsFactor = clamp(0.5 + c.nps / 100, 0.2, 1.5);
     const pmfFactor = Math.min(1.6, Math.pow(Math.max(0.05, c.pmf.score / 60), 1.5));
+    // Referred prospects see the same price tag: overpricing slows word of mouth as well.
     const organic =
-      c.customers * sector.virality * pmfFactor * npsFactor * x.mods.organic * (1 + 0.5 * (q.scale - 1)) * (c.flags.openSource ? 1.6 : 1) * (1 - myPen) * (1 - myPen);
+      c.customers * sector.virality * pmfFactor * npsFactor * Math.min(1, q.priceFactor) * x.mods.organic * (1 + 0.5 * (q.scale - 1)) * (c.flags.openSource ? 1.6 : 1) * (1 - myPen) * (1 - myPen);
     const inbound = c.brand * c.brand * myTam * 0.00015 * Math.min(1.5, q.priceFactor) * (1 - myPen);
     const desired = (paid + outbound + organic + inbound) * x.mods.demand;
     return { x, q, paid, outbound, organic, inbound, waitlist: 0, desired: Math.min(desired, myRemaining * 0.04) };

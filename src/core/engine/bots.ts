@@ -7,6 +7,7 @@ import { carryOverDecision } from "./decision";
 import { defaultOption } from "./dilemmas";
 import { fairValuation, grantChecks, investorChecks, loanLimit, monthlyExpenses } from "./finance";
 import { askSalary, expectedEquity } from "./hiring";
+import { estimateWtp } from "./market";
 import { activeFounders, clamp } from "./util";
 
 const STYLE: Record<BotStyle, { runway: number; priceFactor: number; ask: number; salary: number; equity: number; hours: 50 | 60 | 80; acquisitionPremium: number }> = {
@@ -33,11 +34,6 @@ const DILEMMA_CHOICES: Record<string, Record<BotStyle, string>> = {
   acquihire_offer: { lean: "accept", steady: "decline", blitz: "decline" },
   annual_prepay: { lean: "offer", steady: "offer", blitz: "no" },
 };
-
-function approxWtp(c: Company): number {
-  const s = SECTORS[c.sector];
-  return s.refPrice * (0.6 + 0.8 * (0.5 * c.product.quality + (0.5 * c.pmf.score) / 100)) * (1 + 0.1 * c.brand);
-}
 
 function neededRole(c: Company): Role | null {
   const s = SECTORS[c.sector];
@@ -76,7 +72,7 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
   const launched = c.product.launched;
 
   // Pricing
-  d.price = clamp(Math.round(approxWtp(c) * style.priceFactor * 100) / 100, s.priceMin, s.priceMax);
+  d.price = clamp(Math.round(estimateWtp(state, c) * style.priceFactor * 100) / 100, s.priceMin, s.priceMax);
   // Channel
   const fits = (Object.entries(s.gtmFit) as Array<[Decision["gtm"], number]>).filter(([g]) => g !== "salesLed" || s.salesDependence >= 0.3);
   fits.sort((a, b) => a[1] - b[1]);
@@ -86,7 +82,12 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
   d.devApproach = c.botStyle === "blitz" ? "rush" : c.botStyle === "lean" && !launched ? "quality" : "balanced";
   d.discovery = c.botStyle === "lean" ? "deep" : c.botStyle === "steady" ? (launched ? "light" : "deep") : launched ? "none" : "light";
   d.techDebtAction = c.product.techDebt > 0.5 ? "paydown" : c.product.techDebt > 0.3 ? "maintain" : c.botStyle === "blitz" ? "ship" : "maintain";
-  d.launchNow = !launched && ((c.botStyle === "blitz" && c.product.mvpProgress >= 0.6) || (c.botStyle === "steady" && c.product.mvpProgress >= 0.85));
+  // Lean bots polish the MVP, but stop polishing once half of the game has gone by.
+  d.launchNow =
+    !launched &&
+    ((c.botStyle === "blitz" && c.product.mvpProgress >= 0.6) ||
+      (c.botStyle === "steady" && c.product.mvpProgress >= 0.85) ||
+      (c.botStyle === "lean" && state.round > state.config.totalRounds / 2 && c.product.mvpProgress >= 0.5));
   d.founderHours = c.founderStress > 0.75 ? 50 : style.hours;
   d.vacation = c.founderStress > 0.85;
 
