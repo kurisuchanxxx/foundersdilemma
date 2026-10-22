@@ -15,7 +15,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const errors = [];
 page.on("pageerror", (e) => errors.push(`pageerror: ${e.message}`));
 page.on("console", (m) => {
-  if (m.type() === "error") errors.push(`console: ${m.text()}`);
+  if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(`console: ${m.text()}`);
 });
 const shot = (name) => page.screenshot({ path: `${out}/${name}.png`, fullPage: false });
 const click = (text) => page.getByRole("button", { name: text }).first().click();

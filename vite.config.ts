@@ -11,7 +11,10 @@ function inlineFavicon(): Plugin {
     name: "inline-favicon",
     transformIndexHtml(html) {
       const data = readFileSync(new URL("./public/favicon.png", import.meta.url)).toString("base64");
-      return html.replace('href="./favicon.png"', `href="data:image/png;base64,${data}"`);
+      return html
+        .replace(/\s*<link rel="icon" type="image\/svg\+xml"[^>]*>/, "")
+        .replace(/\s*<link rel="apple-touch-icon"[^>]*>/, "")
+        .replace('href="./favicon.png"', `href="data:image/png;base64,${data}"`);
     },
   };
 }

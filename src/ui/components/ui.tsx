@@ -36,6 +36,7 @@ export function Stat({ label, value, sub, icon, concept, tone, big, delta, delta
   deltaGood?: boolean;
 }) {
   const f = useFmt();
+  const flash = useFlash(typeof value === "string" || typeof value === "number" ? value : null);
   let deltaNode: ReactNode = null;
   if (delta !== undefined && delta !== null && Number.isFinite(delta) && Math.abs(delta) > 0.0005) {
     const up = delta > 0;
@@ -54,7 +55,7 @@ export function Stat({ label, value, sub, icon, concept, tone, big, delta, delta
         <span>{label}</span>
         {concept && <InfoTip concept={concept} />}
       </div>
-      <div className={`stat-value ${big ? "big" : ""} ${tone ?? ""}`}>{value}</div>
+      <div className={`stat-value ${big ? "big" : ""} ${tone ?? ""} ${flash ? "flash" : ""}`}>{value}</div>
       {(sub || deltaNode) && (
         <div className="stat-sub row gap-4">
           {deltaNode}
@@ -155,9 +156,40 @@ export function Badge({ children, tone }: { children: ReactNode; tone?: "accent"
 }
 
 export function Progress({ value, tone, thin }: { value: number; tone?: "good" | "warn" | "bad"; thin?: boolean }) {
+  // Fills from zero on mount and eases to every new value.
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setShown(value));
+    return () => cancelAnimationFrame(id);
+  }, [value]);
   return (
     <div className={`progress ${tone ?? ""} ${thin ? "thin" : ""}`} role="progressbar" aria-valuenow={Math.round(value * 100)} aria-valuemin={0} aria-valuemax={100}>
-      <div style={{ width: `${Math.max(0, Math.min(1, value)) * 100}%` }} />
+      <div style={{ width: `${Math.max(0, Math.min(1, shown)) * 100}%` }} />
+    </div>
+  );
+}
+
+/** Adds a short highlight whenever the rendered text changes (after the first render). */
+export function useFlash(key: string | number | null | undefined): boolean {
+  const [flash, setFlash] = useState(false);
+  const prev = useRef(key);
+  useEffect(() => {
+    if (prev.current === key) return;
+    prev.current = key;
+    setFlash(true);
+    const id = setTimeout(() => setFlash(false), 900);
+    return () => clearTimeout(id);
+  }, [key]);
+  return flash;
+}
+
+/** A value that flashes when it changes (cash, runway, any headline number). */
+export function FlashValue({ children, className = "", style }: { children: ReactNode; className?: string; style?: React.CSSProperties }) {
+  const key = typeof children === "string" || typeof children === "number" ? children : null;
+  const flash = useFlash(key);
+  return (
+    <div className={`${className} ${flash ? "flash" : ""}`} style={style}>
+      {children}
     </div>
   );
 }

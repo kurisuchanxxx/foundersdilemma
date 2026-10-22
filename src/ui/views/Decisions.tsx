@@ -930,7 +930,11 @@ function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview
           data-tour="submit"
           onClick={async () => {
             submit(c.id);
-            if (role === "team" && (await exportDecisionFile(game, c.id, d))) toast(f.tx("Decision file exported: send it to the instructor.", "File delle decisioni esportato: invialo al docente."), "good");
+            if (role === "team") {
+              if (await exportDecisionFile(game, c.id, d)) toast(f.tx("Decision file exported: send it to the instructor.", "File delle decisioni esportato: invialo al docente."), "good");
+            } else {
+              toast(game.config.mode === "solo" ? f.tx("Decisions submitted. Advance when you are ready.", "Decisioni inviate. Avanza quando sei pronto.") : f.tx("Decisions submitted.", "Decisioni inviate."), "good");
+            }
           }}
         >
           <Icon name={role === "team" ? "Upload" : "Check"} size={18} />

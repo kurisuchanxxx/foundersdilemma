@@ -128,6 +128,7 @@ export function LineChart({ series, height = 220, xFormat, yFormat, area, yMin, 
             .map((s) => (
               <path
                 key={`a-${s.id}`}
+                className="chart-area"
                 d={`${path(s.points)} L${sx(s.points[s.points.length - 1].x)},${sy(Math.max(lo, 0))} L${sx(s.points[0].x)},${sy(Math.max(lo, 0))} Z`}
                 fill={s.color}
                 opacity={0.1}
@@ -136,6 +137,8 @@ export function LineChart({ series, height = 220, xFormat, yFormat, area, yMin, 
         {ordered.map((s) => (
           <path
             key={s.id}
+            className="chart-line"
+            pathLength={1}
             d={path(s.points)}
             fill="none"
             stroke={s.muted ? "var(--muted-series)" : s.color}
@@ -148,7 +151,7 @@ export function LineChart({ series, height = 220, xFormat, yFormat, area, yMin, 
           .filter((s) => !s.muted && s.points.length > 0)
           .map((s) => {
             const p = s.points[s.points.length - 1];
-            return <circle key={`e-${s.id}`} cx={sx(p.x)} cy={sy(p.y)} r={4} fill={s.color} stroke="var(--surface)" strokeWidth={2} />;
+            return <circle key={`e-${s.id}`} className="chart-end" cx={sx(p.x)} cy={sy(p.y)} r={4} fill={s.color} stroke="var(--surface)" strokeWidth={2} />;
           })}
         {hoverX !== null && (
           <g>

@@ -4,6 +4,7 @@ import {
   createGame,
   draftFor,
   injectCustomEvent,
+  monthsInRound,
   normalizeState,
   saveDraft,
   startGame,
@@ -75,7 +76,12 @@ interface StoreState {
   decisionsTab: DecisionTab;
   /** Current step of the guided tour, or null when it is not running. */
   tourStep: number | null;
+  /** The round being simulated right now (the overlay is showing), or null. */
+  simulating: { round: number; months: number; toEnd: boolean } | null;
+  /** True right after a new game starts, while the launch curtain plays. */
+  launching: boolean;
 
+  finishLaunch: () => void;
   setLang: (l: Lang) => void;
   setTheme: (t: Theme) => void;
   goHome: () => void;
@@ -110,6 +116,8 @@ interface StoreState {
 }
 
 let toastSeq = 0;
+/** Theatre time for the "simulating the period" screen (the computation itself is instant). */
+export const SIMULATION_MS = 1600;
 
 function firstHuman(state: GameState): string | null {
   return state.companies.find((c) => !c.isBot)?.id ?? state.companies[0]?.id ?? null;
@@ -184,8 +192,23 @@ export function parseGame(raw: string): GameState | null {
 
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
 
+/** English by default. A `?lang=it` link (from the landing page) wins and is remembered; otherwise the saved preference. */
+function initialLang(): Lang {
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get("lang");
+    if (fromUrl === "it" || fromUrl === "en") {
+      prefSet("lang", fromUrl);
+      return fromUrl;
+    }
+  } catch {
+    /* no window */
+  }
+  const saved = prefGet("lang");
+  return saved === "it" ? "it" : "en";
+}
+
 export const useStore = create<StoreState>((set, get) => ({
-  lang: (prefGet("lang") as Lang) || (typeof navigator !== "undefined" && navigator.language?.startsWith("it") ? "it" : "en"),
+  lang: initialLang(),
   theme: (prefGet("theme") as Theme) || "dark",
   screen: "home",
   game: null,
@@ -201,7 +224,10 @@ export const useStore = create<StoreState>((set, get) => ({
   learnTopic: null,
   decisionsTab: "core",
   tourStep: null,
+  simulating: null,
+  launching: false,
 
+  finishLaunch: () => set({ launching: false }),
   setLang: (lang) => {
     prefSet("lang", lang);
     set({ lang });
@@ -234,6 +260,7 @@ export const useStore = create<StoreState>((set, get) => ({
       timerEndsAt: null,
       decisionsTab: "core",
       tourStep: config.mode === "solo" && !prefGet("tour-done") ? 0 : null,
+      launching: !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches),
     });
     void get().persist();
   },
@@ -314,31 +341,48 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   advance: () => {
-    const { game, drafts } = get();
-    if (!game || game.finished) return;
-    const next = stateForSave(game, drafts);
-    const round = next.round;
-    advanceRound(next);
-    set({
-      game: next,
-      drafts: {},
-      reportRound: round,
-      revealedCompanyId: next.config.mode === "hotseat" && get().classroomRole !== "team" ? null : get().revealedCompanyId,
-      view: next.finished ? "results" : get().view === "decisions" ? "dashboard" : get().view,
-      timerEndsAt: null,
-      decisionsTab: "core",
-    });
-    void get().persist();
+    const { game, simulating } = get();
+    if (!game || game.finished || simulating) return;
+    set({ simulating: { round: game.round, months: monthsInRound(game.config, game.round), toEnd: false } });
+    setTimeout(() => {
+      const cur = get();
+      if (!cur.game || cur.game.finished) {
+        set({ simulating: null });
+        return;
+      }
+      const next = stateForSave(cur.game, cur.drafts);
+      const round = next.round;
+      advanceRound(next);
+      set({
+        game: next,
+        drafts: {},
+        reportRound: round,
+        simulating: null,
+        revealedCompanyId: next.config.mode === "hotseat" && cur.classroomRole !== "team" ? null : cur.revealedCompanyId,
+        view: next.finished ? "results" : cur.view === "decisions" ? "dashboard" : cur.view,
+        timerEndsAt: null,
+        decisionsTab: "core",
+      });
+      void get().persist();
+    }, SIMULATION_MS);
   },
 
   fastForward: () => {
-    const { game, drafts } = get();
-    if (!game || game.finished) return;
-    const next = stateForSave(game, drafts);
-    let guard = 0;
-    while (!next.finished && guard++ < 50) advanceRound(next);
-    set({ game: next, drafts: {}, reportRound: null, view: "results", timerEndsAt: null });
-    void get().persist();
+    const { game, simulating } = get();
+    if (!game || game.finished || simulating) return;
+    set({ simulating: { round: game.round, months: monthsInRound(game.config, game.round), toEnd: true } });
+    setTimeout(() => {
+      const cur = get();
+      if (!cur.game || cur.game.finished) {
+        set({ simulating: null });
+        return;
+      }
+      const next = stateForSave(cur.game, cur.drafts);
+      let guard = 0;
+      while (!next.finished && guard++ < 50) advanceRound(next);
+      set({ game: next, drafts: {}, reportRound: null, simulating: null, view: "results", timerEndsAt: null });
+      void get().persist();
+    }, SIMULATION_MS);
   },
 
   injectEvent: (spec) => {

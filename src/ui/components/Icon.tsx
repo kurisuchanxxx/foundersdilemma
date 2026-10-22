@@ -1,5 +1,5 @@
 import {
-  Activity, AlertTriangle, ArrowDownRight, ArrowUpRight, Atom, Award, BadgeCheck, Banknote, BarChart3, Bike, Bot, Box, BookOpen,
+  Activity, AlertTriangle, ArrowDownRight, ArrowRight, ArrowUpRight, Atom, Award, BadgeCheck, Banknote, BarChart3, Bike, Bot, Box, BookOpen,
   BrainCircuit, Briefcase, Bug, Building2, CalendarClock, Camera, Car, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleDollarSign, CircleHelp,
   Eraser, Gift, HeartHandshake, ImagePlus, PartyPopper, Shuffle,
   ClipboardList, Clock, Cloud, Code2, Coins, Compass, Cpu, CreditCard, Crosshair, Crown, Dna, Download, Eye, EyeOff, FastForward,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const ICONS: Record<string, LucideIcon> = {
-  Activity, AlertTriangle, ArrowDownRight, ArrowUpRight, Atom, Award, BadgeCheck, Banknote, BarChart3, Bike, Bot, Box, BookOpen,
+  Activity, AlertTriangle, ArrowDownRight, ArrowRight, ArrowUpRight, Atom, Award, BadgeCheck, Banknote, BarChart3, Bike, Bot, Box, BookOpen,
   BrainCircuit, Briefcase, Bug, Building2, CalendarClock, Camera, Car, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleDollarSign, CircleHelp,
   Eraser, Gift, HeartHandshake, ImagePlus, PartyPopper, Shuffle,
   ClipboardList, Clock, Cloud, Code2, Coins, Compass, Cpu, CreditCard, Crosshair, Crown, Dna, Download, Eye, EyeOff, FastForward,

@@ -1,7 +1,8 @@
 name: Web version on GitHub Pages
 
-# Publishes the browser version to the gh-pages branch, which GitHub Pages serves at
+# Publishes the site to the gh-pages branch, which GitHub Pages serves at
 # https://<owner>.github.io/<repository>/ (Settings > Pages > Deploy from a branch: gh-pages).
+# The static landing page in ./landing is the root of the site; the game (Vite build) is at /play/.
 on:
   push:
     branches: [main]
@@ -25,9 +26,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Site layout (landing page at the root, the game at /play/)
+        run: |
+          mkdir -p site
+          cp -r landing/. site/
+          cp -r dist site/play
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./site
           publish_branch: gh-pages
           commit_message: "Publish the web version"

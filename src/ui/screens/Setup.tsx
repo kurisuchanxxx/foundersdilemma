@@ -19,7 +19,7 @@ import { COLORS, LOGOS } from "../../core/engine/setup";
 import { Avatar, AvatarBuilder, AvatarStack } from "../components/Avatar";
 import { Icon } from "../components/Icon";
 import { LogoStudio } from "../components/LogoArt";
-import { Badge, Card, Logo, OptionCard, Segmented, SliderField, Toggle } from "../components/ui";
+import { Badge, Card, Logo, OptionCard, Progress, Segmented, SliderField, Toggle } from "../components/ui";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
 
@@ -98,7 +98,11 @@ export function Setup() {
             {f.tx("Step", "Passo")} {step + 1} / {steps}
           </div>
         </div>
+        <div style={{ marginBottom: 20 }}>
+          <Progress value={(step + 1) / steps} thin />
+        </div>
 
+        <div key={step} className="wizard-step">
         {step === 0 && (
           <div className="stack">
             <div>
@@ -505,6 +509,7 @@ export function Setup() {
             </div>
           </div>
         )}
+        </div>
       </div>
       {avatarFor !== null && team && team.founders[avatarFor] && (
         <AvatarBuilder
