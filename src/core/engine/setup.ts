@@ -8,6 +8,9 @@ import { createCapTable } from "./captable";
 import { defaultDecision } from "./decision";
 import { initialCandidates } from "./hiring";
 import { pmfScore } from "./product";
+
+/** Board seats held by the founders, however many they are (a larger founding team does not buy more control). */
+export const FOUNDER_BOARD_SEATS = 2;
 import { initialRivals } from "./rivals";
 import { nextId } from "./util";
 import { updateValuation } from "./valuation";
@@ -156,7 +159,7 @@ function createCompany(state: GameState, setup: CompanySetup): Company {
     safes: [],
     capTable,
     fundingHistory: [],
-    board: { founders: founders.length, investors: 0, independents: 0 },
+    board: { founders: Math.min(FOUNDER_BOARD_SEATS, founders.length), investors: 0, independents: 0 },
     lastPostMoney: null,
     lastPricedRound: null,
     totalRaised: 0,

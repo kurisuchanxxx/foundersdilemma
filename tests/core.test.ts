@@ -14,6 +14,7 @@ import {
   totalShares,
   estimateWtp,
   SECTORS,
+  computeValuation,
 } from "../src/core";
 import type { CompanySetup, GameState } from "../src/core";
 import { createRng } from "../src/core/rng";
@@ -125,6 +126,24 @@ describe("cap table", () => {
 });
 
 describe("liquidation waterfall", () => {
+  it("lets each preferred holder convert only when it pays off (stable outcome)", () => {
+    const state = newGame();
+    const c = state.companies[0];
+    const founders = c.capTable.holders.filter((h) => h.kind === "founder");
+    founders.forEach((h, i) => (h.shares = i === 0 ? 1_000_000 : 0));
+    c.capTable.holders = c.capTable.holders.filter((h) => h.shares > 0);
+    const pref = (name: string, shares: number, preference: number) =>
+      c.capTable.holders.push({ id: name, kind: "investor", name, shares, vesting: null, preference, investorId: name, roundLabel: "A" });
+    pref("A", 4_000_000, 4_000_000);
+    pref("B", 1_000_000, 500_000);
+    pref("C", 500_000, 100_000);
+    const out = waterfall(c, 6_450_000);
+    const get = (n: string) => out.find((p) => p.holderId === n)!.amount;
+    expect(get("A")).toBeCloseTo(4_000_000, 0);
+    expect(get("B")).toBeCloseTo(980_000, 0);
+    expect(get("C")).toBeCloseTo(490_000, 0);
+    expect(out.reduce((s, p) => s + p.amount, 0)).toBeCloseTo(6_450_000, 0);
+  });
   it("pays 1x preference before common in a small exit", () => {
     const state = newGame();
     const c = state.companies[0];
@@ -307,5 +326,51 @@ describe("cash accounting", () => {
     expect(loanLimit(c, vd, 2).max).toBe(105_000);
     expect(loanLimit(c, vd, 2).checks.every((ch) => ch.met)).toBe(true);
     expect(loanLimit(c, vd, 6).checks.every((ch) => ch.met)).toBe(false);
+  });
+});
+
+describe("ownership, control and valuation", () => {
+  it("counts outstanding SAFEs in the founders' fully diluted ownership", () => {
+    const state = newGame("SAFE-OWN");
+    const c = state.companies[0];
+    c.safes.push({ id: "s1", investorId: "a", investorName: "Angel", amount: 300_000, cap: 1_000_000, round: 1 });
+    c.safes.push({ id: "s2", investorId: "b", investorName: "Angel 2", amount: 200_000, cap: 1_000_000, round: 1 });
+    expect(foundersOwnership(c)).toBeCloseTo(0.5, 5);
+  });
+
+  it("gives at most two board seats to the founders", () => {
+    const setup = human("Four");
+    setup.founders = [
+      { name: "A", archetype: "hacker" },
+      { name: "B", archetype: "hustler" },
+      { name: "C", archetype: "designer" },
+      { name: "D", archetype: "hacker" },
+    ];
+    const state = createGame({ ...defaultConfig(), seed: "BOARD" }, [setup], 1);
+    expect(state.companies[0].board.founders).toBe(2);
+  });
+
+  it("does not crown a company that was sold", () => {
+    const state = newGame("KING-EXIT");
+    const c = state.companies[0];
+    c.status = "exited";
+    c.exit = { round: 2, value: 5_000_000, acquirer: "X", kind: "strategic", payouts: [], founderPayout: 5_000_000 };
+    expect(standings(state).find((s) => s.companyId === c.id)!.king).toBe(false);
+  });
+
+  it("first revenue never lowers the valuation", () => {
+    const state = newGame("VAL-REV", 1);
+    const c = state.companies[0];
+    c.sector = "ecommerce";
+    c.product.launched = true;
+    c.pmf.score = 50;
+    let last = 0;
+    for (const mrr of [0, 5_000, 10_000, 20_000, 35_000, 60_000]) {
+      c.mrr = mrr;
+      c.monthly = [{ month: 1, cash: c.cash, mrr, customers: 0 }, { month: 7, cash: c.cash, mrr, customers: 0 }];
+      const v = computeValuation(state, c).total;
+      expect(v).toBeGreaterThanOrEqual(last);
+      last = v;
+    }
   });
 });

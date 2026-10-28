@@ -25,9 +25,9 @@ export function teamStrength(c: Company): number {
  * Company valuation used for leaderboard, investor fairness and acquisition offers:
  * - revenue method: ARR x sector multiple adjusted for growth, margin and PMF;
  * - scorecard method for pre-revenue companies (team, product progress, PMF, reputation),
- *   fading out as revenue grows;
- * - anchored to the last priced round (investors' "mark") for two rounds;
- * - plus half of net cash.
+ *   fading out as revenue grows (never below the scorecard alone);
+ * - anchored to the last priced round (investors' "mark"), fading out over four rounds;
+ * - plus half of net cash (cash minus debt and prepaid revenue still to deliver).
  */
 export function computeValuation(state: GameState, c: Company, round = state.round): ValuationBreakdown {
   const s = SECTORS[c.sector];
@@ -51,13 +51,19 @@ export function computeValuation(state: GameState, c: Company, round = state.rou
     climate *
     stale;
   const scorecardWeight = Math.max(0, 1 - arr / Math.max(1, s.preRevenueValuation * 0.6));
-  const modelValue = Math.max(revenueValue, 0) + scorecardValue * scorecardWeight;
+  // the scorecard fades out as revenue grows, but first revenue never lowers the value
+  const modelValue = Math.max(scorecardValue, Math.max(revenueValue, 0) + scorecardValue * scorecardWeight);
 
+  // the last priced round anchors the valuation, fading out over four rounds (no cliff)
   let anchor: number | null = null;
+  let anchorWeight = 0;
   let anchored = modelValue;
-  if (c.lastPostMoney !== null && c.lastPricedRound !== null && round - c.lastPricedRound <= 2) {
-    anchor = c.lastPostMoney;
-    anchored = 0.6 * modelValue + 0.4 * c.lastPostMoney;
+  if (c.lastPostMoney !== null && c.lastPricedRound !== null) {
+    anchorWeight = 0.4 * Math.min(1, Math.max(0, (4 - (round - c.lastPricedRound)) / 3));
+    if (anchorWeight > 0) {
+      anchor = c.lastPostMoney;
+      anchored = (1 - anchorWeight) * modelValue + anchorWeight * c.lastPostMoney;
+    }
   }
   const debt = c.loans.reduce((x, l) => x + l.remaining, 0);
   const netCash = 0.5 * (c.cash - debt - deferredRevenue(c));
@@ -75,6 +81,8 @@ export function computeValuation(state: GameState, c: Company, round = state.rou
     scorecardWeight,
     modelValue,
     anchor,
+    anchorWeight,
+    anchored,
     netCash,
     total,
   };

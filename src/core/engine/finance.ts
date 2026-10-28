@@ -4,7 +4,7 @@ import { SECTORS } from "../data/sectors";
 import type { Rng } from "../rng";
 import { fill, lt, moneyShort, type LText, moneyL, decL } from "../text";
 import type { Company, Decision, GameState, Instrument, Pitch, PitchResult, RequirementCheck, RoundReport } from "../types";
-import { applyEquityRound, issueWarrants, totalShares } from "./captable";
+import { SAFE_LIMIT, applyEquityRound, issueWarrants, totalShares } from "./captable";
 import type { SimCtx } from "./context";
 import { applyBundle } from "./effects";
 import { DISCOVERY } from "./product";
@@ -137,7 +137,7 @@ export function investorChecks(state: GameState, c: Company, inv: InvestorDef, f
 export function fairValuation(state: GameState, c: Company, inv: InvestorDef): number {
   const b = computeValuation(state, c);
   const mods = effectiveModifiers(state, c, c.sector, state.round);
-  const base = Math.max(300_000, b.total - b.netCash);
+  const base = Math.max(300_000, b.anchored);
   return base * inv.valuationBias * Math.sqrt(mods.climate) * (1 + 0.003 * (c.reputation.investors - 50));
 }
 
@@ -206,6 +206,9 @@ export function assessPitch(state: GameState, c: Company, p: Pitch, rng: Rng, _r
 
   if (dilution > 0.4) {
     return done(rejection(inv, lt("Selling that much of the company would demotivate the founders. Ask for less money or a higher valuation.", "Cedere così tanto dell'azienda demotiverebbe i fondatori. Chiedi meno soldi o una valutazione più alta."), checks, fair, p));
+  }
+  if (p.instrument === "safe" && c.safes.reduce((s, x) => s + x.amount / Math.max(1, x.cap), 0) + dilution > SAFE_LIMIT) {
+    return done(rejection(inv, lt("Your SAFEs would already convert into most of the company: raise a priced round first.", "I vostri SAFE si convertirebbero già nella maggior parte dell'azienda: fate prima un round con prezzo."), checks, fair, p));
   }
 
   // Equity crowdfunding: the crowd decides.

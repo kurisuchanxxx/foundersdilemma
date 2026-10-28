@@ -51,7 +51,7 @@ export function cofounderLeaves(_state: GameState, c: Company, founderId: string
   const forfeited = departHolder(c, f.holderId, month);
   f.active = false;
   f.leftRound = round;
-  c.board.founders = Math.max(1, c.board.founders - 1);
+  c.board.founders = Math.max(1, Math.min(c.board.founders, c.founders.filter((x) => x.active).length));
   c.cash -= settlement;
   const keptPct = before > 0 ? ((before - forfeited) / before) * 100 : 0;
   report.lines.push({

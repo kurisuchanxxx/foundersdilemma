@@ -271,7 +271,7 @@ function simulateRound(game: GameState, c: Company, inv: InvestorDef, p: Pitch):
   const g = structuredClone(game);
   const cc = g.companies.find((x) => x.id === c.id)!;
   if (p.instrument === "safe") {
-    return { investorPct: p.amount / p.valuation, foundersAfter: foundersOwnership(cc) * (1 - p.amount / p.valuation), poolAdded: 0 };
+    return { investorPct: p.amount / p.valuation, foundersAfter: foundersOwnership(cc, p.amount / p.valuation), poolAdded: 0 };
   }
   const res = applyEquityRound(g, cc, {
     investorId: inv.id,

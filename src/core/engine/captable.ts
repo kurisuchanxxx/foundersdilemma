@@ -24,14 +24,17 @@ export function ownership(ct: CapTable, holderId: string | null): number {
   return h && total > 0 ? h.shares / total : 0;
 }
 
-/** Fully diluted ownership of the founders that are still active. */
-export function foundersOwnership(c: Company): number {
+/**
+ * Fully diluted ownership of the founders that are still active: option pool included and outstanding
+ * SAFEs counted as converted at their caps (plus an optional new SAFE, for previews).
+ */
+export function foundersOwnership(c: Company, newSafePct = 0): number {
   const total = totalShares(c.capTable);
   if (total <= 0) return 0;
   const shares = c.founders
     .filter((f) => f.active)
     .reduce((s, f) => s + (holderById(c.capTable, f.holderId)?.shares ?? 0), 0);
-  return shares / total;
+  return (shares / total) * (1 - Math.min(SAFE_LIMIT, safeRawPct(c) + newSafePct));
 }
 
 /** Voting ownership of active founders (unissued pool excluded). */
@@ -196,7 +199,7 @@ export function applyEquityRound(state: GameState, c: Company, input: EquityRoun
   const S0 = totalShares(ct);
   const safes = c.safes.slice();
   const fractions = safes.map((s) => s.amount / Math.max(1, Math.min(s.cap, input.preMoney)));
-  const F = Math.min(0.6, fractions.reduce((x, y) => x + y, 0));
+  const F = Math.min(SAFE_LIMIT, fractions.reduce((x, y) => x + y, 0));
   const X = F > 0 ? (S0 * F) / (1 - F) : 0;
   const totalFrac = fractions.reduce((x, y) => x + y, 0) || 1;
   const convertedSafes: EquityRoundResult["convertedSafes"] = [];
@@ -267,9 +270,16 @@ export function issueWarrants(state: GameState, c: Company, name: string, invest
   });
 }
 
+/** Most of the company that outstanding SAFEs may convert into (larger stacks are refused). */
+export const SAFE_LIMIT = 0.6;
+
+function safeRawPct(c: Company): number {
+  return c.safes.reduce((s, x) => s + x.amount / Math.max(1, x.cap), 0);
+}
+
 /** Ownership a SAFE would represent if it converted at its cap today. */
 export function safeImpliedPct(c: Company): number {
-  return Math.min(0.6, c.safes.reduce((s, x) => s + x.amount / Math.max(1, x.cap), 0));
+  return Math.min(SAFE_LIMIT, safeRawPct(c));
 }
 
 interface Claimant {
@@ -322,21 +332,18 @@ export function waterfall(c: Company, exitValue: number): Payout[] {
     return { prefTotal, commonShares };
   };
 
-  // Convert preferred holders one at a time, best candidates first, while it pays off.
-  for (;;) {
-    const { prefTotal, commonShares } = compute();
-    const remaining = value - prefTotal;
-    if (remaining <= 0) break;
-    const candidates = preferred
-      .filter((p) => !p.converting)
-      .map((p) => {
-        const pps = (remaining + p.pref) / (commonShares + p.shares);
-        return { p, gain: p.shares * pps - p.pref };
-      })
-      .filter((x) => x.gain > 0)
-      .sort((x, y) => y.gain - x.gain);
-    if (candidates.length === 0) break;
-    candidates[0].p.converting = true;
+  // A preferred holder converts when the common price per share beats its preference per share.
+  // Holders with the lowest preference per share convert first; each conversion lowers the price,
+  // so the first holder for whom converting no longer pays stops the sequence (a stable outcome).
+  const byThreshold = preferred.slice().sort((x, y) => x.pref / x.shares - y.pref / y.shares);
+  let { prefTotal: owed, commonShares: common } = compute();
+  let price = value - owed <= 0 ? 0 : common > 0 ? (value - owed) / common : Infinity;
+  for (const p of byThreshold) {
+    if (price <= 0 || p.pref / p.shares > price) break;
+    p.converting = true;
+    owed -= p.pref;
+    common += p.shares;
+    price = (value - owed) / common;
   }
 
   const { prefTotal, commonShares } = compute();

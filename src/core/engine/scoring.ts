@@ -91,7 +91,7 @@ export function standings(state: GameState): Standing[] {
     ownership: r.c.status === "bankrupt" ? 0 : foundersOwnership(r.c),
     voting: r.voting,
     boardControl: r.boardControl,
-    king: r.voting > 0.5 && r.boardControl && !r.c.flags.ceoReplaced && r.c.status !== "bankrupt",
+    king: r.voting > 0.5 && r.boardControl && !r.c.flags.ceoReplaced && r.c.status === "active",
     status: r.c.status,
     customers: r.c.customers,
     mrr: r.c.mrr,

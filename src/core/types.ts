@@ -736,6 +736,10 @@ export interface ValuationBreakdown {
   scorecardWeight: number;
   modelValue: number;
   anchor: number | null;
+  /** Weight of the last round's post-money in the valuation (fades out over four rounds). */
+  anchorWeight: number;
+  /** Model value blended with the anchor, before cash. */
+  anchored: number;
   netCash: number;
   total: number;
 }

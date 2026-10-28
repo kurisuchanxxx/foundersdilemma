@@ -392,7 +392,7 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Le valutazioni iniziali si negoziano, non si calcolano. Più avanti dominano i multipli sui ricavi: crescita, margini e retention elevati giustificano multipli più alti.",
     ),
     formula: "Valuation ≈ ARR × sector multiple × growth × margin × PMF × market climate",
-    inGame: lt("Pre-revenue companies are valued with a scorecard (team, progress, PMF, reputation); the last round anchors the valuation for two rounds.", "Le aziende senza ricavi sono valutate con una scorecard (team, progressi, PMF, reputazione); l'ultimo round ancora la valutazione per due round."),
+    inGame: lt("Pre-revenue companies are valued with a scorecard (team, progress, PMF, reputation) that fades out as revenue grows; the last priced round anchors the valuation, less and less over four rounds.", "Le aziende senza ricavi sono valutate con una scorecard (team, progressi, PMF, reputazione) che sfuma man mano che crescono i ricavi; l'ultimo round con prezzo ancora la valutazione, sempre meno nell'arco di quattro round."),
   },
   {
     id: "preMoney",
