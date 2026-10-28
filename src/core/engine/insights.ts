@@ -39,7 +39,8 @@ export function mentorInsights(state: GameState, c: Company, snap: Snapshot): In
       if (ratio < 1) add("critical", fill(lt("LTV/CAC is {r}: you lose money on every customer you buy.", "LTV/CAC è {r}: perdi soldi su ogni cliente che acquisti."), { r: decL(ratio, 1) }), "ltvCac");
       else if (ratio < 3) add("warn", fill(lt("LTV/CAC is {r}. Investors look for at least 3.", "LTV/CAC è {r}. Gli investitori cercano almeno 3."), { r: decL(ratio, 1) }), "ltvCac");
       else add("good", fill(lt("Healthy unit economics: LTV/CAC = {r}.", "Unit economics sane: LTV/CAC = {r}."), { r: decL(ratio, 1) }), "ltvCac");
-      const payback = snap.cac / Math.max(0.01, snap.price * s.grossMargin);
+      const gm = snap.revenue > 0 ? snap.grossProfit / snap.revenue : s.grossMargin;
+      const payback = snap.cac / Math.max(0.01, snap.price * gm);
       if (payback > 18) add("warn", fill(lt("CAC payback of {m} months: growth will eat a lot of cash.", "CAC payback di {m} mesi: la crescita consumerà molta cassa."), { m: Math.round(payback) }), "cacPayback");
     }
     if (snap.churn > s.baseChurn * 1.6)

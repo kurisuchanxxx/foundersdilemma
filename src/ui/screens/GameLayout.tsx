@@ -121,7 +121,7 @@ export function GameLayout() {
         </div>
       </aside>
       <main className="main">
-        <TopBar company={company} label={label} onAdvance={advance} draftsPending={Object.keys(drafts).length > 0} />
+        <TopBar company={company} label={label} onAdvance={advance} draftsPending={Object.keys(drafts).length > 0} needsPin={!!game.config.instructorPin && !pinOk} />
         <div className="content">
           <div className="content-inner">
             {instructorLocked ? (
@@ -205,7 +205,7 @@ function CompanySwitcher({ company, humans, onPick, locked }: { company: Company
   );
 }
 
-function TopBar({ company, label, onAdvance, draftsPending }: { company: Company | null; label: string; onAdvance: () => void; draftsPending: boolean }) {
+function TopBar({ company, label, onAdvance, draftsPending, needsPin }: { company: Company | null; label: string; onAdvance: () => void; draftsPending: boolean; needsPin: boolean }) {
   const f = useFmt();
   const game = useGame();
   const role = useStore((s) => s.classroomRole);
@@ -268,9 +268,10 @@ function TopBar({ company, label, onAdvance, draftsPending }: { company: Company
       {!game.finished && mode === "hotseat" && role !== "team" && (
         <button
           className={`btn ${allHumansSubmitted(game) ? "primary" : ""}`}
-          onClick={() => (allHumansSubmitted(game) ? onAdvance() : setConfirmAdvance(true))}
+          onClick={() => (needsPin ? setView("instructor") : allHumansSubmitted(game) ? onAdvance() : setConfirmAdvance(true))}
+          title={needsPin ? f.tx("The instructor PIN is required", "Serve il PIN del docente") : undefined}
         >
-          <Icon name="FastForward" size={16} />
+          <Icon name={needsPin ? "KeyRound" : "FastForward"} size={16} />
           {f.tx("Advance round", "Avanza il round")}
         </button>
       )}
