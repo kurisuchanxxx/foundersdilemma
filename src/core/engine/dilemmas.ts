@@ -146,10 +146,10 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
       const amount = Math.min(Number(d.context.amountValue ?? 0), Math.floor((safeRoom(c) * cap) / 1_000) * 1_000);
       if (amount <= 0) report.lines.push({ kind: "finance", text: lt("The bridge could not close: your SAFEs already cover most of the company.", "Il round ponte non è potuto partire: i vostri SAFE coprono già la maggior parte dell'azienda.") });
       if (amount > 0) {
-        c.safes.push({ id: nextId(state, "safe"), investorId: "bridge", investorName: "Bridge (existing investors)", amount, cap, round });
+        c.safes.push({ id: nextId(state, "safe"), investorId: "bridge", investorName: "Bridge SAFE", amount, cap, round });
         c.cash += amount;
         c.totalRaised += amount;
-        c.fundingHistory.push({ id: nextId(state, "fr"), round, investorId: "bridge", investorName: "Bridge (existing investors)", type: "seed", instrument: "safe", amount, preMoney: null, postMoney: cap, equityPct: amount / cap, boardSeat: false });
+        c.fundingHistory.push({ id: nextId(state, "fr"), round, investorId: "bridge", investorName: "Bridge SAFE", type: "seed", instrument: "safe", amount, preMoney: null, postMoney: cap, equityPct: amount / cap, boardSeat: false });
         c.reputation.investors = Math.max(0, c.reputation.investors - 3);
         report.lines.push({ kind: "finance", text: fill(lt("Bridge round closed: +{a} (SAFE, cap {c}).", "Round ponte chiuso: +{a} (SAFE, cap {c})."), { a: moneyL(amount), c: moneyL(cap) }) });
       }

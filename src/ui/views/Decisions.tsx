@@ -127,10 +127,22 @@ export function Decisions() {
             </div>
           )}
         </div>
-        <div className="sticky-side">
+        <div className="sticky-side" id="decision-projection">
           <PreviewPanel c={c} preview={preview} />
         </div>
       </div>
+      {preview && (
+        // on narrow screens the projection sits below the form: a compact bar keeps its key numbers in sight
+        <button className="mini-projection" onClick={() => document.getElementById("decision-projection")?.scrollIntoView({ behavior: "smooth" })}>
+          <Icon name="Gauge" size={14} />
+          <span>
+            {f.tx("Cash at end of round", "Cassa a fine round")} <b>{f.money(preview.cashEnd)}</b>
+          </span>
+          <span>
+            Runway <b className={preview.runway < 6 ? "bad" : ""}>{f.months(preview.runway)}</b>
+          </span>
+        </button>
+      )}
       <style>{`@media (max-width: 1000px) { .decisions-grid { grid-template-columns: 1fr !important; } }`}</style>
     </div>
   );
@@ -257,8 +269,8 @@ function CoreTab({ c, d, set, preview }: { c: Company; d: Decision; set: (p: Par
             onChange={(v) => set({ rdBudget: v })}
             format={(v) => `${f.money(v)}/${f.tx("mo", "mese")}`}
             hint={f.tx(
-              `Adds ≈${contractorPts.toFixed(1)} development points/month on top of your team (${cap.devPower.toFixed(1)} total). The first €1k covers tools. Contractors create more tech debt than employees.`,
-              `Aggiunge ≈${f.num(contractorPts, 1)} punti di sviluppo/mese oltre al team (${f.num(cap.devPower, 1)} in totale). I primi 1k€ coprono gli strumenti. I contractor creano più debito tecnico dei dipendenti.`,
+              `Adds ≈${f.num(contractorPts, 1)} development points/month on top of your team (${f.num(cap.devPower, 1)} total). The first ${f.money(1_000)} covers tools. Contractors create more tech debt than employees.`,
+              `Aggiunge ≈${f.num(contractorPts, 1)} punti di sviluppo/mese oltre al team (${f.num(cap.devPower, 1)} in totale). I primi ${f.money(1_000)} coprono gli strumenti. I contractor creano più debito tecnico dei dipendenti.`,
             )}
           />
           <SliderField
@@ -359,8 +371,8 @@ function ProductTab({ c, d, set, techDebt }: { c: Company; d: Decision; set: (p:
   };
   const discText: Record<DiscoveryLevel, [string, string]> = {
     none: [f.tx("None", "Nessuna"), f.tx("All time on building.", "Tutto il tempo sullo sviluppo.")],
-    light: [f.tx("Light", "Leggera"), f.tx(`Some interviews: €${DISCOVERY.light.cost}/month, -5% dev time.`, `Qualche intervista: ${DISCOVERY.light.cost}€/mese, -5% tempo di sviluppo.`)],
-    deep: [f.tx("Deep", "Profonda"), f.tx(`Continuous discovery: €${DISCOVERY.deep.cost}/month, -12% dev time, much faster learning.`, `Discovery continua: ${DISCOVERY.deep.cost}€/mese, -12% tempo di sviluppo, apprendimento molto più rapido.`)],
+    light: [f.tx("Light", "Leggera"), f.tx(`Some interviews: ${f.money(DISCOVERY.light.cost)}/month, -5% dev time.`, `Qualche intervista: ${f.money(DISCOVERY.light.cost)}/mese, -5% tempo di sviluppo.`)],
+    deep: [f.tx("Deep", "Profonda"), f.tx(`Continuous discovery: ${f.money(DISCOVERY.deep.cost)}/month, -12% dev time, much faster learning.`, `Discovery continua: ${f.money(DISCOVERY.deep.cost)}/mese, -12% tempo di sviluppo, apprendimento molto più rapido.`)],
   };
   const debtText: Record<TechDebtAction, [string, string]> = {
     ship: [f.tx("Ship fast", "Spedisci veloce"), f.tx("No refactoring: debt grows 30% faster.", "Nessun refactoring: il debito cresce del 30% più in fretta.")],
@@ -873,15 +885,36 @@ function ReviewTab({ c, d, preview, onEdit }: { c: Company; d: Decision; preview
     [f.tx("Development", "Sviluppo"), { rush: f.tx("Rush", "Corsa"), balanced: f.tx("Balanced", "Bilanciato"), quality: f.tx("Quality first", "Prima la qualità") }[d.devApproach], "product"],
     ["Discovery", { none: f.tx("None", "Nessuna"), light: f.tx("Light", "Leggera"), deep: f.tx("Deep", "Profonda") }[d.discovery], "product"],
     [f.tx("Founders' hours", "Ore dei fondatori"), `${d.founderHours}h`, "people"],
-    [f.tx("Hiring offers", "Offerte di assunzione"), String(d.offers.length), "people"],
+    [
+      f.tx("Hiring offers", "Offerte di assunzione"),
+      d.offers.length > 0 ? d.offers.map((o) => game.candidates.find((k) => k.id === o.candidateId)?.name ?? "?").join(", ") : f.tx("none", "nessuna"),
+      "people",
+    ],
     [f.tx("Reputation action", "Azione di reputazione"), f.L(REPUTATION_ACTIONS[d.reputationAction].label), "growth"],
-    [f.tx("Pitches", "Pitch"), String(d.pitches.length), "finance"],
+    [
+      f.tx("Pitches", "Pitch"),
+      d.pitches.length > 0 ? d.pitches.map((p) => `${investorDef(p.investorId)?.name ?? "?"}: ${f.money(p.amount)}`).join(", ") : f.tx("none", "nessuno"),
+      "finance",
+    ],
     [
       f.tx("Founder network", "Rete dei fondatori"),
       d.interactions.length > 0 ? d.interactions.map((i) => `${f.L(INTERACTION_DEFS[i.kind].title)} → ${game.companies.find((o) => o.id === i.targetId)?.name ?? "?"}`).join(", ") : f.tx("none", "nessuna"),
       "network",
     ],
   ];
+  // one-off decisions with big consequences: listed only when taken
+  if (d.fires.length > 0)
+    rows.push([f.tx("Layoffs", "Licenziamenti"), d.fires.map((id) => c.team.find((e) => e.id === id)?.name ?? "?").join(", "), "people"]);
+  if (d.acceptCounterIds.length > 0)
+    rows.push([f.tx("Counter-offers accepted", "Controfferte accettate"), c.counterOffers.filter((co) => d.acceptCounterIds.includes(co.id)).map((co) => `${co.candidateName}: ${f.money(co.salary)}`).join(", "), "people"]);
+  if (d.grantApplication) rows.push([f.tx("Grant application", "Domanda di bando"), f.L(GRANTS.find((g) => g.id === d.grantApplication)?.name), "finance"]);
+  if (d.loanRequest) rows.push([f.tx("Loan request", "Richiesta di prestito"), `${LENDERS.find((l) => l.id === d.loanRequest!.lenderId)?.name ?? "?"}: ${f.money(d.loanRequest.amount)}`, "finance"]);
+  if (d.acceptTermSheetIds.length > 0)
+    rows.push([f.tx("Term sheets accepted", "Term sheet accettati"), c.termSheets.filter((t) => d.acceptTermSheetIds.includes(t.id)).map((t) => `${t.investorName}: ${f.money(t.amount)}`).join(", "), "finance"]);
+  if (d.acceptAcquisitionId) {
+    const o = c.acquisitionOffers.find((x) => x.id === d.acceptAcquisitionId);
+    rows.push([f.tx("Sell the company", "Vendita dell'azienda"), o ? `${o.acquirer}: ${f.money(o.value)}` : "?", "finance"]);
+  }
   const teamName = (id: string) => game.companies.find((o) => o.id === id)?.name ?? "?";
   if (d.partnershipProposals.length + d.acceptPartnershipIds.length > 0 || d.acquisitionBid)
     rows.push([

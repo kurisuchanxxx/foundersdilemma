@@ -10,6 +10,7 @@ import { stateForSave, useStore } from "../store";
 import { StandingsTable } from "./Leaderboard";
 import { EventCard } from "./News";
 import { discussionPrompts } from "../content/prompts";
+import { describeEffect } from "./Market";
 
 export function Instructor() {
   const f = useFmt();
@@ -342,7 +343,7 @@ function InjectEventModal({ onClose }: { onClose: () => void }) {
           <button className="btn" onClick={onClose}>
             {f.tx("Cancel", "Annulla")}
           </button>
-          <button className="btn primary" onClick={submit}>
+          <button className="btn primary" onClick={submit} disabled={!title.trim()}>
             <Icon name="Zap" size={16} />
             {f.tx("Publish event", "Pubblica l'evento")}
           </button>
@@ -396,6 +397,11 @@ function InjectEventModal({ onClose }: { onClose: () => void }) {
           )}
         </div>
         <SliderField label={f.tx("Strength", "Intensità")} value={strength} min={0.5} max={2} step={0.25} onChange={setStrength} format={(v) => `×${v}`} />
+        <p className="small muted">
+          {f.tx("Effects", "Effetti")}: {Object.entries(scaled()).map(([k, v]) => describeEffect(f, k, v as number)).join(", ")}
+          {preset.cash !== 0 && `, ${f.tx("cash", "cassa")} ${f.money(Math.round(preset.cash * strength), { sign: true })} ${f.tx("for each company hit", "per ogni azienda colpita")}`}
+          {` · ${f.count(rounds, ["round", "rounds"], ["round", "round"])}`}
+        </p>
         <SliderField label={f.tx("Duration (rounds)", "Durata (round)")} value={rounds} min={1} max={4} onChange={setRounds} format={(v) => String(v)} />
       </div>
     </Modal>

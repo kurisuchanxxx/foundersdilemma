@@ -44,10 +44,10 @@ function newTeam(i: number): CompanySetup {
 }
 
 export function Setup() {
-  const f = useFmt();
   const goHome = useStore((s) => s.goHome);
   const newGame = useStore((s) => s.newGame);
   const [config, setConfig] = useState<GameConfig>(() => defaultConfig());
+  const f = useFmt(config.currency);
   const [humans, setHumans] = useState(1);
   const [bots, setBots] = useState(3);
   const [teams, setTeams] = useState<CompanySetup[]>(() => Array.from({ length: 12 }, (_, i) => newTeam(i)));
@@ -322,7 +322,7 @@ export function Setup() {
                   );
                 })}
               </div>
-              <SectorDetails sector={team.sector} />
+              <SectorDetails sector={team.sector} currency={config.currency} />
             </Card>
 
             <Card
@@ -549,8 +549,8 @@ function ArchetypeMults({ archetype }: { archetype: Archetype }) {
   );
 }
 
-function SectorDetails({ sector }: { sector: SectorId }) {
-  const f = useFmt();
+function SectorDetails({ sector, currency }: { sector: SectorId; currency: GameConfig["currency"] }) {
+  const f = useFmt(currency);
   const s = SECTORS[sector];
   return (
     <div className="mt-16 col gap-12">

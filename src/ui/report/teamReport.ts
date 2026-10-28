@@ -110,7 +110,7 @@ export function teamReportHtml(game: GameState, c: Company, lang: Lang): string 
     [false, true, true, true, true, true, true, true, true],
   );
 
-  const dev = { rush: f.tx("fast", "veloce"), balanced: f.tx("balanced", "bilanciato"), quality: f.tx("quality", "qualità") } as const;
+  const dev = { rush: f.tx("rush", "corsa"), balanced: f.tx("balanced", "bilanciato"), quality: f.tx("quality first", "prima la qualità") } as const;
   const disc = { none: f.tx("none", "nessuna"), light: f.tx("light", "leggera"), deep: f.tx("deep", "profonda") } as const;
   const myReports = game.reports.filter((r) => r.companyId === c.id && r.decision).sort((a, b) => a.round - b.round);
   const decisions = table(

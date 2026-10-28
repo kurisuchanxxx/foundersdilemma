@@ -162,6 +162,7 @@ export function GameLayout() {
 
 function CompanySwitcher({ company, humans, onPick, locked }: { company: Company; humans: Company[]; onPick: (id: string) => void; locked: boolean }) {
   const f = useFmt();
+  const game = useGame();
   const [open, setOpen] = useState(false);
   return (
     <div style={{ position: "relative" }}>
@@ -174,9 +175,11 @@ function CompanySwitcher({ company, humans, onPick, locked }: { company: Company
               ? company.status === "exited"
                 ? f.tx("Exited", "Venduta")
                 : f.tx("Bankrupt", "Fallita")
-              : company.submitted
-                ? f.tx("Decisions sent", "Decisioni inviate")
-                : f.tx("Deciding…", "In decisione…")}
+              : game.finished
+                ? f.tx("Game over", "Partita conclusa")
+                : company.submitted
+                  ? f.tx("Decisions sent", "Decisioni inviate")
+                  : f.tx("Deciding…", "In decisione…")}
           </div>
         </div>
         {!locked && <Icon name="ChevronRight" size={14} />}

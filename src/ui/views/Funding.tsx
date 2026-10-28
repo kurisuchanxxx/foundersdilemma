@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import {
+  GRANTS,
   INVESTORS,
   INVESTOR_TYPE_LABEL,
   MAX_PITCHES,
@@ -70,10 +71,10 @@ export function Funding() {
           <Stat label={f.tx("Founders' ownership", "Quota dei fondatori")} concept="dilution" value={f.pct(own, 1)} sub={`${f.tx("voting", "con diritto di voto")} ${f.pct(voting, 1)}`} />
         </Card>
         <Card>
-          <Stat label={f.tx("Total raised", "Totale raccolto")} value={f.money(c.totalRaised)} sub={`${c.fundingHistory.length} ${f.tx("operations", "operazioni")}`} />
+          <Stat label={f.tx("Total raised", "Totale raccolto")} value={f.money(c.totalRaised)} sub={f.count(c.fundingHistory.length, ["operation", "operations"], ["operazione", "operazioni"])} />
         </Card>
         <Card>
-          <Stat label={f.tx("Board control", "Controllo del CdA")} concept="richVsKing" value={control ? f.tx("Founders", "Fondatori") : f.tx("Investors", "Investitori")} tone={control ? "good" : "warn"} sub={`${c.board.founders} ${f.tx("founders", "fondatori")} · ${c.board.investors} ${f.tx("investors", "investitori")} · ${c.board.independents} ${f.tx("independent", "indipendenti")}`} />
+          <Stat label={f.tx("Board control", "Controllo del CdA")} concept="richVsKing" value={control ? f.tx("Founders", "Fondatori") : f.tx("Investors", "Investitori")} tone={control ? "good" : "warn"} sub={`${f.count(c.board.founders, ["founder", "founders"], ["fondatore", "fondatori"])} · ${f.count(c.board.investors, ["investor", "investors"], ["investitore", "investitori"])} · ${f.count(c.board.independents, ["independent", "independents"], ["indipendente", "indipendenti"])}`} />
         </Card>
       </div>
 
@@ -109,7 +110,7 @@ export function Funding() {
                   {c.fundingHistory.map((r) => (
                     <tr key={r.id}>
                       <td>{r.round}</td>
-                      <td>{r.investorName}</td>
+                      <td>{r.instrument === "grant" ? f.L(GRANTS.find((g) => g.id === r.investorId)?.name) || r.investorName : r.investorName}</td>
                       <td className="small muted">{instrumentLabel(f, r.instrument)}</td>
                       <td className="num">{f.money(r.amount)}</td>
                       <td className="num">{r.equityPct ? f.pct(r.equityPct, 1) : "—"}</td>

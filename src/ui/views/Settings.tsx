@@ -131,7 +131,7 @@ export function SettingsView() {
               <Icon name="FileSpreadsheet" size={16} />
               {f.tx("History (all teams, all rounds)", "Storico (tutti i team, tutti i round)")}
             </button>
-            <button className="btn" onClick={() => saveTextFile(`${game.config.seed}_decisions.csv`, decisionsCsv(game), [{ name: "CSV", extensions: ["csv"] }], "text/csv")}>
+            <button className="btn" onClick={() => saveTextFile(`${game.config.seed}_decisions.csv`, decisionsCsv(game, lang), [{ name: "CSV", extensions: ["csv"] }], "text/csv")}>
               <Icon name="FileSpreadsheet" size={16} />
               {f.tx("Decisions", "Decisioni")}
             </button>
@@ -148,11 +148,11 @@ export function SettingsView() {
           <span>Seed</span>
           <span>{game.config.seed}</span>
           <span>{f.tx("Mode", "Modalità")}</span>
-          <span>{game.config.mode}</span>
+          <span>{{ solo: f.tx("Solo vs bots", "Solo contro bot"), hotseat: f.tx("Hot-seat", "Hot-seat"), classroom: f.tx("Classroom (files)", "Classe (file)") }[game.config.mode]}</span>
           <span>{f.tx("Complexity", "Complessità")}</span>
-          <span>{game.config.complexity}</span>
+          <span>{{ essential: f.tx("Essential", "Essenziale"), standard: f.tx("Standard", "Standard"), advanced: f.tx("Advanced", "Avanzata") }[game.config.complexity]}</span>
           <span>{f.tx("Difficulty", "Difficoltà")}</span>
-          <span>{game.config.difficulty}</span>
+          <span>{{ forgiving: f.tx("Forgiving", "Indulgente"), standard: f.tx("Standard", "Standard"), hardcore: f.tx("Realistic", "Realistica") }[game.config.difficulty]}</span>
           <span>{f.tx("Version", "Versione")}</span>
           <span>
             {APP_VERSION} · {isDesktop() ? f.tx("desktop app", "app desktop") : f.tx("browser", "browser")}

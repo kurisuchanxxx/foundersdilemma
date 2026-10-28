@@ -2,7 +2,7 @@ import { combinedMultipliers } from "../data/founders";
 import { GRANTS, INVESTORS, LENDERS, grantDef, investorDef, lenderDef, type InvestorDef, type LenderDef } from "../data/investors";
 import { SECTORS } from "../data/sectors";
 import type { Rng } from "../rng";
-import { fill, lt, moneyShort, type LText, moneyL, decL } from "../text";
+import { fill, lt, type LText, moneyL, decL } from "../text";
 import type { Company, Decision, GameState, Instrument, Pitch, PitchResult, RequirementCheck, RoundReport } from "../types";
 import { applyEquityRound, issueWarrants, safeRoom, totalShares } from "./captable";
 import type { SimCtx } from "./context";
@@ -97,10 +97,16 @@ export function investorChecks(state: GameState, c: Company, inv: InvestorDef, f
     const met = r.anyOf.some(
       (a) => (a.minMrr === undefined || c.mrr >= a.minMrr) && (a.minPmf === undefined || c.pmf.score >= a.minPmf) && (a.minCustomers === undefined || c.customers >= a.minCustomers),
     );
-    const parts = r.anyOf.map((a) =>
-      a.minMrr !== undefined ? `MRR ≥ ${moneyShort(a.minMrr)}` : a.minPmf !== undefined ? `PMF ≥ ${a.minPmf}` : `${a.minCustomers}+`,
-    );
-    checks.push({ label: fill(lt("Traction: {v}", "Trazione: {v}"), { v: parts.join(" / ") }), met, hard: true });
+    const part = (a: (typeof r.anyOf)[number], lang: "en" | "it") =>
+      a.minMrr !== undefined
+        ? `MRR ≥ ${moneyL(a.minMrr)[lang]}`
+        : a.minPmf !== undefined
+          ? `PMF ≥ ${a.minPmf}`
+          : lang === "it"
+            ? `${a.minCustomers} clienti`
+            : `${a.minCustomers} customers`;
+    const v = { en: r.anyOf.map((a) => part(a, "en")).join(" or "), it: r.anyOf.map((a) => part(a, "it")).join(" o ") };
+    checks.push({ label: fill(lt("Traction: {v}", "Trazione: {v}"), { v }), met, hard: true });
   }
   if (r.maxValuation !== undefined)
     checks.push({ label: fill(lt("Valuation below {v}", "Valutazione sotto {v}"), { v: moneyL(r.maxValuation) }), met: c.valuation <= r.maxValuation, hard: true });

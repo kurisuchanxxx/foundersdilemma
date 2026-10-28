@@ -52,10 +52,11 @@ function moneyShortIt(value: number, symbol: string): string {
   const abs = Math.abs(value);
   const sign = value < 0 ? "-" : "";
   const n = (v: number, d: number) => v.toFixed(d).replace(".", ",");
-  if (abs >= 1e9) return `${sign}${n(abs / 1e9, abs >= 1e10 ? 0 : 1)} Mrd ${symbol}`;
-  if (abs >= 1e6) return `${sign}${n(abs / 1e6, abs >= 1e7 ? 0 : 1)} Mln ${symbol}`;
-  if (abs >= 1e3) return `${sign}${n(abs / 1e3, abs >= 1e4 ? 0 : 1)} k ${symbol}`;
-  return `${sign}${Math.round(abs)} ${symbol}`;
+  // non-breaking spaces keep "12 k €" on one line
+  if (abs >= 1e9) return `${sign}${n(abs / 1e9, abs >= 1e10 ? 0 : 1)}\u00a0Mrd\u00a0${symbol}`;
+  if (abs >= 1e6) return `${sign}${n(abs / 1e6, abs >= 1e7 ? 0 : 1)}\u00a0Mln\u00a0${symbol}`;
+  if (abs >= 1e3) return `${sign}${n(abs / 1e3, abs >= 1e4 ? 0 : 1)}\u00a0k\u00a0${symbol}`;
+  return `${sign}${Math.round(abs)}\u00a0${symbol}`;
 }
 
 /** Compact money for bilingual messages: "€1.2M" in English, "1,2 Mln €" in Italian. */

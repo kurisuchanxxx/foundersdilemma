@@ -25,6 +25,8 @@ export function prevSnapshot(c: Company) {
 
 export function change(curr: number | undefined, prev: number | undefined): number | null {
   if (curr === undefined || prev === undefined || !Number.isFinite(curr) || !Number.isFinite(prev) || prev === 0) return null;
+  // a percentage change across zero (e.g. cash going negative) means nothing
+  if (curr < 0 !== prev < 0) return null;
   return (curr - prev) / Math.abs(prev);
 }
 

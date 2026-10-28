@@ -48,7 +48,7 @@ export function Market() {
           <Stat
             label={f.tx("Addressable market", "Mercato indirizzabile")}
             value={f.compact(s.tam * mods.demand)}
-            sub={fx.tam < 1 ? `${f.tx("you can reach", "raggiungibili da te")} ${f.compact(reachable)} (${f.L(SEGMENT_INFO[c.segment].label)})` : f.tx("potential customers", "clienti potenziali")}
+            sub={fx.tam < 1 ? `${f.tx("you can reach", "raggiungibili da te")} ${f.compact(reachable)} · ${f.L(SEGMENT_INFO[c.segment].label)}` : f.tx("potential customers", "clienti potenziali")}
           />
         </Card>
         <Card>
@@ -63,7 +63,7 @@ export function Market() {
           <Stat label={f.tx("Your market share", "La tua quota di mercato")} value={sectorCustomers > 0 ? f.pct(c.customers / sectorCustomers) : "—"} sub={f.tx("of in-game customers", "dei clienti in gioco")} />
         </Card>
         <Card>
-          <Stat label={f.tx("Competition", "Concorrenza")} concept="competition" value={`×${f.num(competitionFactor(game, c), 2)}`} sub={`${rivals.length} ${f.tx("teams", "team")} + ${game.markets[c.sector].npcCompetitors} ${f.tx("others", "altri")}`} />
+          <Stat label={f.tx("Competition", "Concorrenza")} concept="competition" value={`×${f.num(competitionFactor(game, c), 2)}`} sub={`${f.count(rivals.length, ["team", "teams"], ["team", "team"])} + ${f.count(game.markets[c.sector].npcCompetitors, ["other", "others"], ["altro", "altri"])}`} />
         </Card>
       </div>
 

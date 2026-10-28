@@ -91,7 +91,15 @@ export function Dashboard() {
           <Stat
             label={f.tx("Momentum", "Slancio")}
             icon="TrendingUp"
-            value={last && prev && prev.mrr > 0 ? f.pct((last.mrr - prev.mrr) / prev.mrr) : c.product.launched ? "—" : f.pct(c.product.mvpProgress)}
+            value={
+              last && prev && prev.mrr > 0
+                ? last.mrr / prev.mrr >= 4
+                  ? `×${f.num(last.mrr / prev.mrr, 1)}`
+                  : f.pct((last.mrr - prev.mrr) / prev.mrr)
+                : c.product.launched
+                  ? "—"
+                  : f.pct(c.product.mvpProgress)
+            }
             sub={c.product.launched ? f.tx("MRR growth vs last round", "Crescita MRR sul round precedente") : f.tx("MVP progress", "Avanzamento MVP")}
             tone="accent"
           />
@@ -107,7 +115,13 @@ export function Dashboard() {
           />
         </Card>
         <Card>
-          <Stat label={f.tx("Health", "Salute")} icon="HeartPulse" value={health.grade} sub={`${health.score}/100`} tone={health.score >= 65 ? "good" : health.score >= 45 ? "warn" : "bad"} />
+          <Stat
+            label={f.tx("Health", "Salute")}
+            icon="HeartPulse"
+            value={health.grade}
+            sub={`${health.score}/100 · ${f.tx("runway, LTV/CAC, PMF, morale, tech debt", "runway, LTV/CAC, PMF, morale, debito tecnico")}`}
+            tone={health.score >= 65 ? "good" : health.score >= 45 ? "warn" : "bad"}
+          />
         </Card>
         <Card tour="pmf">
           <Stat label="Product-market fit" icon="Target" concept="pmf" value={`${Math.round(c.pmf.score)}`} sub={`${stageLabel(f, c.pmf.score)} · ${f.pct(seanEllisShare(c.pmf.score))} ${f.tx("very disappointed", "molto delusi")}`} />
