@@ -1,6 +1,6 @@
 import { DILEMMAS, dilemmaTemplate, type DilemmaContext, type DilemmaOptionDef, type DilemmaSpecial } from "../data/dilemmas";
 import type { Rng } from "../rng";
-import { fill, lt, moneyL } from "../text";
+import { fill, lt, moneyL, type LText } from "../text";
 import type { Company, DilemmaInstance, GameState, RoundReport } from "../types";
 import { addGrant, grantOptions, safeRoom } from "./captable";
 import { applyBundle } from "./effects";
@@ -9,7 +9,10 @@ import { addProfessionalCeo, cofounderLeaves, fireEmployee, resignEmployee } fro
 import { nextId } from "./util";
 
 /** Dilemmas that can only happen once per company. */
-const ONE_SHOT = new Set(["pivot_or_persevere", "remote_or_office", "open_source_core", "sustainability", "ceo_replacement", "acquihire_offer"]);
+const ONE_SHOT = new Set([
+  "pivot_or_persevere", "remote_or_office", "open_source_core", "sustainability", "ceo_replacement", "acquihire_offer",
+  "inflated_metrics", "ransomware", "license_gray_zone", "platform_risk", "controversial_client", "star_misconduct", "delaware_flip",
+]);
 
 export function generateDilemma(state: GameState, c: Company, round: number, netBurn: number, runway: number, rng: Rng): DilemmaInstance | null {
   if (c.status !== "active" || round < 2 || round > state.config.totalRounds) return null;
@@ -28,6 +31,7 @@ export function generateDilemma(state: GameState, c: Company, round: number, net
   if (params === null) return null;
   // bilingual values (money in each language's format) only go into the texts
   const context = Object.fromEntries(Object.entries(params).filter((e): e is [string, string | number] => typeof e[1] !== "object"));
+  const labels = Object.fromEntries(Object.entries(params).filter((e): e is [string, LText] => typeof e[1] === "object"));
   return {
     id: nextId(state, "dil"),
     templateId: t.id,
@@ -37,6 +41,7 @@ export function generateDilemma(state: GameState, c: Company, round: number, net
     options: t.options.map((o) => ({ id: o.id, label: fill(o.label, params), description: fill(o.description, params) })),
     concept: t.concept,
     context,
+    labels,
     chosen: null,
     outcome: null,
   };
@@ -61,12 +66,14 @@ export function resolveDilemma(state: GameState, c: Company, choice: string | nu
   const optionId = choice && t.options.some((o) => o.id === choice) ? choice : defaultOption(d);
   const opt = t.options.find((o) => o.id === optionId)!;
   d.chosen = optionId;
-  let outcome = fill(opt.outcome, d.context);
+  let outcome = fill(opt.outcome, { ...d.context, ...(d.labels ?? {}) });
   if (opt.effects) applyBundle(state, c, opt.effects, d.title, round);
   if (opt.gamble) {
     const branch = rng.chance(opt.gamble.probability) ? opt.gamble.success : opt.gamble.failure;
     applyBundle(state, c, branch.effects, d.title, round);
-    outcome = lt(`${outcome.en} ${branch.text.en}`, `${outcome.it} ${branch.text.it}`);
+    const text = fill(branch.text, { ...d.context, ...(d.labels ?? {}) });
+    outcome = lt(`${outcome.en} ${text.en}`, `${outcome.it} ${text.it}`);
+    if (branch.special) applySpecial(state, c, d, opt, branch.special, round, rng, report);
   }
   if (opt.risk) {
     c.pendingRisks.push({
@@ -216,6 +223,14 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
       const cash = Number(d.context.cashValue ?? 0);
       c.cash += cash;
       c.prepayments = [...(c.prepayments ?? []), { monthly: cash / (12 * 0.8), monthsLeft: 12 }];
+      return false;
+    }
+    case "scaled": {
+      if (sp.addCustomers) {
+        c.customers += Number(d.context.customers ?? 0);
+        c.mrr = c.customers * c.price;
+      }
+      if (sp.cashSign) c.cash += sp.cashSign * Number(d.context.cashValue ?? 0);
       return false;
     }
   }

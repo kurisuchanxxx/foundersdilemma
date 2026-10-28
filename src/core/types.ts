@@ -586,6 +586,8 @@ export interface DilemmaInstance {
   options: DilemmaOption[];
   concept: string | null;
   context: Record<string, string | number>;
+  /** Bilingual values (e.g. amounts in each language's format) for the outcome texts. */
+  labels?: Record<string, LText>;
   chosen: string | null;
   outcome: LText | null;
 }

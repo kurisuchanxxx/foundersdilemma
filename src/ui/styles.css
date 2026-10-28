@@ -3,16 +3,17 @@
 :root {
   color-scheme: dark;
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
-  --bg: #161617;
-  --bg-sidebar: #1d1d1f;
-  --surface: #232325;
-  --surface-2: #2c2c2f;
-  --surface-3: #37373a;
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text: #f5f5f7;
-  --text-2: #b4b4ba;
-  --text-3: #85858b;
+  /* anthracite, almost black */
+  --bg: #0c0c0c;
+  --bg-sidebar: #0c0c0c;
+  --surface: #161616;
+  --surface-2: #1c1c1c;
+  --surface-3: #262626;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.17);
+  --text: #f5f5f5;
+  --text-2: #a8a8a8;
+  --text-3: #858585;
   --accent: #0a84ff;
   --accent-soft: rgba(10, 132, 255, 0.16);
   --accent-text: #4aa3ff;
@@ -23,9 +24,9 @@
   --bad: #ff453a;
   --bad-soft: rgba(255, 69, 58, 0.14);
   --purple: #bf5af2;
-  --grid: #303033;
-  --axis: #48484c;
-  --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  --grid: #242424;
+  --axis: #3d3d3d;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
   --radius: 12px;
   --radius-sm: 8px;
   /* validated categorical palette (dark steps) */
@@ -37,7 +38,7 @@
   --s6: #008300;
   --s7: #9085e9;
   --s8: #e66767;
-  --muted-series: #5a5a60;
+  --muted-series: #575757;
 }
 
 @media (prefers-color-scheme: light) {

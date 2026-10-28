@@ -230,6 +230,17 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 | Tagliare il team? | Licenziare il 30%, ridurre gli stipendi, o tenere tutti |
 | Offerta di acqui-hire | Exit a 250k per persona, distribuita con il waterfall |
 | Sconto per il pagamento annuale | Un quarto dei clienti paga 12 mesi in anticipo con il 20% di sconto: cassa subito, poi per 12 mesi nessun incasso da loro (ricavo differito), churn più basso per due round. Nel complesso si rinuncia al 20% di quei ricavi in cambio di liquidità |
+| Gonfiare i numeri per il round? | Contare pilot e lettere d'intenti come ricavi: valutazione e interesse degli investitori +15% per 2 round, ma 50% di rischio che la due diligence se ne accorga (reputazione verso gli investitori −30, clima 0,7 per 3 round). Numeri onesti: reputazione |
+| Il cliente più grande paga a 120 giorni | Accettare: +15% clienti, ma quattro mesi dei loro ricavi anticipati di tasca propria e 15% di rischio di insolvenza. Trattare 60 giorni (55% di successo) o rifiutare |
+| Una gara d'appalto pubblica | 20k di consulenze e un round più lento per un 35% di probabilità di un contratto pubblico triennale (clienti, referenze, reputazione) |
+| Attacco ransomware | Pagare 40k in silenzio (70% che le chiavi funzionino, 40% che i dati finiscano online con sanzione GDPR) oppure ripristinare dai backup e notificare entro 72 ore (un round più lento, qualche cliente perso, reputazione) |
+| Lanciare prima dell'autorizzazione? (fintech, healthtech) | Zona grigia: +12% clienti e domanda, 40% di rischio di multa e sospensione. Partner autorizzato: −6 punti di margine per 3 round. Aspettare: CAC +10% per 2 round |
+| La piattaforma cambia le regole (app store, marketplace, fornitore di AI, motore di ricerca) | Investire per dipenderne meno (30k, un round più lento), alzare i prezzi (−7% clienti) o assorbire (−6 punti di margine per sempre) |
+| Il pilota gratuito della multinazionale | Pilota gratis: due round più lenti, 30% che diventi un contratto. Pilota a pagamento: 50% che accettino (25k e clienti). Rifiutare |
+| Un cliente controverso (gioco d'azzardo) | Firmare: +10% clienti, morale e reputazione verso i talenti in calo, 30% di rischio di inchiesta giornalistica. Rifiutare con una policy: morale e talenti |
+| Una segnalazione sul venditore migliore | Indagine e provvedimenti: la persona se ne va, vendite più lente per un round, morale e talenti in su. Richiamo informale: morale giù e 45% di rischio che il caso diventi pubblico |
+| Trasferire la holding negli Stati Uniti? | Flip in Delaware: 60k e stress, poi clima degli investitori × 1,12 e valutazione × 1,08 fino a fine partita. Restare: agevolazioni italiane (10k) |
+| L'ordine minimo del fornitore (e-commerce, deeptech) | Stock per dodici mesi: cassa immobilizzata, margine +8 punti per 4 round, 30% di rischio di merce invenduta. Ordini piccoli |
 
 **Mentor**: fino a 6 commenti per round basati su regole (runway sotto 3 e 6 mesi, LTV/CAC sotto 1 e 3, payback oltre 18 mesi, churn alto, prezzo lontano dalla WTP, chasm, PMF, debito tecnico, bug, morale, stress, quota dei fondatori sotto il 50%, perdita del controllo del CdA).
 

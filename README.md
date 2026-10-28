@@ -36,7 +36,7 @@ Ogni meccanica del gioco corrisponde a un concetto del corso, con la relativa sc
 | Unit economics e prezzo | CAC, LTV, churn, payback, margine lordo, elasticità; abbonamento, freemium o a consumo | Ramanujam e Tacke |
 | Finanza della startup | Bandi, prestiti, crowdfunding, SAFE, round prezzati, option pool, waterfall; investitori con posti e capitale limitati, contesi tra i team | Feld e Mendelson |
 | Team e fondatori | Archetipi, divisione delle quote, vesting e cliff, aste per i talenti | Wasserman |
-| Il dilemma del fondatore | 16 dilemmi, controllo del CdA, classifica Ricco o Re | Wasserman |
+| Il dilemma del fondatore | 27 dilemmi ispirati a casi reali, controllo del CdA, classifica Ricco o Re | Wasserman |
 | Strategia e concorrenza | Concorrenti esterni che reagiscono, partnership e acquisizioni tra team | Porter, Brandenburger e Nalebuff |
 | Etica | Eventi di mercato, reputazione, scelte con conseguenze differite | |
 
