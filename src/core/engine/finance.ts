@@ -536,14 +536,18 @@ export function processLoanRequest(state: GameState, x: SimCtx, round: number): 
   if (!lender) return;
   const { max, checks } = loanLimit(c, lender, round);
   const unmet = checks.find((ch) => !ch.met);
-  if (unmet || req.amount > max) {
+  if (unmet || max <= 0) {
     x.report.lines.push({
       kind: "bad",
       text: unmet
         ? fill(lt("{l} declined the loan: {r}.", "{l} ha rifiutato il prestito: {r}."), { l: lender.name, r: unmet.label })
-        : fill(lt("{l} declined: the maximum they can lend you is {m}.", "{l} ha rifiutato: il massimo che può prestarti è {m}."), { l: lender.name, m: moneyL(max) }),
+        : fill(lt("{l} declined: you already owe them as much as they can lend you.", "{l} ha rifiutato: le devi già quanto può prestarti."), { l: lender.name }),
     });
     return;
+  }
+  if (req.amount > max) {
+    x.report.lines.push({ kind: "finance", text: fill(lt("{l} lends at most {m}: you asked for {a}.", "{l} presta al massimo {m}: avevi chiesto {a}."), { l: lender.name, m: moneyL(max), a: moneyL(req.amount) }) });
+    req.amount = max;
   }
   const mods = effectiveModifiers(state, c, c.sector, round);
   const rate = lender.annualRate + (lender.annualRate > 0 ? mods.debtRate : 0);

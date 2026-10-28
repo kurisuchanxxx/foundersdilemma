@@ -131,14 +131,16 @@ export function quote(state: GameState, x: SimCtx, price: number): MarketQuote {
     (x.cap.marketingEff * priceFactor * scale);
   cac = Math.max(s.baseCac * 0.05, cac);
 
-  const priceChurn = price > wtp ? 1 + 0.6 * (price / wtp - 1) : 1 - 0.1 * Math.min(1, wtp / price - 1);
+  // paying more than the product is worth to them, customers leave faster and faster as the gap grows
+  const gap = price / wtp - 1;
+  const priceChurn = gap > 0 ? 1 + 0.6 * gap + 1.2 * gap * gap : 1 - 0.1 * Math.min(1, wtp / price - 1);
   const csReduction = (0.3 * x.cap.csPts) / (x.cap.csPts + 2 + c.customers / s.customersPerCsPoint);
   let churn =
     s.baseChurn *
     (1.6 - c.pmf.score / 100) *
     seg.churn *
     GTM_INFO[x.d.gtm].churn *
-    clamp(priceChurn, 0.85, 2.5) *
+    clamp(priceChurn, 0.85, 20) *
     (1 + (c.product.bugs / 100) * 0.6) *
     (1.2 - 0.4 * c.product.quality) *
     (1 - csReduction) *
@@ -234,6 +236,18 @@ export function marketMonth(state: GameState, sector: SectorDef, ctxs: SimCtx[])
     x.paidCustomers += paidNew;
     c.mrr = c.customers * x.d.price;
   }
+}
+
+/**
+ * Share of current customers who stay when the price goes up. They re-decide at the new price like
+ * prospects would, but are stickier (they already adopted the product): the square root of the drop
+ * in conversion. Raising the price up to the willingness to pay costs almost nobody.
+ */
+export function priceRiseRetention(state: GameState, x: SimCtx, oldPrice: number, newPrice: number): number {
+  if (!(newPrice > oldPrice)) return 1;
+  const before = Math.min(1, quote(state, x, oldPrice).priceFactor);
+  const after = Math.min(1, quote(state, x, newPrice).priceFactor);
+  return after >= before || before <= 0 ? 1 : Math.sqrt(after / before);
 }
 
 /** Customers converted from the waitlist at launch. */

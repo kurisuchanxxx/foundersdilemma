@@ -281,7 +281,10 @@ export const useStore = create<StoreState>((set, get) => ({
       classroomRole: role,
       decisionsTab: "core",
       tourStep: role === "team" && !state.finished && !prefGet("tour-done") ? 0 : null,
+      timerEndsAt: savedTimer(state.id),
     });
+    // a game opened from a file is stored on this device right away
+    if (!opts?.saveId) void get().persist();
   },
 
   replaceGame: (state) => {
@@ -403,7 +406,12 @@ export const useStore = create<StoreState>((set, get) => ({
     setTimeout(() => get().dismissToast(id), 4_000);
   },
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
-  setTimer: (endsAt) => set({ timerEndsAt: endsAt }),
+  setTimer: (endsAt) => {
+    // kept per game, so a reload during the round does not lose the countdown
+    const id = get().game?.id;
+    if (id) prefSet(`timer-${id}`, endsAt ? String(endsAt) : "");
+    set({ timerEndsAt: endsAt });
+  },
   openLearn: (topic) => set({ view: "learn", learnTopic: topic }),
   setDecisionsTab: (decisionsTab) => set({ decisionsTab }),
   startTour: () => set({ tourStep: 0, reportRound: null }),
@@ -415,9 +423,9 @@ export const useStore = create<StoreState>((set, get) => ({
   saveAs: async (name) => {
     const { game, drafts, classroomRole } = get();
     if (!game) return "";
+    // a frozen copy: the game keeps autosaving to its own save, not to the copy
     const id = newSaveId();
     await writeSave(id, name, stateForSave(game, drafts), classroomRole);
-    set({ saveId: id });
     return id;
   },
 
@@ -428,6 +436,11 @@ export const useStore = create<StoreState>((set, get) => ({
     await writeSave(saveId, name, stateForSave(game, drafts), classroomRole);
   },
 }));
+
+function savedTimer(gameId: string): number | null {
+  const v = Number(prefGet(`timer-${gameId}`) || 0);
+  return v > Date.now() ? v : null;
+}
 
 function schedulePersist(get: () => StoreState) {
   if (persistTimer) clearTimeout(persistTimer);

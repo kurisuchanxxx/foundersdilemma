@@ -17,7 +17,7 @@ import { evaluateChallenges, generateChallenges, openShowdown, resolveShowdown }
 import { refreshCandidates, resolveHiring } from "./hiring";
 import { resolveInteractions } from "./interactions";
 import { mentorInsights } from "./insights";
-import { brandAndSentiment, convertWaitlist, marketMonth, quote } from "./market";
+import { brandAndSentiment, convertWaitlist, marketMonth, priceRiseRetention, quote } from "./market";
 import { fireEmployee, resignEmployee } from "./people";
 import { maybeLaunch, productMonth } from "./product";
 import { monthsInRound } from "./periods";
@@ -129,6 +129,26 @@ function applyReputationAction(x: SimCtx): void {
     r.talent = clamp(r.talent + 3, 0, 100);
     c.brand = clamp01(c.brand + 0.02);
   }
+}
+
+/** Sets this round's price; customers who no longer find it worth paying leave at once. */
+function applyPrice(state: GameState, x: SimCtx, price: number): void {
+  const c = x.c;
+  if (c.product.launched && c.customers > 0) {
+    const kept = priceRiseRetention(state, x, c.price, price);
+    if (kept < 1) {
+      const lost = c.customers * (1 - kept);
+      c.customers -= lost;
+      x.churnedCustomers += lost;
+      if (!x.preview && lost >= 0.5)
+        x.report.lines.push({
+          kind: "bad",
+          text: fill(lt("The price rise above what customers value made {n} of them cancel right away.", "L'aumento di prezzo oltre il valore percepito ha fatto disdire subito {n} clienti."), { n: Math.round(lost) }),
+        });
+    }
+  }
+  c.price = price;
+  if (c.product.launched) c.mrr = c.customers * c.price;
 }
 
 function lastMonthNet(state: GameState, x: SimCtx, round: number): number {
@@ -305,6 +325,8 @@ export function advanceRound(state: GameState): void {
         continue;
       }
     }
+    // the loan is assessed on the numbers the team saw when deciding (before switches and dilemmas)
+    processLoanRequest(state, x, round);
     if (c.dilemma) {
       const res = resolveDilemma(state, c, d.dilemmaChoice, round, rng, report);
       if (res.exited) {
@@ -329,9 +351,7 @@ export function advanceRound(state: GameState): void {
     }
     c.termSheets = c.termSheets.filter((t) => t.validRound > round);
     processGrantApplication(state, x, round);
-    processLoanRequest(state, x, round);
-    c.price = d.price;
-    if (c.product.launched) c.mrr = c.customers * c.price;
+    applyPrice(state, x, d.price);
     ctxs.push(x);
     // proposals to other teams go out after every company has acted on last round's ones
     followUps.push(() => {
@@ -450,19 +470,19 @@ export function previewDecision(state: GameState, companyId: string, decision: D
   const c = s.companies.find((x) => x.id === companyId);
   if (!c || c.status !== "active") return null;
   const d = sanitizeDecision(s, c, decision);
-  applyStrategySwitch(c, d, null);
   const rng = createPreviewRng();
   const features = featuresFor(s.config);
   const report = newReport(s.round, c.id);
   const x = buildCtx(s, c, d, rng, report, features, true);
+  // same order as the round: the loan is assessed before a strategy switch
+  processLoanRequest(s, x, s.round);
+  applyStrategySwitch(c, d, null);
   const months = monthsInRound(s.config, s.round);
   x.oneOffCosts = oneOffCosts(c, d);
   for (const id of d.fires) c.team = c.team.filter((e) => e.id !== id);
   x.distraction += REPUTATION_ACTIONS[d.reputationAction].distraction + 0.1 * d.pitches.length;
   for (const id of d.acceptTermSheetIds) acceptTermSheet(s, c, id, s.round, report);
-  processLoanRequest(s, x, s.round);
-  c.price = d.price;
-  if (c.product.launched) c.mrr = c.customers * c.price;
+  applyPrice(s, x, d.price);
   // Assume every offer (and accepted counter-offer) is accepted.
   let hiringCost = 0;
   const offers = [
