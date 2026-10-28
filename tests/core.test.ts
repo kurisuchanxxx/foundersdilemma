@@ -19,6 +19,10 @@ import type { CompanySetup, GameState } from "../src/core";
 import { createRng } from "../src/core/rng";
 import { applyEquityRound, createCapTable, departHolder, grantOptions, vestedShares } from "../src/core/engine/captable";
 import { botDecision } from "../src/core/engine/bots";
+import { resolveDilemma } from "../src/core/engine/dilemmas";
+import { loanLimit } from "../src/core/engine/finance";
+import { deferredRevenue } from "../src/core/engine/util";
+import { DILEMMAS, LENDERS } from "../src/core";
 import { priceConversion } from "../src/core/engine/market";
 
 function human(name = "Team Alpha", sector: CompanySetup["sector"] = "saas"): CompanySetup {
@@ -247,5 +251,61 @@ describe("pricing", () => {
       };
       expect(wealth("max")).toBeLessThan(wealth("wtp"));
     }
+  });
+});
+
+describe("cash accounting", () => {
+  function launched(seed: string) {
+    const state = newGame(seed, 1);
+    const c = state.companies[0];
+    c.product.launched = true;
+    c.customers = 200;
+    c.price = 300;
+    c.mrr = 60_000;
+    return { state, c };
+  }
+
+  it("annual prepayment brings cash forward instead of creating it", () => {
+    const { state, c } = launched("PREPAY-1");
+    const t = DILEMMAS.find((d) => d.id === "annual_prepay")!;
+    const context = t.prepare!({ company: c, state, netBurn: 0, runway: 99 })!;
+    c.dilemma = {
+      id: "d1", templateId: t.id, round: state.round, title: t.title, description: t.description,
+      options: t.options.map((o) => ({ id: o.id, label: o.label, description: o.description })), concept: t.concept,
+      context: { cashValue: context.cashValue as number }, chosen: null, outcome: null,
+    };
+    const cash = c.cash;
+    resolveDilemma(state, c, "offer", state.round, createRng("x"), { round: 1, companyId: c.id, lines: [], pitchResults: [], hiringResults: [], eventIds: [], insights: [], decision: null });
+    const received = c.cash - cash;
+    expect(received).toBeGreaterThan(0);
+    // 20% discount: what was collected now is 80% of the revenue owed over the next 12 months
+    expect(received).toBeCloseTo(0.8 * deferredRevenue(c), 0);
+  });
+
+  it("customers who prepaid do not pay again while the prepayment lasts", () => {
+    const a = launched("PREPAY-2");
+    const b = launched("PREPAY-2");
+    b.c.prepayments = [{ monthly: 1_000, monthsLeft: 12 }];
+    advanceRound(a.state);
+    advanceRound(b.state);
+    expect(a.c.cash - b.c.cash).toBeCloseTo(3_000, 0);
+    expect(b.c.prepayments[0].monthsLeft).toBe(9);
+  });
+
+  it("bank loans cannot be stacked beyond the limit", () => {
+    const { state, c } = launched("LOAN-1");
+    const bank = LENDERS.find((l) => l.id === "loan_bank")!;
+    expect(loanLimit(c, bank, state.round).max).toBe(250_000);
+    c.loans.push({ id: "l1", lenderId: bank.id, lenderName: bank.name, principal: 200_000, remaining: 200_000, annualRate: 0.075, monthlyPayment: 9_000, monthsLeft: 24, personalGuarantee: true, startRound: 1 });
+    expect(loanLimit(c, bank, state.round).max).toBe(50_000);
+  });
+
+  it("venture debt needs a recent VC round and is sized on it", () => {
+    const { c } = launched("LOAN-2");
+    const vd = LENDERS.find((l) => l.id === "loan_venture")!;
+    c.fundingHistory.push({ id: "f1", round: 1, investorId: "seed_x", investorName: "Seed", type: "seed", instrument: "equity", amount: 300_000, preMoney: 1_200_000, postMoney: 1_500_000, equityPct: 0.2, boardSeat: true });
+    expect(loanLimit(c, vd, 2).max).toBe(105_000);
+    expect(loanLimit(c, vd, 2).checks.every((ch) => ch.met)).toBe(true);
+    expect(loanLimit(c, vd, 6).checks.every((ch) => ch.met)).toBe(false);
   });
 });

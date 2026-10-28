@@ -1,4 +1,4 @@
-import { lt, type LText } from "../text";
+import { lt, moneyL, type LText, type LTextParams } from "../text";
 import type { Company, EffectBundle, GameState, SectorId } from "../types";
 
 // "Founder's dilemmas": situations with no obviously right answer. Each one maps to a
@@ -56,7 +56,8 @@ export interface DilemmaTemplate {
   concept: string;
   /** 0 = not eligible. */
   weight: (ctx: DilemmaContext) => number;
-  prepare?: (ctx: DilemmaContext) => Record<string, string | number> | null;
+  /** Values for the texts; numbers and strings are also kept on the instance for the resolution. */
+  prepare?: (ctx: DilemmaContext) => LTextParams | null;
   options: DilemmaOptionDef[];
 }
 
@@ -91,7 +92,7 @@ export const DILEMMAS: DilemmaTemplate[] = [
     weight: ({ company }) => (company.product.launched && B2B.includes(company.sector) ? 1 : 0),
     prepare: ({ company }) => {
       const n = Math.max(1, Math.round(company.customers * 0.12));
-      return { customers: n, mrr: `€${Math.round(n * company.price).toLocaleString("en-US")}` };
+      return { customers: n, mrr: moneyL(Math.round(n * company.price)) };
     },
     options: [
       {
@@ -321,7 +322,7 @@ export const DILEMMAS: DilemmaTemplate[] = [
     prepare: ({ company, netBurn }) => {
       const amount = Math.max(50_000, Math.round((Math.max(netBurn, 10_000) * 6) / 10_000) * 10_000);
       const cap = Math.max(500_000, Math.round((company.valuation * 0.5) / 10_000) * 10_000);
-      return { amountValue: amount, capValue: cap, amount: `€${amount.toLocaleString("en-US")}`, cap: `€${cap.toLocaleString("en-US")}` };
+      return { amountValue: amount, capValue: cap, amount: moneyL(amount), cap: moneyL(cap) };
     },
     options: [
       {
@@ -577,7 +578,7 @@ export const DILEMMAS: DilemmaTemplate[] = [
       state.round >= 3 && state.round < state.config.totalRounds && company.team.length >= 2 && (company.pmf.score < 35 || runway < 5) ? 1 : 0,
     prepare: ({ company }) => {
       const value = (company.team.length + company.founders.filter((f) => f.active).length) * 250_000;
-      return { valueAmount: value, value: `€${value.toLocaleString("en-US")}` };
+      return { valueAmount: value, value: moneyL(value) };
     },
     options: [
       {
@@ -607,18 +608,18 @@ export const DILEMMAS: DilemmaTemplate[] = [
     weight: ({ company }) => (company.product.launched && B2B.includes(company.sector) && company.mrr > 5_000 ? 0.8 : 0),
     prepare: ({ company }) => {
       const cash = Math.round((company.mrr * 0.25 * 12 * 0.8) / 1_000) * 1_000;
-      return { cashValue: cash, cash: `€${cash.toLocaleString("en-US")}` };
+      return { cashValue: cash, cash: moneyL(cash) };
     },
     options: [
       {
         id: "offer",
         label: lt("Offer the discount", "Offri lo sconto"),
         description: lt(
-          "About a quarter of customers prepay: ~{cash} now, lower margin for a while, but they will not churn.",
-          "Circa un quarto dei clienti paga in anticipo: ~{cash} subito, margine più basso per un po', ma non abbandoneranno.",
+          "About a quarter of customers prepay: ~{cash} now, then no payments from them for 12 months (you gave up 20% of that revenue), but they will not churn.",
+          "Circa un quarto dei clienti paga in anticipo: ~{cash} subito, poi per 12 mesi nessun pagamento da loro (hai rinunciato al 20% di quei ricavi), ma non abbandoneranno.",
         ),
-        outcome: lt("Prepaid contracts boosted your cash.", "I contratti prepagati hanno rinforzato la cassa."),
-        effects: { modifier: { rounds: 2, effects: { gm: -0.05, churn: 0.85 } } },
+        outcome: lt("Prepaid contracts boosted your cash today; the next 12 months will bring in less.", "I contratti prepagati hanno rinforzato la cassa oggi; i prossimi 12 mesi incasserai meno."),
+        effects: { modifier: { rounds: 2, effects: { churn: 0.85 } } },
         special: { kind: "annualPrepay" },
       },
       {

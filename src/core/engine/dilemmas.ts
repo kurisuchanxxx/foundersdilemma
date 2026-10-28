@@ -24,15 +24,17 @@ export function generateDilemma(state: GameState, c: Company, round: number, net
   const pick = rng.weighted(weights, (x) => x.w);
   if (!pick) return null;
   const t = pick.t;
-  const context = t.prepare ? t.prepare(ctx) : {};
-  if (context === null) return null;
+  const params = t.prepare ? t.prepare(ctx) : {};
+  if (params === null) return null;
+  // bilingual values (money in each language's format) only go into the texts
+  const context = Object.fromEntries(Object.entries(params).filter((e): e is [string, string | number] => typeof e[1] !== "object"));
   return {
     id: nextId(state, "dil"),
     templateId: t.id,
     round,
     title: t.title,
-    description: fill(t.description, context),
-    options: t.options.map((o) => ({ id: o.id, label: fill(o.label, context), description: fill(o.description, context) })),
+    description: fill(t.description, params),
+    options: t.options.map((o) => ({ id: o.id, label: fill(o.label, params), description: fill(o.description, params) })),
     concept: t.concept,
     context,
     chosen: null,
@@ -207,9 +209,13 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
       c.mrr = c.customers * c.price;
       return false;
     }
-    case "annualPrepay":
-      c.cash += Number(d.context.cashValue ?? 0);
+    case "annualPrepay": {
+      // a quarter of customers pay 12 months upfront at a 20% discount: no further payments from them for a year
+      const cash = Number(d.context.cashValue ?? 0);
+      c.cash += cash;
+      c.prepayments = [...(c.prepayments ?? []), { monthly: cash / (12 * 0.8), monthsLeft: 12 }];
       return false;
+    }
   }
   return false;
 }

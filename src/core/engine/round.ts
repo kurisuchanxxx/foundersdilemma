@@ -25,7 +25,7 @@ import { rivalMoves } from "./rivals";
 import { applyStrategySwitch } from "./strategy";
 import { computeCapacities, moraleTarget, resignationChance, stressTarget } from "./team";
 import { updateValuation } from "./valuation";
-import { clamp, clamp01, effectiveModifiers, featuresFor, headcount } from "./util";
+import { clamp, clamp01, effectiveModifiers, featuresFor, headcount, prepaidMonthly } from "./util";
 
 function newReport(round: number, companyId: string): RoundReport {
   return { round, companyId, lines: [], pitchResults: [], hiringResults: [], eventIds: [], insights: [], decision: null };
@@ -135,7 +135,7 @@ function lastMonthNet(state: GameState, x: SimCtx, round: number): number {
   const gm = clamp(x.sector.grossMargin + x.mods.gm, 0.05, 0.95);
   const exp = monthlyExpenses(state, x.c, x.d, round, x.cap.traits.burn).total;
   const debt = x.c.loans.reduce((s, l) => s + l.monthlyPayment, 0);
-  return (x.c.product.launched ? x.c.mrr * gm : 0) - exp - debt;
+  return (x.c.product.launched ? x.c.mrr * gm : 0) - prepaidMonthly(x.c) - exp - debt;
 }
 
 function projectedRunway(state: GameState, x: SimCtx, round: number): number {

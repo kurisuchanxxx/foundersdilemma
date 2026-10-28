@@ -636,12 +636,13 @@ function FinanceTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<D
 
 function LoanPicker({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<Decision>) => void }) {
   const f = useFmt();
+  const game = useGame();
   const lenderId = d.loanRequest?.lenderId ?? null;
   return (
     <div className="col gap-8">
       <OptionCard on={!lenderId} onClick={() => set({ loanRequest: null })} title={f.tx("No loan", "Nessun prestito")} />
       {LENDERS.map((l) => {
-        const lim = loanLimit(c, l);
+        const lim = loanLimit(c, l, game.round);
         const ok = lim.checks.every((ch) => ch.met) && lim.max > 0;
         const on = lenderId === l.id;
         return (

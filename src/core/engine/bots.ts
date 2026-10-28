@@ -170,8 +170,8 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
     if (d.pitches.length === 0 && runway < 9) {
       const grant = GRANTS.find((g) => grantChecks(c, g.id).every((ch) => ch.met));
       if (grant) d.grantApplication = grant.id;
-      const lender = LENDERS.find((l) => l.type === "bank" && loanLimit(c, l).checks.every((ch) => ch.met) && loanLimit(c, l).max > 20_000);
-      if (lender && c.botStyle !== "lean") d.loanRequest = { lenderId: lender.id, amount: loanLimit(c, lender).max };
+      const lender = LENDERS.find((l) => l.type === "bank" && loanLimit(c, l, state.round).checks.every((ch) => ch.met) && loanLimit(c, l, state.round).max > 20_000);
+      if (lender && c.botStyle !== "lean") d.loanRequest = { lenderId: lender.id, amount: loanLimit(c, lender, state.round).max };
     }
   }
 

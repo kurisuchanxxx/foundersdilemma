@@ -1,7 +1,7 @@
 import { SECTORS } from "../data/sectors";
 import type { Company, GameState, ValuationBreakdown } from "../types";
 import { headcount } from "./util";
-import { effectiveModifiers } from "./util";
+import { deferredRevenue, effectiveModifiers } from "./util";
 
 /** Annualised MRR growth over (up to) the last 6 months. */
 export function annualGrowth(c: Company): number {
@@ -60,7 +60,7 @@ export function computeValuation(state: GameState, c: Company, round = state.rou
     anchored = 0.6 * modelValue + 0.4 * c.lastPostMoney;
   }
   const debt = c.loans.reduce((x, l) => x + l.remaining, 0);
-  const netCash = 0.5 * (c.cash - debt);
+  const netCash = 0.5 * (c.cash - debt - deferredRevenue(c));
   const total = c.status === "bankrupt" ? 0 : Math.max(50_000, anchored + netCash);
   return {
     arr,

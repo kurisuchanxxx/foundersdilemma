@@ -514,8 +514,8 @@ export const LENDERS: LenderDef[] = [
     name: "Banca del Territorio",
     type: "bank",
     description: lt(
-      "Bank loan up to 8x your monthly revenue (max €250k), 24 months at 7.5%. The bank asks for a personal guarantee from the founders.",
-      "Prestito bancario fino a 8 volte il fatturato mensile (max 250k€), 24 mesi al 7,5%. La banca chiede una garanzia personale ai fondatori.",
+      "Bank loan up to 8x your monthly revenue (max €250k, including what you still owe the bank), 24 months at 7.5%. The bank asks for a personal guarantee from the founders.",
+      "Prestito bancario fino a 8 volte il fatturato mensile (max 250k€, compreso quanto devi ancora alla banca), 24 mesi al 7,5%. La banca chiede una garanzia personale ai fondatori.",
     ),
     annualRate: 0.075,
     termMonths: 24,
@@ -528,8 +528,8 @@ export const LENDERS: LenderDef[] = [
     name: "Atlas Venture Debt",
     type: "ventureDebt",
     description: lt(
-      "Venture debt for VC-backed companies: up to 35% of your last equity round, 36 months at 12% plus 0.5% warrants.",
-      "Venture debt per aziende finanziate da VC: fino al 35% dell'ultimo round equity, 36 mesi al 12% più warrant dello 0,5%.",
+      "Venture debt for companies with a VC round in the last 3 rounds: up to 35% of that round (minus venture debt still owed), 36 months at 12% plus 0.5% warrants.",
+      "Venture debt per aziende con un round VC negli ultimi 3 round: fino al 35% di quel round (meno il venture debt ancora da restituire), 36 mesi al 12% più warrant dello 0,5%.",
     ),
     annualRate: 0.12,
     termMonths: 36,

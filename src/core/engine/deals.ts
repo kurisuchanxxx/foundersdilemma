@@ -63,6 +63,15 @@ function mergeInto(state: GameState, buyer: Company, target: Company, round: num
   }
   target.team = [];
   target.customers = 0;
+  // buying the company means buying its balance sheet: cash, debts and prepaid contracts come along
+  const cash = target.cash;
+  const debt = target.loans.reduce((s, l) => s + l.remaining, 0);
+  buyer.cash += cash;
+  buyer.loans.push(...target.loans);
+  buyer.prepayments = [...(buyer.prepayments ?? []), ...(target.prepayments ?? [])];
+  target.cash = 0;
+  target.loans = [];
+  target.prepayments = [];
   buyer.morale = clamp(buyer.morale - 0.03, 0.05, 1);
   report?.lines.push({
     kind: "good",
@@ -70,6 +79,11 @@ function mergeInto(state: GameState, buyer: Company, target: Company, round: num
       ? fill(lt("Acquisition of {t} completed: +{c} customers and {n} people join the team.", "Acquisizione di {t} completata: +{c} clienti e {n} persone entrano nel team."), { t: target.name, c: Math.round(customers), n: people })
       : fill(lt("Acquisition of {t} completed: {n} people and their know-how join the team.", "Acquisizione di {t} completata: {n} persone e le loro competenze entrano nel team."), { t: target.name, n: people }),
   });
+  if (cash > 0 || debt > 0)
+    report?.lines.push({
+      kind: "finance",
+      text: fill(lt("With {t} you also took over its cash ({c}) and its debts ({d}).", "Con {t} avete rilevato anche la sua cassa ({c}) e i suoi debiti ({d})."), { t: target.name, c: moneyL(cash), d: moneyL(debt) }),
+    });
 }
 
 /** Sends partnership proposals: the other team answers next round. */

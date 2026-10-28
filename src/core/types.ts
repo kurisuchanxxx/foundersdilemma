@@ -407,6 +407,12 @@ export interface Loan {
   startRound: number;
 }
 
+export interface Prepayment {
+  /** Monthly revenue already collected in advance. */
+  monthly: number;
+  monthsLeft: number;
+}
+
 export interface FundingRecord {
   id: string;
   round: number;
@@ -868,6 +874,8 @@ export interface Company {
   lastPricedRound: number | null;
   totalRaised: number;
   rescues: number;
+  /** Annual contracts paid upfront: revenue still to be earned without new cash (deferred revenue). */
+  prepayments?: Prepayment[];
 
   // product
   product: ProductState;

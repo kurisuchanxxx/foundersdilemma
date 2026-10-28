@@ -70,6 +70,16 @@ export function effectiveModifiers(state: GameState, company: Company | null, se
   return out;
 }
 
+/** Monthly revenue already collected through annual prepayments (no new cash this month). */
+export function prepaidMonthly(c: Company): number {
+  return (c.prepayments ?? []).reduce((sum, p) => sum + (p.monthsLeft > 0 ? p.monthly : 0), 0);
+}
+
+/** Revenue still to be delivered to customers who prepaid: a liability, like debt. */
+export function deferredRevenue(c: Company): number {
+  return (c.prepayments ?? []).reduce((sum, p) => sum + p.monthly * Math.max(0, p.monthsLeft), 0);
+}
+
 export function activeFounders(c: Company) {
   return c.founders.filter((f) => f.active);
 }
