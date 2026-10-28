@@ -23,7 +23,7 @@ import { createRng } from "../src/core/rng";
 import { applyEquityRound, createCapTable, departHolder, grantOptions, vestedShares } from "../src/core/engine/captable";
 import { botDecision } from "../src/core/engine/bots";
 import { resolveDilemma } from "../src/core/engine/dilemmas";
-import { loanLimit } from "../src/core/engine/finance";
+import { acceptTermSheet, loanLimit } from "../src/core/engine/finance";
 import { deferredRevenue } from "../src/core/engine/util";
 import { DILEMMAS, LENDERS } from "../src/core";
 import { priceConversion } from "../src/core/engine/market";
@@ -338,6 +338,18 @@ describe("ownership, control and valuation", () => {
     c.safes.push({ id: "s1", investorId: "a", investorName: "Angel", amount: 300_000, cap: 1_000_000, round: 1 });
     c.safes.push({ id: "s2", investorId: "b", investorName: "Angel 2", amount: 200_000, cap: 1_000_000, round: 1 });
     expect(foundersOwnership(c)).toBeCloseTo(0.5, 5);
+  });
+
+  it("refuses a SAFE that would take the outstanding SAFEs above 60% of the company", () => {
+    const state = newGame("SAFE-STACK");
+    const c = state.companies[0];
+    c.safes.push({ id: "s1", investorId: "a", investorName: "Angel", amount: 500_000, cap: 1_000_000, round: 1 });
+    c.termSheets.push({ id: "ts1", investorId: "angel_mark", investorName: "Mark", amount: 200_000, valuation: 1_000_000, instrument: "safe", validRound: state.round, boardSeat: false, poolTopUp: 0, liquidationPref: 1, note: { en: "", it: "" } });
+    const cash = c.cash;
+    acceptTermSheet(state, c, "ts1", state.round, { round: state.round, companyId: c.id, lines: [], pitchResults: [], hiringResults: [], eventIds: [], insights: [], decision: null });
+    expect(c.safes).toHaveLength(1);
+    expect(c.cash).toBe(cash);
+    expect(c.termSheets).toHaveLength(0);
   });
 
   it("gives at most two board seats to the founders", () => {

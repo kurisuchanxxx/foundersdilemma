@@ -135,7 +135,9 @@ function lastMonthNet(state: GameState, x: SimCtx, round: number): number {
   const gm = clamp(x.sector.grossMargin + x.mods.gm, 0.05, 0.95);
   const exp = monthlyExpenses(state, x.c, x.d, round, x.cap.traits.burn).total;
   const debt = x.c.loans.reduce((s, l) => s + l.monthlyPayment, 0);
-  return (x.c.product.launched ? x.c.mrr * gm : 0) - prepaidMonthly(x.c) - exp - debt;
+  const revenue = x.c.product.launched ? x.c.mrr : 0;
+  // prepaid customers pay nothing this month (as in financeMonth, never more than the revenue itself)
+  return revenue * gm - Math.min(prepaidMonthly(x.c), revenue) - exp - debt;
 }
 
 function projectedRunway(state: GameState, x: SimCtx, round: number): number {

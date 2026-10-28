@@ -69,7 +69,7 @@ const CONCEPT_PROMPTS: Record<string, LText> = {
 
 export function discussionPrompts(game: GameState): LText[] {
   const total = Math.max(1, game.config.totalRounds);
-  const phase = PHASE.find((p) => game.round <= Math.max(1, Math.round(p.upTo * total))) ?? PHASE[PHASE.length - 1];
+  const phase = game.round >= total ? PHASE[PHASE.length - 1] : (PHASE.find((p) => game.round <= Math.max(1, Math.round(p.upTo * total))) ?? PHASE[PHASE.length - 1]);
   const out = [...phase.prompts];
   for (const e of game.outlook) {
     if (e.concept && CONCEPT_PROMPTS[e.concept]) out.unshift(CONCEPT_PROMPTS[e.concept]);

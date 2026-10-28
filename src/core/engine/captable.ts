@@ -279,6 +279,11 @@ function safeRawPct(c: Company): number {
   return c.safes.reduce((s, x) => s + x.amount / Math.max(1, x.cap), 0);
 }
 
+/** Share of the company that new SAFEs can still take before the outstanding stack hits the limit. */
+export function safeRoom(c: Company): number {
+  return Math.max(0, SAFE_LIMIT - safeRawPct(c));
+}
+
 /** Ownership a SAFE would represent if it converted at its cap today. */
 export function safeImpliedPct(c: Company): number {
   return Math.min(SAFE_LIMIT, safeRawPct(c));

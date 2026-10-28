@@ -2,7 +2,7 @@ import { DILEMMAS, dilemmaTemplate, type DilemmaContext, type DilemmaOptionDef, 
 import type { Rng } from "../rng";
 import { fill, lt, moneyL } from "../text";
 import type { Company, DilemmaInstance, GameState, RoundReport } from "../types";
-import { addGrant, grantOptions } from "./captable";
+import { addGrant, grantOptions, safeRoom } from "./captable";
 import { applyBundle } from "./effects";
 import { executeExit } from "./exit";
 import { addProfessionalCeo, cofounderLeaves, fireEmployee, resignEmployee } from "./people";
@@ -141,8 +141,10 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
       return false;
     }
     case "bridge": {
-      const amount = Number(d.context.amountValue ?? 0);
       const cap = Number(d.context.capValue ?? 1_000_000);
+      // the existing investors never take the SAFE stack above its limit
+      const amount = Math.min(Number(d.context.amountValue ?? 0), Math.floor((safeRoom(c) * cap) / 1_000) * 1_000);
+      if (amount <= 0) report.lines.push({ kind: "finance", text: lt("The bridge could not close: your SAFEs already cover most of the company.", "Il round ponte non è potuto partire: i vostri SAFE coprono già la maggior parte dell'azienda.") });
       if (amount > 0) {
         c.safes.push({ id: nextId(state, "safe"), investorId: "bridge", investorName: "Bridge (existing investors)", amount, cap, round });
         c.cash += amount;

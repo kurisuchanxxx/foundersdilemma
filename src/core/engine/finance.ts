@@ -4,7 +4,7 @@ import { SECTORS } from "../data/sectors";
 import type { Rng } from "../rng";
 import { fill, lt, moneyShort, type LText, moneyL, decL } from "../text";
 import type { Company, Decision, GameState, Instrument, Pitch, PitchResult, RequirementCheck, RoundReport } from "../types";
-import { SAFE_LIMIT, applyEquityRound, issueWarrants, totalShares } from "./captable";
+import { applyEquityRound, issueWarrants, safeRoom, totalShares } from "./captable";
 import type { SimCtx } from "./context";
 import { applyBundle } from "./effects";
 import { DISCOVERY } from "./product";
@@ -149,6 +149,11 @@ export function equityPctFor(p: Pitch): number {
   return p.instrument === "safe" ? p.amount / Math.max(1, p.valuation) : p.amount / Math.max(1, p.valuation + p.amount);
 }
 
+const SAFE_STACK_REASON = lt(
+  "Your SAFEs would already convert into most of the company: raise a priced round first.",
+  "I vostri SAFE si convertirebbero già nella maggior parte dell'azienda: fate prima un round con prezzo.",
+);
+
 function rejection(inv: InvestorDef, reason: LText, checks: RequirementCheck[], fair: number, p: Pitch): PitchResult {
   return { investorId: inv.id, investorName: inv.name, outcome: "rejected", reason, amount: p.amount, valuation: p.valuation, fairValuation: fair, checks };
 }
@@ -207,9 +212,7 @@ export function assessPitch(state: GameState, c: Company, p: Pitch, rng: Rng, _r
   if (dilution > 0.4) {
     return done(rejection(inv, lt("Selling that much of the company would demotivate the founders. Ask for less money or a higher valuation.", "Cedere così tanto dell'azienda demotiverebbe i fondatori. Chiedi meno soldi o una valutazione più alta."), checks, fair, p));
   }
-  if (p.instrument === "safe" && c.safes.reduce((s, x) => s + x.amount / Math.max(1, x.cap), 0) + dilution > SAFE_LIMIT) {
-    return done(rejection(inv, lt("Your SAFEs would already convert into most of the company: raise a priced round first.", "I vostri SAFE si convertirebbero già nella maggior parte dell'azienda: fate prima un round con prezzo."), checks, fair, p));
-  }
+  if (p.instrument === "safe" && dilution > safeRoom(c)) return done(rejection(inv, SAFE_STACK_REASON, checks, fair, p));
 
   // Equity crowdfunding: the crowd decides.
   if (inv.type === "crowdfunding") {
@@ -334,6 +337,12 @@ export function allocateDeals(state: GameState, candidates: PitchCandidate[], ro
     for (const k of list) {
       const deal = k.assessment.close!;
       const cap = investorCapacity(state, inv, round);
+      // several SAFEs can be pitched in the same round: the stack is checked again when each one closes
+      if (deal.instrument === "safe" && deal.amount / Math.max(1, deal.valuation) > safeRoom(k.c)) {
+        k.assessment.result.outcome = "rejected";
+        k.assessment.result.reason = SAFE_STACK_REASON;
+        continue;
+      }
       if (cap.slotsLeft >= 1 && deal.amount <= cap.capitalLeft) {
         closeDeal(state, k.c, inv, deal, round, k.report);
         recordDeal(state, inv, k.c.id, deal.amount, round);
@@ -433,6 +442,11 @@ export function acceptTermSheet(state: GameState, c: Company, tsId: string, roun
   if (!ts || ts.validRound < round) return;
   const inv = investorDef(ts.investorId);
   if (!inv) return;
+  if (ts.instrument === "safe" && ts.amount / Math.max(1, ts.valuation) > safeRoom(c)) {
+    report.lines.push({ kind: "finance", text: fill(lt("The SAFE from {n} lapsed: your SAFEs would convert into most of the company.", "Il SAFE di {n} è decaduto: i vostri SAFE si convertirebbero nella maggior parte dell'azienda."), { n: inv.name }) });
+    c.termSheets = c.termSheets.filter((t) => t.id !== tsId);
+    return;
+  }
   if (investorCapacity(state, inv, round).capitalLeft < ts.amount) {
     report.lines.push({ kind: "finance", text: fill(lt("{n} has no capital left: the term sheet lapsed.", "{n} non ha più capitale: il term sheet è decaduto."), { n: inv.name }) });
     c.termSheets = c.termSheets.filter((t) => t.id !== tsId);
