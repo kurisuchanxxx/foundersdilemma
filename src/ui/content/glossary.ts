@@ -583,7 +583,10 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "team",
     short: lt("Stress degrades decisions; burnout stops companies.", "Lo stress peggiora le decisioni; il burnout ferma le aziende."),
     body: lt("Working 80 hours a week raises output in the short run and stress in the long run.", "Lavorare 80 ore a settimana aumenta la produzione nel breve e lo stress nel lungo."),
-    inGame: lt("Founder stress reduces founders' output above 0.6; two months above 0.85 cause burnout.", "Lo stress riduce la produzione dei fondatori sopra 0,6; due mesi sopra 0,85 causano burnout."),
+    inGame: lt(
+      "Hours raise the founders' output (×1.15 at 60h, ×1.3 at 80h), but every consecutive month at 60-80 hours adds fatigue and stress. Above 60% stress output falls, above 85% for two months comes burnout: three months at half speed. Rest (50h or less) and vacations reset the fatigue.",
+      "Le ore aumentano la produttività dei fondatori (×1,15 a 60h, ×1,3 a 80h), ma ogni mese consecutivo a 60-80 ore aggiunge fatica e stress. Sopra il 60% di stress la produttività cala, sopra l'85% per due mesi arriva il burnout: tre mesi a metà velocità. Il riposo (50 ore o meno) e le vacanze azzerano la fatica.",
+    ),
   },
   {
     id: "richVsKing",

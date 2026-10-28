@@ -224,7 +224,12 @@ export function stressTarget(c: Company, d: Decision | null, runway: number, rou
   if (runway < 3) s += 0.35;
   else if (runway < 6) s += 0.2;
   else if (runway < 12) s += 0.08;
-  s += HOURS_INFO[d?.founderHours ?? 50]?.stress ?? 0;
+  const hours = d?.founderHours ?? 50;
+  s += HOURS_INFO[hours]?.stress ?? 0;
+  // long stretches of 60-80 hour weeks wear founders down: the cost of overwork grows month after month
+  const tired = Math.min(12, c.overworkMonths ?? 0);
+  if (hours >= 80) s += 0.035 * tired;
+  else if (hours >= 60) s += 0.01 * tired;
   if (c.morale < 0.5) s += 0.12;
   if (c.pmf.score < 40 && round >= 6) s += 0.1;
   s += 0.05 * (d?.pitches.length ?? 0);

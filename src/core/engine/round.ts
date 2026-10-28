@@ -151,6 +151,9 @@ function teamMonth(state: GameState, x: SimCtx, month: number, round: number): v
   const ref = pts.length >= 3 ? pts[pts.length - 3].mrr : pts.length > 0 ? pts[0].mrr : 0;
   const growth = ref > 0 ? c.mrr / ref - 1 : c.mrr > 0 ? 0.3 : 0;
   c.morale = clamp(c.morale + (moraleTarget(c, x.d, runway, growth, x.mods.morale) - c.morale) * 0.25, 0.05, 1);
+  // fatigue: grows with every month at 60+ hours, rest and vacations bring it down
+  const tired = c.overworkMonths ?? 0;
+  c.overworkMonths = x.d.vacation ? 0 : x.d.founderHours >= 60 ? tired + 1 : Math.max(0, tired - 2);
   c.founderStress = clamp01(c.founderStress + (stressTarget(c, x.d, runway, round, x.mods.stress) - c.founderStress) * 0.3);
   if (c.burnoutMonthsLeft > 0) c.burnoutMonthsLeft -= 1;
   c.stressStreak = c.founderStress > 0.85 ? c.stressStreak + 1 : 0;

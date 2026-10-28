@@ -445,8 +445,10 @@ function PeopleTab({ c, d, set }: { c: Company; d: Decision; set: (p: Partial<De
           onChange={(v) => set({ founderHours: v })}
         />
         <p className="small muted mt-8">
-          {f.L(HOURS_INFO[d.founderHours].label)} · {f.tx("output", "produttività")} ×{HOURS_INFO[d.founderHours].output} · {f.tx("stress", "stress")} {HOURS_INFO[d.founderHours].stress >= 0 ? "+" : ""}
-          {HOURS_INFO[d.founderHours].stress}
+          {f.L(HOURS_INFO[d.founderHours].label)} · {f.tx("output", "produttività")} ×{f.num(HOURS_INFO[d.founderHours].output, 2)} · {f.tx("stress", "stress")} {HOURS_INFO[d.founderHours].stress >= 0 ? "+" : "−"}
+          {f.pct(Math.abs(HOURS_INFO[d.founderHours].stress))}
+          {d.founderHours >= 60 &&
+            ` · ${f.tx("fatigue builds up every month at this pace", "a questo ritmo la fatica cresce ogni mese")}${(c.overworkMonths ?? 0) > 0 ? ` (${c.overworkMonths} ${f.tx("months so far", "mesi finora")})` : ""}`}
         </p>
         <div className="row between mt-16">
           <span className="small muted">

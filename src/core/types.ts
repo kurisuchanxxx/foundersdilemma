@@ -905,6 +905,8 @@ export interface Company {
   founderStress: number;
   stressStreak: number;
   burnoutMonthsLeft: number;
+  /** Consecutive months at 60+ hours a week without rest: fatigue builds up. */
+  overworkMonths?: number;
 
   modifiers: Modifier[];
 

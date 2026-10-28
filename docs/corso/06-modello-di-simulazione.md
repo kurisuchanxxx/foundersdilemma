@@ -151,7 +151,7 @@ Ogni settore parte con due **concorrenti con un nome** (aziende di fantasia, `da
 - **Equity attesa**: da 0,1% (junior) a 2,5% (principal), × 1,3 prima del lancio, × 1 dopo il lancio con PMF sotto 60, × 0,8 con PMF raggiunto e × 0,6 dopo un round con valutazione sopra 20 M€.
 - **Come scelgono i candidati** (`engine/hiring.ts`): punteggio = peso × stipendio offerto rispetto alla richiesta + peso × equity offerta rispetto all'attesa + 0,12 × compatibilità con il rischio della fase + 0,15 × reputazione verso i talenti + 0,18 × interesse per il settore − penalità (runway troppo breve, morale basso, fondatori stressati) + rumore. I candidati più propensi all'equity pesano di più le quote.
 - **Asta**: tutte le offerte per lo stesso candidato, anche di team diversi, si confrontano; vince il punteggio migliore sopra la soglia. Chi arriva vicino alla soglia riceve un **rilancio** (più stipendio e più equity) valido per il round successivo.
-- **Morale** e **stress dei fondatori** tendono ogni mese a un obiettivo che dipende da runway, crescita, ore lavorate, offsite, vacanza, equity diffusa. Stress sopra 0,85 per due mesi provoca **burnout**: fondatori a metà rendimento per 3 mesi. Le ore rendono 0,8 (40h), 1,0 (50h), 1,15 (60h), 1,3 (80h), ma con stress alto il rendimento cala.
+- **Morale** e **stress dei fondatori** tendono ogni mese a un obiettivo che dipende da runway, crescita, ore lavorate, offsite, vacanza, equity diffusa. Stress sopra 0,85 per due mesi provoca **burnout**: fondatori a metà rendimento per 3 mesi. Le ore rendono 0,8 (40h), 1,0 (50h), 1,15 (60h), 1,3 (80h), ma con stress sopra 0,6 il rendimento cala. Ogni mese consecutivo a 60 ore o più accumula **fatica**: lo stress obiettivo sale di 0,01 al mese a 60h e di 0,035 al mese a 80h (fino a 12 mesi); a 50 ore o meno la fatica scende di 2 mesi al mese, una vacanza la azzera. Le 80 ore rendono nel breve ma, mantenute per un anno, portano quasi sempre al burnout: nelle simulazioni non battono le 60 ore.
 - Con morale sotto 0,55 i dipendenti iniziano a dimettersi; chi ha equity non ancora maturata resta più volentieri.
 
 ## 7. Finanza
@@ -277,18 +277,18 @@ Lo script `npm run balance` gioca 60 partite con 6 aziende bot ciascuna (imposta
 
 | Gruppo | Falliti | Exit | Salvati | PMF ≥ 60 raggiunto | Valutazione mediana | Ricchezza fondatori mediana | Quota fondatori |
 |---|---|---|---|---|---|---|---|
-| Tutte (360) | 5% | 19% | 10% | 54% | 12,4 M€ | 5,4 M€ | 44% |
-| Bot lean | 5% | 19% | 11% | 95% | 10,6 M€ | 5,6 M€ | 52% |
-| Bot steady | 3% | 34% | 7% | 67% | 17,3 M€ | 8,8 M€ | 54% |
-| Bot blitz | 8% | 3% | 13% | 0% | 11,1 M€ | 2,6 M€ | 30% |
+| Tutte (360) | 5% | 19% | 12% | 53% | 13,0 M€ | 5,7 M€ | 43% |
+| Bot lean | 5% | 19% | 11% | 95% | 10,9 M€ | 5,9 M€ | 52% |
+| Bot steady | 3% | 35% | 7% | 65% | 19,6 M€ | 9,0 M€ | 51% |
+| Bot blitz | 8% | 4% | 19% | 0% | 10,2 M€ | 2,5 M€ | 30% |
 
 Letture utili in aula:
 - La strategia **lean** raggiunge il PMF molto più spesso e fallisce meno: il gioco premia la disciplina della lean startup.
 - La strategia **blitz** raccoglie di più e cresce in fretta all'inizio, ma non raggiunge mai il PMF: quando il mercato arriva alla maggioranza anticipatrice finisce nel chasm, si diluisce di più e lascia ai fondatori meno della metà della ricchezza degli steady. È il costo dello *scalare prima del fit*.
 - I settori B2B con multipli alti (DeepTech, AI, SaaS) generano più exit; consumer, e-commerce e fintech hanno più fallimenti e salvataggi per margini sottili o churn alto.
-- Con investitori dai posti limitati soffre soprattutto chi brucia molto (blitz: 8% di fallimenti e 13% di salvataggi): quando tutti chiedono soldi insieme, chi ha i numeri peggiori resta fuori.
+- Con investitori dai posti limitati soffre soprattutto chi brucia molto (blitz: 8% di fallimenti e 19% di salvataggi): quando tutti chiedono soldi insieme, chi ha i numeri peggiori resta fuori.
 - La nicchia iniziale dei bot lean porta il PMF al 95%: la testa di ponte accelera l'apprendimento.
-- I fallimenti si concentrano nei round 8-10, nella seconda metà della partita: i round semestrali (dal round 5) consumano più cassa per round e il mercato è passato alla maggioranza, più costosa da conquistare. Un buon momento per discutere di runway.
+- I fallimenti si concentrano nei round 7-10, nella seconda metà della partita: i round semestrali (dal round 5) consumano più cassa per round e il mercato è passato alla maggioranza, più costosa da conquistare. Un buon momento per discutere di runway.
 - Nelle simulazioni con un team umano, il prezzo migliore resta vicino alla disponibilità a pagare in tutti i settori: chiedere il doppio o il massimo consentito fa perdere quasi sempre.
 
 Il gioco è volutamente *indulgente* (pochi fallimenti), perché una squadra fallita impara meno dei round successivi. Per aule più esperte si può scegliere la difficoltà *Realistica*.
