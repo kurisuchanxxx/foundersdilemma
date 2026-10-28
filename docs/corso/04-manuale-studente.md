@@ -64,7 +64,7 @@ Alla prima partita parte un **tour guidato** di due minuti che mostra dove si tr
 3. In **Budget e prezzo** tenete il burn compatibile con almeno 9-12 mesi di runway.
 4. Valutate un **bando** o un **acceleratore** in **Finanza ed exit**: denaro non diluitivo o poco diluitivo all'inizio è prezioso.
 5. Rispondete al **dilemma**, se presente, e scrivete subito nel decision memo perché avete scelto così.
-6. **Riepilogo e invio**: leggete gli avvisi, poi inviate (in modalità Classe: consegnate il file al docente).
+6. **Riepilogo e invio**: leggete gli avvisi, poi inviate (in modalità Classe: consegnate il file al docente). **Non saltate mai l'invio**: un team che non decide va col pilota automatico mentre il mercato si muove, e perde capacità di sviluppo e vendita, morale e fiducia degli investitori, sempre di più a ogni round saltato. Se non volete cambiare nulla, inviate le decisioni così come sono.
 
 ## Consigli
 

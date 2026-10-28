@@ -131,6 +131,40 @@ function applyReputationAction(x: SimCtx): void {
   }
 }
 
+/**
+ * A team that takes no decision at all stands still while the market moves on: last round's settings
+ * run on autopilot, but without direction the team works at a fraction of its capacity, learns nothing
+ * new about customers and loses morale and investors' trust. Each consecutive missed round costs more.
+ */
+function applyInaction(c: Company, round: number, report: RoundReport): void {
+  const k = Math.min(3, (c.missedRounds ?? 0) + 1);
+  c.missedRounds = k;
+  c.modifiers.push({
+    id: `inaction_${round}`,
+    source: lt("No decisions taken", "Nessuna decisione presa"),
+    fromRound: round,
+    untilRound: round,
+    sectors: null,
+    effects: { dev: 1 - 0.25 * k, sales: 1 - 0.25 * k, organic: 1 - 0.2 * k, cac: 1 + 0.15 * k },
+  });
+  c.morale = clamp(c.morale - 0.06 * k, 0.05, 1);
+  c.reputation.investors = clamp(c.reputation.investors - 5 * k, 0, 100);
+  c.pmf.problemClarity = clamp01(c.pmf.problemClarity - 0.03 * k);
+  report.lines.push({
+    kind: "bad",
+    text: fill(
+      lt(
+        "No decisions this round: the company ran on autopilot while the market moved on. Development and sales at {p}% of capacity, customers' needs drifting away, team and investors losing confidence.{again}",
+        "Nessuna decisione in questo round: l'azienda è andata avanti col pilota automatico mentre il mercato si muoveva. Sviluppo e vendite al {p}% della capacità, bisogni dei clienti che cambiano senza di voi, team e investitori che perdono fiducia.{again}",
+      ),
+      {
+        p: Math.round((1 - 0.25 * k) * 100),
+        again: k > 1 ? lt(" Another round in a row without decisions: the cost grows every time.", " Un altro round di fila senza decisioni: il costo cresce ogni volta.") : "",
+      },
+    ),
+  });
+}
+
 /** Sets this round's price; customers who no longer find it worth paying leave at once. */
 function applyPrice(state: GameState, x: SimCtx, price: number): void {
   const c = x.c;
@@ -310,8 +344,13 @@ export function advanceRound(state: GameState): void {
   for (const c of state.companies) {
     if (c.status !== "active") continue;
     const report = reports.get(c.id)!;
+    const idle = !c.isBot && !c.submitted && !c.decision;
     const d = sanitizeDecision(state, c, c.decision ?? carryOverDecision(c));
-    if (!c.submitted && !c.isBot) report.lines.push({ kind: "info", text: lt("No decision submitted: last round's settings were applied.", "Nessuna decisione inviata: sono state applicate le impostazioni del round precedente.") });
+    if (idle) applyInaction(c, round, report);
+    else {
+      c.missedRounds = 0;
+      if (!c.submitted && !c.isBot) report.lines.push({ kind: "info", text: lt("Decisions not submitted: your saved draft was applied.", "Decisioni non inviate: è stata applicata la bozza salvata.") });
+    }
     c.decision = d;
     report.decision = structuredClone(d);
     const rng = createRng(state.config.seed, round, "company", c.id);

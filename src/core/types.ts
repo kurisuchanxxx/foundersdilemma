@@ -907,6 +907,8 @@ export interface Company {
   burnoutMonthsLeft: number;
   /** Consecutive months at 60+ hours a week without rest: fatigue builds up. */
   overworkMonths?: number;
+  /** Consecutive rounds in which the team took no decision at all (no submission, no draft). */
+  missedRounds?: number;
 
   modifiers: Modifier[];
 

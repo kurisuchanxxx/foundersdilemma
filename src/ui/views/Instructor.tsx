@@ -92,7 +92,7 @@ export function Instructor() {
             <div className="stat-value">
               {humans.filter((c) => c.submitted || c.status !== "active").length} / {humans.length}
             </div>
-            <p className="small faint">{allReady ? f.tx("Everyone submitted: you can advance.", "Tutti hanno inviato: puoi avanzare.") : f.tx("Missing teams will keep last round's settings.", "I team mancanti terranno le impostazioni del round precedente.")}</p>
+            <p className="small faint">{allReady ? f.tx("Everyone submitted: you can advance.", "Tutti hanno inviato: puoi avanzare.") : f.tx("Missing teams run on autopilot and lose ground.", "I team mancanti vanno col pilota automatico e perdono terreno.")}</p>
           </Card>
           <Card title={f.tx("Surprise event", "Evento a sorpresa")} icon="Zap">
             <button className="btn primary" onClick={() => setEventOpen(true)}>
@@ -249,7 +249,10 @@ export function Instructor() {
           <p>
             {f.tx("Missing teams:", "Team mancanti:")} {humans.filter((c) => c.status === "active" && !c.submitted).map((c) => c.name).join(", ")}
           </p>
-          <p className="small muted mt-8">{f.tx("They will play with their drafts or last round's settings.", "Giocheranno con le bozze o con le impostazioni del round precedente.")}</p>
+          <p className="small muted mt-8">{f.tx(
+            "Without a decision file they run on autopilot and lose ground (slower development and sales, lower morale and investors' trust), more with every missed round.",
+            "Senza file di decisioni vanno col pilota automatico e perdono terreno (sviluppo e vendite più lenti, morale e fiducia degli investitori in calo), sempre di più a ogni round saltato.",
+          )}</p>
         </Modal>
       )}
       {eventOpen && <InjectEventModal onClose={() => setEventOpen(false)} />}

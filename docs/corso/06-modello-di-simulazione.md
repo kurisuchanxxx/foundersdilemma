@@ -17,7 +17,9 @@ Questo capitolo descrive come il motore calcola i risultati, con i parametri eff
 | Trimestri | 3 mesi | 30 mesi |
 | Semestri | 6 mesi | 60 mesi |
 
-I round possono essere da 4 a 14. Sequenza di un round (`engine/round.ts`): decisioni una tantum (acquisizione, dilemma, licenziamenti, reputazione, bandi, term sheet, pitch, prestiti, prezzo), poi le aste per le assunzioni di tutti i team insieme, poi i mesi simulati (capacità del team, prodotto, mercato per settore con tutti i team, finanza, brand, team, eventi aziendali), infine controllo di solvibilità, valutazione, obiettivi e commenti del mentor.
+I round possono essere da 4 a 14.
+
+**Chi non decide perde terreno.** Un team umano che non invia decisioni e non ha nemmeno una bozza va col pilota automatico (le impostazioni del round precedente, senza azioni una tantum) e paga l'inerzia: per k round consecutivi senza decisioni (fino a 3), sviluppo e vendite al (100 − 25 × k)% della capacità, passaparola −20% × k, CAC +15% × k, morale −0,06 × k, reputazione verso gli investitori −5 × k e chiarezza del problema −0,03 × k. Basta un invio, anche senza modifiche, per azzerare il contatore. Nelle simulazioni un team che non decide mai fallisce in tutti i settori; saltare un solo round costa poco, saltarne uno sì e uno no costa molto. I bot decidono sempre. Sequenza di un round (`engine/round.ts`): decisioni una tantum (acquisizione, dilemma, licenziamenti, reputazione, bandi, term sheet, pitch, prestiti, prezzo), poi le aste per le assunzioni di tutti i team insieme, poi i mesi simulati (capacità del team, prodotto, mercato per settore con tutti i team, finanza, brand, team, eventi aziendali), infine controllo di solvibilità, valutazione, obiettivi e commenti del mentor.
 
 ## 3. Fondazione
 

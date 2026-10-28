@@ -307,8 +307,8 @@ function TopBar({ company, label, onAdvance, draftsPending, needsPin }: { compan
         >
           <p>
             {f.tx(
-              "Teams that did not submit will play with last round's settings (drafts are used if present).",
-              "I team che non hanno inviato giocheranno con le impostazioni del round precedente (se presenti, si usano le bozze).",
+              "Teams with a draft will play it. Teams that took no decision at all run on autopilot and lose ground: development and sales slow down, morale and investors' trust fall, more with every missed round.",
+              "I team con una bozza giocheranno quella. I team che non hanno preso nessuna decisione vanno col pilota automatico e perdono terreno: sviluppo e vendite rallentano, morale e fiducia degli investitori calano, sempre di più a ogni round saltato.",
             )}
           </p>
         </Modal>

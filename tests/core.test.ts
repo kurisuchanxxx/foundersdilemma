@@ -7,6 +7,7 @@ import {
   historyCsv,
   previewDecision,
   draftFor,
+  saveDraft,
   standings,
   startGame,
   submitDecision,
@@ -398,5 +399,36 @@ describe("adoption curve", () => {
     expect(segmentFor(sectorPenetration(state, s))).toBe("earlyAdopters");
     state.round = state.config.totalRounds;
     expect(segmentFor(sectorPenetration(state, s))).toBe("earlyMajority");
+  });
+});
+
+describe("teams that take no decision", () => {
+  it("lose ground, more with every missed round, while a draft counts as a decision", () => {
+    const state = newGame("IDLE-1");
+    const c = state.companies[0];
+    const morale = c.morale;
+    advanceRound(state);
+    expect(c.missedRounds).toBe(1);
+    expect(c.morale).toBeLessThan(morale);
+    expect(state.reports.find((r) => r.companyId === c.id && r.round === 1)!.lines.some((l) => l.kind === "bad" && l.text.en.includes("autopilot"))).toBe(true);
+    advanceRound(state);
+    expect(c.missedRounds).toBe(2);
+    saveDraft(state, c.id, draftFor(state, c));
+    advanceRound(state);
+    expect(c.missedRounds).toBe(0);
+  });
+
+  it("never deciding ends worse than deciding the minimum", () => {
+    const wealth = (decide: boolean) => {
+      const state = newGame("IDLE-2", 2);
+      const c = state.companies[0];
+      while (!state.finished && c.status === "active") {
+        if (decide) submitDecision(state, c.id, draftFor(state, c));
+        advanceRound(state);
+      }
+      playToEnd(state);
+      return standings(state).find((s) => s.companyId === c.id)!.founderWealth;
+    };
+    expect(wealth(false)).toBeLessThan(wealth(true));
   });
 });

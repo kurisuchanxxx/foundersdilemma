@@ -36,7 +36,7 @@ Il vostro computer conserva la copia *ufficiale* della partita. Il ciclo di ogni
 1. **Console docente > Esporta file di partita per i team.** Ottenete un file `NomeSessione_roundN.fdgame.json`: caricatelo su Moodle o in una cartella condivisa.
 2. **I team** aprono il gioco, scelgono *Partecipa a una classe*, aprono il file, selezionano il proprio team, decidono e premono **Blocca ed esporta il file delle decisioni**. Vi consegnano un file `Team_roundN.fddecision.json` (pochi kB).
 3. **Console docente > Importa i file delle decisioni**: selezionateli tutti insieme. Il riquadro conferma ogni team importato e segnala i file sbagliati (altra partita, round già passato).
-4. **Avanza il round.** Se manca qualche team, il gioco chiede conferma: chi non ha consegnato gioca con la bozza o con le impostazioni del round precedente.
+4. **Avanza il round.** Se manca qualche team, il gioco chiede conferma: chi non ha consegnato va col *pilota automatico* (le impostazioni del round precedente) e perde terreno, perché non decidere è il contrario dell'innovazione (vedi sotto).
 5. **Esporta di nuovo il file di partita** e condividetelo. I team lo importano da *Impostazioni e salvataggio > Importa la partita aggiornata dal docente* e vedono subito il report del round.
 
 Il ciclo funziona anche a distanza, con scadenze tra un incontro e l'altro.
@@ -90,7 +90,7 @@ Evitate di premiare solo il primo in classifica: valorizzate le decisioni ben ar
 | Windows: avviso di SmartScreen | *Ulteriori informazioni* > *Esegui comunque* |
 | Computer dell'ateneo senza permessi di installazione | Usate `FoundersDilemma-web.html` in Chrome, Edge, Firefox o Safari |
 | Un team ha inviato il file sbagliato | La console lo segnala (*appartiene a un'altra partita* o *è per il round N*); il team riesporta dal proprio gioco |
-| Un team non ha consegnato | Avanzate comunque: giocherà con le impostazioni del round precedente. Annotatelo per la valutazione |
+| Un team non ha consegnato | Avanzate comunque: va col pilota automatico e perde terreno (sviluppo e vendite al 75% della capacità, morale, fiducia degli investitori e chiarezza del problema in calo; il costo cresce a ogni round saltato di fila). Se l'assenza è giustificata, fate inviare anche solo le decisioni invariate, oppure in Hot-seat inviatele voi per il team: basta un invio, anche senza modifiche, per evitare la penalità |
 | Un team ha sbagliato una decisione per errore | Prima di avanzare potete reimportare un nuovo file del team: sostituisce il precedente |
 | Volete tornare indietro di un round | Ripartite dal file di partita del round precedente (conservate sempre i file esportati) o da una copia salvata in *Impostazioni e salvataggio* |
 | Un team è fallito presto | Resta in partita come osservatore: chiedetegli un post-mortem anticipato e di fare da *board advisor* per un altro team |
