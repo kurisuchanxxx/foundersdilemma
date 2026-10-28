@@ -289,6 +289,8 @@ const PRESETS: Preset[] = [
   { id: "costs", en: "Cost shock", it: "Shock dei costi", impact: "negative", effects: { gm: -0.08 }, cash: -15_000, descEn: "Energy and supplier prices jump.", descIt: "I prezzi dell'energia e dei fornitori schizzano in alto." },
   { id: "talent", en: "Talent crunch", it: "Carenza di talenti", impact: "negative", effects: { hiringBar: 0.08, salaryAsk: 1.15 }, cash: 0, descEn: "A tech giant opens an office in town and hires everyone.", descIt: "Un colosso tecnologico apre un ufficio in città e assume tutti." },
   { id: "regulation", en: "New regulation", it: "Nuova regolamentazione", impact: "negative", effects: { compliance: 2_000, dev: 0.92 }, cash: 0, descEn: "A new law requires certifications and audits.", descIt: "Una nuova legge richiede certificazioni e audit." },
+  { id: "recession", en: "Recession", it: "Recessione", impact: "negative", effects: { demand: 0.85, churn: 1.15, climate: 0.85 }, cash: 0, descEn: "Customers cut budgets: fewer purchases, more cancellations, cautious investors.", descIt: "I clienti tagliano i budget: meno acquisti, più disdette, investitori prudenti." },
+  { id: "entrant", en: "New competitor", it: "Nuovo concorrente", impact: "negative", effects: { cac: 1.2, wtp: 0.92, churn: 1.1 }, cash: 0, descEn: "A well-funded newcomer enters the market with aggressive prices and ads.", descIt: "Un nuovo arrivato ben finanziato entra nel mercato con prezzi e pubblicità aggressivi." },
   { id: "grant", en: "Government stimulus", it: "Stimolo governativo", impact: "positive", effects: { climate: 1.2 }, cash: 20_000, descEn: "A public program gives every startup a small grant.", descIt: "Un programma pubblico dà a ogni startup un piccolo contributo." },
 ];
 

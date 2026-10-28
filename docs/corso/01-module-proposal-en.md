@@ -28,7 +28,7 @@ The game makes **testable** what lectures leave abstract: the search for product
 2. **Evidence from entrepreneurship education.** Research on simulations and serious games in entrepreneurship education (Fox, Pittaway and Uzuegbunam, 2018) reports gains in motivation, understanding of interdependencies and entrepreneurial self-efficacy, provided the game comes with a structured debrief. The module is built around that debrief.
 3. **Mistakes at zero cost.** Failing, over-diluting or losing board control in a simulation costs part of a grade, not a life's savings. Assessment rewards learning from mistakes: decision memos and the post-mortem weigh more than the ranking.
 4. **A bridge between theory and tools.** Every mechanic maps to a course model and links to the in-game glossary (61 concepts with formulas and references).
-5. **Sustainable for the university.** No licences, no servers, no personal data collected. The code is open and auditable; the engine is documented and reproducible (same seed, same events), which also supports comparisons across classes and teaching research.
+5. **Sustainable for the university.** No licences, no servers, no personal data collected. The code is open and auditable; the engine is documented and deterministic (same seed and same decisions, same game; same seed, same starting market and macro events), which also supports comparisons across classes and teaching research.
 
 ### 3. Learning outcomes (Dublin descriptors)
 
@@ -75,7 +75,7 @@ The detailed session plan (in Italian) is in [02-piano-sessioni.md](02-piano-ses
 - **Game rounds** of 30-40 minutes with a projected timer. Teams use their own laptops (Classroom mode) or take turns on one computer (Hot-seat mode).
 - **Debriefs** of 30 minutes after every two rounds: standings, market news and guiding questions suggested by the instructor console.
 - **Work between sessions**: a one-page decision memo per round; rounds can also be played remotely through the file exchange cycle.
-- **Surprise events**: the instructor can inject market shocks (regulation, recession, a new competitor) to discuss resilience and pivots.
+- **Surprise events**: the instructor can inject market shocks (regulation, recession, a new competitor, an investor freeze and more) on the whole class, one sector or one team, to discuss resilience and pivots.
 
 ### 6. Assessment
 
@@ -94,18 +94,23 @@ The in-game result deliberately weighs little: reasoning matters more than luck 
 - **Software**: a free desktop app for macOS 11+ and Windows 10/11, or a single HTML file that opens in any recent browser and can be uploaded to the learning platform.
 - **Room**: a projector for the instructor console and power for laptops. Alternatively, a single computer (Hot-seat mode).
 - **Network**: not required. In Classroom mode files travel through the learning platform, e-mail, a shared folder or a USB key.
-- **Personal data**: the game neither collects nor transmits data; saves stay on the computers. Student names, if entered, appear only in reports exported by the instructor.
+- **Personal data**: the game neither collects nor transmits data over the network; saves stay on the computers. Student names and photo avatars are optional and, in Classroom mode, travel inside the game files shared with the teams: the instructor can ask for made-up names and drawn avatars only.
 - **Instructor preparation**: about 3 hours the first time (reading the guide and one solo practice game).
 
 ### 8. Core references
 
 - Blank, S. (2013). Why the lean start-up changes everything. *Harvard Business Review*, 91(5), 63-72.
+- Andreessen, M. (2007). The only thing that matters. *pmarchive* (online essay).
+- Aulet, B. (2013). *Disciplined Entrepreneurship*. Wiley.
 - Blank, S., and Dorf, B. (2012). *The Startup Owner's Manual*. K&S Ranch.
+- Brandenburger, A. M., and Nalebuff, B. J. (1996). *Co-opetition*. Currency Doubleday.
 - Ellis, S., and Brown, M. (2017). *Hacking Growth*. Crown Business.
 - Feld, B., and Mendelson, J. (2019). *Venture Deals* (4th ed.). Wiley.
 - Fox, J., Pittaway, L., and Uzuegbunam, I. (2018). Simulations in entrepreneurship education: Serious games and learning through play. *Entrepreneurship Education and Pedagogy*, 1(1), 61-89.
 - Kolb, D. A. (1984). *Experiential Learning*. Prentice-Hall.
 - Moore, G. A. (2014). *Crossing the Chasm* (3rd ed.). HarperBusiness.
+- Porter, M. E. (1980). *Competitive Strategy*. Free Press.
+- Ramanujam, M., and Tacke, G. (2016). *Monetizing Innovation*. Wiley.
 - Ries, E. (2011). *The Lean Startup*. Crown Business.
 - Rogers, E. M. (2003). *Diffusion of Innovations* (5th ed.). Free Press.
 - Wasserman, N. (2008). The founder's dilemma. *Harvard Business Review*, 86(2), 102-109.
@@ -113,6 +118,6 @@ The in-game result deliberately weighs little: reasoning matters more than luck 
 
 ### 9. Possible developments
 
-- Later editions with the same seed to compare classes and measure the effect of teaching changes.
+- Later editions with the same seed and the same sectors to compare classes from the same starting market and measure the effect of teaching changes.
 - Integration with the course's venture project: teams apply the game's metrics to their real idea.
 - Teaching research on exported decisions and results, following the university's data rules.

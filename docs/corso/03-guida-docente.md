@@ -3,10 +3,10 @@
 ## 1. Prima del corso (circa 3 ore, una tantum)
 
 1. **Installa il gioco** (vedi il [README](../../README.md#installazione)) oppure apri `FoundersDilemma-web.html` in un browser.
-2. **Gioca una partita di prova** in *Solo contro bot*, complessità *Standard*: bastano 40-60 minuti con *Simula fino alla fine* per vedere tutte le schermate e il debriefing finale.
+2. **Gioca una partita di prova** in *Solo contro bot*, complessità *Standard*: bastano 40-60 minuti, inviando a ogni round le decisioni con pochi ritocchi, per vedere tutte le schermate e il debriefing finale. Il pulsante *Simula fino alla fine* compare quando la vostra azienda esce dal gioco (exit o fallimento).
 3. **Leggi** il [piano delle sessioni](02-piano-sessioni.md) e il capitolo sul [modello di simulazione](06-modello-di-simulazione.md) almeno nelle parti su PMF, mercato e finanza.
 4. **Prepara la distribuzione**: carica su Moodle (o sulla piattaforma dell'ateneo) gli installer e il file web, con il [manuale dello studente](04-manuale-studente.md).
-5. **Scegli il seed** della classe e annotalo: con lo stesso seed potrai rigiocare o confrontare le edizioni.
+5. **Scegli il seed** della classe e annotalo: con lo stesso seed, gli stessi team e le stesse decisioni la partita si ripete identica; con decisioni diverse restano uguali il mercato di partenza e gli eventi macroeconomici, utile per confrontare le edizioni.
 
 ## 2. Creare la partita della classe
 
@@ -23,7 +23,7 @@
 | Difficoltà | **Standard** (un round di salvataggio punitivo, poi fallimento). *Indulgente* concede fino a 3 salvataggi; *Realistica* nessuno |
 | Come si decide il vincitore | **Ricchezza dei fondatori** (consigliato: rende visibile il costo della diluizione), oppure valutazione, oppure criterio bilanciato |
 | Tempo per round | 30' o 45' |
-| PIN del docente | Consigliato in Hot-seat, così gli studenti non aprono la console |
+| PIN del docente | Consigliato in Hot-seat: blocca la console e il pulsante *Avanza il round* |
 
 Poi configurate i team: nome, settore, fondatori, quote e vesting. In aula conviene farlo fare ai team stessi (in Hot-seat a turno, in modalità Classe sul vostro computer mentre il team detta le scelte, oppure raccogliendole prima con un modulo).
 
@@ -45,7 +45,7 @@ Il ciclo funziona anche a distanza, con scadenze tra un incontro e l'altro.
 
 - Selezionate il team dal riquadro in alto a sinistra: appare la schermata *Passa il computer a ...*, i dati restano nascosti finché il team non preme *Siamo ...: mostra la nostra azienda*.
 - Quando il team ha inviato le decisioni, passate al successivo. Con tutti i team pronti, *Avanza il round* nella barra in alto.
-- Con il PIN, la console docente resta bloccata per gli studenti.
+- Con il PIN, la console docente e il pulsante *Avanza il round* chiedono il PIN: gli studenti non possono avanzare da soli.
 
 ### Strumenti della console docente
 
@@ -53,10 +53,10 @@ Il ciclo funziona anche a distanza, con scadenze tra un incontro e l'altro.
 |---|---|
 | **Timer del round** (15', 10', 20', 30') | Il conto alla rovescia compare nella barra in alto per tutti |
 | **Team pronti** | Chi ha già inviato le decisioni |
-| **Evento a sorpresa** | Iniettate uno shock (titolo, settori colpiti, effetti su domanda, CAC, churn, valutazioni, clima degli investitori...). Effettivo da subito e visibile nelle news di tutti |
+| **Evento a sorpresa** | Scegliete uno degli otto shock predefiniti (blocco degli investitori, boom della domanda, recessione, nuovo concorrente, shock dei costi, carenza di talenti, nuova regolamentazione, stimolo governativo), modificate titolo e descrizione, intensità (da ×0,5 a ×2) e durata, e decidete chi colpire: tutti, un settore o un team. Effettivo da subito e visibile nelle news |
 | **Vista proiettore** | Classifica e notizie a tutto schermo, senza dati riservati |
 | **Tabella dei team** | Cassa, runway, MRR, PMF e valutazione di tutti i team: utile per il debriefing, da non proiettare durante il round |
-| **Spunti per la discussione** | Domande adattate alla fase della partita e agli eventi in corso |
+| **Spunti per la discussione** | Le domande guida del [piano delle sessioni](02-piano-sessioni.md) per la fase della partita, più quelle legate agli eventi del round |
 
 ### Esportazioni per la valutazione
 
@@ -71,7 +71,7 @@ Il ciclo funziona anche a distanza, con scadenze tra un incontro e l'altro.
 Il debriefing è il momento in cui si impara davvero. Una struttura in tre passi che funziona:
 
 1. **Cosa è successo?** Proiettate classifica e notizie. Chiedete a due team con risultati opposti di descrivere le proprie decisioni.
-2. **Perché?** Collegate i risultati a un concetto: *il vostro CAC è salito perché il settore ha superato gli early adopter e il vostro PMF era sotto 55: questo è il chasm*. Aprite la scheda corrispondente in *Impara*.
+2. **Perché?** Collegate i risultati a un concetto: *il vostro CAC è salito perché il mercato ha superato gli early adopter e il vostro PMF era sotto 55: questo è il chasm* (succede di solito verso metà partita, e il mentor lo annuncia un round prima). Aprite la scheda corrispondente in *Impara*.
 3. **E nella realtà?** Un caso reale o una domanda: *quale startup conoscete che ha scalato prima del PMF?*
 
 Le meccaniche di interazione danno ottimi spunti di debriefing:
@@ -98,4 +98,12 @@ Evitate di premiare solo il primo in classifica: valorizzate le decisioni ben ar
 
 ## 6. Dati e privacy
 
-Il gioco non usa account e non invia nulla in rete. I salvataggi sono nel database locale dell'app (o del browser) di ciascun computer; i file di partita contengono solo i nomi dei team e, se inseriti, i nomi degli studenti. Per la ricerca didattica sui CSV esportati seguite le regole dell'ateneo (consenso informato, anonimizzazione).
+Il gioco non usa account e non invia nulla in rete. I salvataggi sono nel database locale dell'app (o del browser) di ciascun computer. I file di partita contengono i nomi dei team e, se inseriti, i nomi degli studenti e le foto caricate come avatar dei fondatori: in modalità Classe arrivano a tutti i team, quindi chiedete il consenso prima di usare foto vere, oppure fate usare gli avatar disegnati. Per la ricerca didattica sui CSV esportati seguite le regole dell'ateneo (consenso informato, anonimizzazione).
+
+## 7. Integrità delle partite valutate
+
+Il gioco è pensato per imparare, non per un esame a prova di frode. Il file di partita che condividete in modalità Classe è una copia completa della partita: chi lo apre con *Apri file di partita* invece che con *Partecipa a una classe* può provare decisioni diverse e vedere i risultati in anticipo, e *Partecipa a una classe* non verifica chi sceglie quale team. Il PIN protegge la console dall'uso casuale, non da uno studente determinato. Per questo:
+
+- valutate soprattutto i decision memo, il report finale e il ragionamento (vedi [Valutazione e rubriche](05-valutazione-e-rubriche.md)), non solo la posizione in classifica;
+- se la classifica pesa sul voto, giocate i round in aula entro il tempo del timer, oppure in Hot-seat sul vostro computer;
+- conservate i file di decisione ricevuti: dicono chi ha consegnato cosa e quando.

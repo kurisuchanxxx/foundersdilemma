@@ -16,7 +16,7 @@ Il gioco rende **sperimentabili** concetti che nelle lezioni frontali restano as
 |---|---|
 | Collocazione | Modulo all'interno del corso di Startup Venturing (laurea magistrale o ultimo anno della triennale in Economia, Management, Ingegneria gestionale) |
 | Crediti | 3 ECTS (circa 75 ore di impegno: 18 d'aula, 57 di lavoro di gruppo e studio individuale) |
-| Ambito disciplinare | Economia e gestione delle imprese (in Italia SECS-P/08) |
+| Ambito disciplinare | Economia e gestione delle imprese (in Italia ECON-07/A, già SECS-P/08) |
 | Lingua | Italiano o inglese (il gioco è bilingue) |
 | Durata | 6 incontri da 3 ore, nell'arco di 3-6 settimane |
 | Partecipanti | Da 12 a 60 studenti, in 4-8 team da 3-5 persone |
@@ -29,7 +29,7 @@ Il gioco rende **sperimentabili** concetti che nelle lezioni frontali restano as
 2. **Evidenza nella didattica dell'imprenditorialità.** La letteratura sulle simulazioni e i serious game in entrepreneurship education (Fox, Pittaway e Uzuegbunam, 2018) mostra benefici su motivazione, comprensione delle interdipendenze e autoefficacia imprenditoriale, purché il gioco sia accompagnato da un debriefing strutturato. Il modulo è costruito attorno a questo debriefing.
 3. **Errori a costo zero.** Fallire, diluirsi troppo o perdere il controllo del CdA in una simulazione costa un voto parziale, non i risparmi di una vita. Il gioco premia l'apprendimento dall'errore (decision memo e post-mortem valgono più del piazzamento).
 4. **Ponte tra teoria e strumenti.** Ogni meccanica corrisponde a un modello del corso e rimanda alla scheda di glossario integrata nell'app (61 concetti, con formule e riferimenti).
-5. **Sostenibile per l'ateneo.** Nessun costo di licenza, nessun server da gestire, nessun dato personale raccolto. Il codice è aperto e verificabile; il motore è documentato e riproducibile (stesso seed, stessi eventi), quindi adatto anche a confronti tra classi e a progetti di ricerca didattica.
+5. **Sostenibile per l'ateneo.** Nessun costo di licenza, nessun server da gestire, nessun dato personale raccolto. Il codice è aperto e verificabile; il motore è documentato e deterministico (stesso seed e stesse decisioni, stessa partita; stesso seed, stesso mercato di partenza ed eventi macroeconomici), quindi adatto anche a confronti tra classi e a progetti di ricerca didattica.
 
 ### 3. Obiettivi formativi e risultati di apprendimento attesi
 
@@ -78,7 +78,7 @@ Il dettaglio di ogni incontro è nel [piano delle sessioni](02-piano-sessioni.md
 - **Round di gioco** di 30-40 minuti per team, con timer proiettato. I team usano i propri portatili (modalità Classe) oppure si alternano su un computer (modalità Hot-seat).
 - **Debriefing** di 30 minuti dopo ogni coppia di round: classifica, eventi di mercato e domande guida proposte dalla console del docente.
 - **Lavoro tra gli incontri**: decision memo di una pagina per round; il docente può anche far giocare un round a distanza (ciclo dei file).
-- **Eventi a sorpresa**: il docente può iniettare shock di mercato (regolazione, recessione, nuovo concorrente) per discutere resilienza e pivot.
+- **Eventi a sorpresa**: il docente può iniettare shock di mercato (regolazione, recessione, nuovo concorrente, blocco degli investitori e altri) su tutta la classe, un settore o un team, per discutere resilienza e pivot.
 
 ### 6. Valutazione
 
@@ -97,28 +97,33 @@ Il risultato nel gioco pesa poco di proposito: conta la qualità del ragionament
 - **Software**: app desktop gratuita per macOS 11+ e Windows 10/11 (installazione in un minuto, anche senza diritti di amministratore su Windows) oppure un unico file HTML apribile in qualsiasi browser recente, caricabile su Moodle.
 - **Aula**: un proiettore per la console del docente; prese elettriche per i portatili. In alternativa, un solo computer (modalità Hot-seat).
 - **Rete**: non necessaria. Nella modalità Classe i file si scambiano tramite piattaforma e-learning, e-mail, cartella condivisa o chiavetta.
-- **Dati personali**: il gioco non raccoglie né trasmette dati; i salvataggi restano sui computer. I nomi degli studenti, se inseriti, compaiono solo nei report esportati dal docente.
+- **Dati personali**: il gioco non raccoglie né trasmette dati in rete; i salvataggi restano sui computer. I nomi degli studenti e le eventuali foto usate come avatar sono facoltativi e, in modalità Classe, viaggiano nei file di partita condivisi con i team: il docente può far usare solo nomi di fantasia e avatar disegnati.
 - **Preparazione del docente**: circa 3 ore la prima volta (lettura della guida e una partita di prova in solitario).
 
 ### 8. Bibliografia essenziale
 
 - Blank, S. (2013). Why the lean start-up changes everything. *Harvard Business Review*, 91(5), 63-72.
+- Andreessen, M. (2007). The only thing that matters. *pmarchive* (saggio online).
+- Aulet, B. (2013). *Disciplined Entrepreneurship*. Wiley.
 - Blank, S., e Dorf, B. (2012). *The Startup Owner's Manual*. K&S Ranch.
+- Brandenburger, A. M., e Nalebuff, B. J. (1996). *Co-opetition*. Currency Doubleday.
 - Ellis, S., e Brown, M. (2017). *Hacking Growth*. Crown Business.
 - Feld, B., e Mendelson, J. (2019). *Venture Deals* (4a ed.). Wiley.
 - Fox, J., Pittaway, L., e Uzuegbunam, I. (2018). Simulations in entrepreneurship education: Serious games and learning through play. *Entrepreneurship Education and Pedagogy*, 1(1), 61-89.
 - Kolb, D. A. (1984). *Experiential Learning*. Prentice-Hall.
 - Moore, G. A. (2014). *Crossing the Chasm* (3a ed.). HarperBusiness.
+- Porter, M. E. (1980). *Competitive Strategy*. Free Press.
+- Ramanujam, M., e Tacke, G. (2016). *Monetizing Innovation*. Wiley.
 - Ries, E. (2011). *The Lean Startup*. Crown Business.
 - Rogers, E. M. (2003). *Diffusion of Innovations* (5a ed.). Free Press.
 - Wasserman, N. (2008). The founder's dilemma. *Harvard Business Review*, 86(2), 102-109.
 - Wasserman, N. (2012). *The Founder's Dilemmas*. Princeton University Press.
 
-Letture complementari: Graham, P. (2015), *Default Alive or Default Dead?* (saggio online); Sarasvathy, S. D. (2001), Causation and effectuation, *Academy of Management Review*, 26(2), 243-263; Osterwalder, A., e Pigneur, Y. (2010), *Business Model Generation*, Wiley.
+Letture complementari: Anderson, C. (2009), *Free: The Future of a Radical Price*, Hyperion; Graham, P. (2015), *Default Alive or Default Dead?* (saggio online); Sarasvathy, S. D. (2001), Causation and effectuation, *Academy of Management Review*, 26(2), 243-263; Osterwalder, A., e Pigneur, Y. (2010), *Business Model Generation*, Wiley.
 
 ### 9. Sviluppi possibili
 
-- Edizioni successive con lo stesso seed per confrontare le classi (e misurare l'effetto di cambiamenti didattici).
+- Edizioni successive con lo stesso seed e gli stessi settori per confrontare le classi a parità di mercato iniziale (e misurare l'effetto di cambiamenti didattici).
 - Versione in sola lingua inglese per i programmi internazionali (già disponibile nel gioco).
 - Integrazione con il progetto imprenditoriale del corso: i team applicano le metriche del gioco alla propria idea reale.
 - Ricerca didattica: le esportazioni CSV di decisioni e risultati permettono studi sulle strategie degli studenti, nel rispetto delle regole di ateneo sui dati.
