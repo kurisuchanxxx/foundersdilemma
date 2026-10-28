@@ -134,10 +134,12 @@ export function addGrant(c: Company, holderId: string, pct: number, startMonth: 
   } else {
     shares = sharesForPct(total, pct);
   }
-  // Merge into a fresh vesting schedule covering the unvested remainder + new grant.
+  // Merge into a fresh vesting schedule covering the unvested remainder + new grant;
+  // someone still inside the original cliff stays inside it.
   const unvested = h.shares - vestedShares(h, startMonth);
+  const cliffEnd = h.vesting ? h.vesting.startMonth + h.vesting.cliff : startMonth;
   h.shares += shares;
-  h.vesting = { total: unvested + shares, startMonth, months: VESTING_MONTHS, cliff: 0 };
+  h.vesting = { total: unvested + shares, startMonth, months: VESTING_MONTHS, cliff: Math.max(0, cliffEnd - startMonth) };
 }
 
 /**
