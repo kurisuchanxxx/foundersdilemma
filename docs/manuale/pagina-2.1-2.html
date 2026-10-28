@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>FD2A-03-BLOCK I-(1) Manuale operativo Founder’s Dilemma, pagina 2.1-2</title>
+<style>
+  /* ---------- fonts (files in ./fonts, copied from the skill's assets/fonts) ---------- */
+  /* Leroy-template lettering for every drawing label. */
+  @font-face { font-family: "Routed Gothic"; src: url("fonts/routed-gothic.ttf"); unicode-range: U+0000-0030, U+0032-FFFF; }
+  @font-face { font-family: "Routed Gothic Narrow"; src: url("fonts/routed-gothic-narrow.ttf"); unicode-range: U+0000-0030, U+0032-FFFF; }
+  /* Leroy's plain "1" reads as "I" (API V1, T1). Borrow a flagged one. Delete these two
+     rules for a strictly period look on pages without versions or subscripts. */
+  @font-face { font-family: "Routed Gothic"; src: local("Helvetica Neue"), local("HelveticaNeue"), local("Arial"); unicode-range: U+0031; }
+  @font-face { font-family: "Routed Gothic Narrow"; src: local("Helvetica Neue"), local("HelveticaNeue"), local("Arial"); unicode-range: U+0031; }
+  /* IBM Selectric Letter Gothic: crew checklists only. */
+  @font-face { font-family: "Letter Gothic"; src: url("fonts/LetterGothicCode-R.ttf"); font-weight: 400; }
+  @font-face { font-family: "Letter Gothic"; src: url("fonts/LetterGothicCode-B.ttf"); font-weight: 700; }
+
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #8a8a86; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @media print { html, body { background: none; } }
+
+  :root {
+    --ink: #000000;
+    --paper: #fbfaf5;   /* screen only; print is pure white (below) */
+    --type: "Iowan Old Style", "Iowan", Georgia, serif;
+    --leroy: "Routed Gothic Narrow", "Routed Gothic", sans-serif;
+    --selectric: "Letter Gothic", "Courier", monospace;
+  }
+  /* Must come after :root. A printed off-white tint is halftoned into dots. */
+  @media print { :root { --paper: #ffffff; } }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    padding: 9mm 15mm 0 16mm;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--type);
+    font-size: 8pt;
+    line-height: 1.33;
+    letter-spacing: 0.055em;   /* the Selectric typewriter spacing */
+    overflow: hidden;
+  }
+
+  /* ---------- running head / foot ---------- */
+  .head { text-align: center; line-height: 1.25; }
+  .head .doc { font-weight: 700; font-size: 8.6pt; letter-spacing: 0.06em; }
+  .head .title { font-weight: 700; font-size: 8.6pt; letter-spacing: 0.08em; }
+  .head .part { margin-top: 2.2mm; font-size: 8.2pt; letter-spacing: 0.1em; }
+  .rule { height: 0; border-top: 1.5pt solid var(--ink); margin: 1.4mm -2mm 0; }
+
+  .foot { position: absolute; left: 16mm; right: 15mm; bottom: 8mm; }
+  .foot .rule { margin: 0 -2mm 1.6mm; }
+  .foot .sub { text-align: center; letter-spacing: 0.1em; font-size: 8.2pt; }
+  .foot .line { display: flex; align-items: baseline; justify-content: space-between; margin-top: 2.2mm; font-size: 8.2pt; }
+  .foot .fill { display: inline-block; border-bottom: 0.6pt solid var(--ink); text-align: center; padding: 0 1mm; font-size: 8.8pt; letter-spacing: 0.03em; }
+
+  /* ---------- section opener ---------- */
+  .opener { text-align: center; letter-spacing: 0.12em; margin: 3.4mm 0 2mm; line-height: 1.6; }
+
+  /* ---------- numbered paragraphs ---------- */
+  .para { display: grid; grid-template-columns: 19mm 1fr; position: relative; }
+  .para .num { letter-spacing: 0.08em; }
+  .para h2, .para h3 { margin: 0 0 0.8mm; font: inherit; font-weight: 400; letter-spacing: 0.08em; }
+  .para h3 { text-decoration: underline; text-underline-offset: 1.6pt; text-decoration-thickness: 0.5pt; letter-spacing: 0.06em; }
+  .para p { margin: 0 0 1mm; text-indent: 9mm; text-align: left; }
+  .para p.flush { text-indent: 0; }
+  .changebar { position: absolute; left: -9mm; width: 1.3mm; background: var(--ink); }
+  .nowrap { white-space: nowrap; }
+
+  /* ---------- figures ---------- */
+  figure { margin: 1.6mm 0 0; }
+  figure svg { display: block; width: 100%; height: auto; }
+  figcaption { text-align: center; margin-top: 0.6mm; letter-spacing: 0.07em; }
+  figcaption .n { margin-right: 3mm; }
+
+  /* SVG units are millimetres on paper: a figure 180 units wide fills the 179 mm column. */
+  svg text { font-family: var(--leroy); fill: var(--ink); letter-spacing: 0.04px; }
+  svg .o    { fill: none; stroke: var(--ink); stroke-width: 0.42; stroke-linejoin: round; stroke-linecap: round; } /* object line */
+  svg .of   { fill: var(--paper); stroke: var(--ink); stroke-width: 0.42; stroke-linejoin: round; }               /* object, opaque */
+  svg .t    { fill: none; stroke: var(--ink); stroke-width: 0.17; stroke-linecap: round; }                        /* thin detail */
+  svg .hid  { fill: none; stroke: var(--ink); stroke-width: 0.22; stroke-dasharray: 1.3 0.7; }                     /* hidden */
+  svg .cl   { fill: none; stroke: var(--ink); stroke-width: 0.16; stroke-dasharray: 5 0.8 0.9 0.8; }               /* centerline */
+  svg .cut  { fill: none; stroke: var(--ink); stroke-width: 0.5; stroke-dasharray: 5 1 1 1; }                      /* section cut */
+  svg .ld   { fill: none; stroke: var(--ink); stroke-width: 0.16; marker-end: url(#nh-leader); }                   /* leader */
+  svg .dim  { fill: none; stroke: var(--ink); stroke-width: 0.16; marker-start: url(#nh-dim); }                    /* dimension half */
+  svg .w    { fill: none; stroke: var(--ink); stroke-width: 0.3; stroke-linejoin: round; }                         /* wire */
+  svg .wa   { fill: none; stroke: var(--ink); stroke-width: 0.3; stroke-linejoin: round; marker-end: url(#nh-arrow); } /* wire with arrow */
+  svg .box  { fill: var(--paper); stroke: var(--ink); stroke-width: 0.45; }
+  svg .panel{ fill: none; stroke: var(--ink); stroke-width: 0.3; stroke-dasharray: 2 1; }
+  svg .ev   { fill: none; stroke: var(--ink); stroke-width: 0.18; stroke-dasharray: 1 0.7; }                       /* timeline event */
+  svg .vid  { fill: url(#nh-hatch); stroke: var(--ink); stroke-width: 0.35; }                                      /* hatched bar */
+  svg .aud  { fill: var(--paper); stroke: var(--ink); stroke-width: 0.35; }                                        /* plain bar */
+  svg .gap  { fill: var(--paper); stroke: var(--ink); stroke-width: 0.35; stroke-dasharray: 0.6 0.5; }             /* dotted bar */
+  svg .grain{ fill: url(#nh-dots); stroke: var(--ink); stroke-width: 0.35; }                                       /* granular, powder, fill */
+  svg .dot  { fill: var(--ink); }
+  svg .lbl   { font-size: 2.35px; }                                         /* callouts, box titles */
+  svg .lbl-s { font-size: 2.05px; }                                         /* secondary lines, wire names */
+  svg .lbl-b { font-size: 2.5px; font-family: "Routed Gothic", sans-serif; } /* view titles, big letters */
+  svg .code  { font-size: 2.4px; font-family: "Routed Gothic", sans-serif; } /* figure code, bottom right */
+
+  /* ---------- lower band: data table + notice + checklist ---------- */
+  .lower { display: grid; grid-template-columns: 1fr 64mm; column-gap: 6mm; margin-top: 2.8mm; }
+  .tcap { text-align: center; letter-spacing: 0.07em; margin: 0 0 0.8mm; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.3pt; line-height: 1.2; }
+  th, td { border: 0.6pt solid var(--ink); padding: 0.35mm 1.6mm; text-align: left; vertical-align: top; font-weight: 400; }
+  thead th { text-align: center; letter-spacing: 0.1em; padding: 0.5mm 1.6mm; }
+  td.v { white-space: nowrap; }
+
+  .notice { text-align: left; margin-bottom: 1.8mm; }
+  .notice .tag { display: block; text-align: center; letter-spacing: 0.18em; font-weight: 700; text-decoration: underline; text-underline-offset: 1.6pt; text-decoration-thickness: 0.6pt; margin-bottom: 0.8mm; }
+  .notice p { margin: 0; font-size: 7.4pt; line-height: 1.28; }
+
+  .card { border: 0.8pt solid var(--ink); font-family: var(--selectric); font-size: 7.1pt; line-height: 1.3; letter-spacing: 0; }
+  .card .bar { background: var(--ink); color: var(--paper); font-weight: 700; padding: 0.5mm 1.8mm; display: flex; justify-content: space-between; }
+  .card ol { list-style: none; margin: 0; padding: 0.8mm 1.8mm 1mm; }
+  .card li { display: grid; grid-template-columns: 3.2mm 1fr; white-space: pre; }
+
+  /* black thumb tab, bleeds off the trim edge */
+  .tab { position: absolute; right: 0; top: 112mm; width: 8.5mm; height: 17mm; background: var(--ink); color: var(--paper);
+    font-family: "Routed Gothic", sans-serif; font-size: 8pt; letter-spacing: 0.08em; display: flex; align-items: center; justify-content: center; }
+</style>
+</head>
+<body>
+
+<!-- Shared drawing defs: every figure on the page uses these ids. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="nh-leader" viewBox="0 0 6 4" refX="5.6" refY="2" markerWidth="2.1" markerHeight="1.05" markerUnits="userSpaceOnUse" orient="auto" preserveAspectRatio="none"><path d="M0,0 L6,2 L0,4 Z" fill="#000"/></marker>
+    <marker id="nh-arrow" viewBox="0 0 6 4" refX="5.6" refY="2" markerWidth="2.4" markerHeight="1.3" markerUnits="userSpaceOnUse" orient="auto" preserveAspectRatio="none"><path d="M0,0 L6,2 L0,4 Z" fill="#000"/></marker>
+    <marker id="nh-dim" viewBox="0 0 6 4" refX="0" refY="2" markerWidth="2.2" markerHeight="0.95" markerUnits="userSpaceOnUse" orient="auto" preserveAspectRatio="none"><path d="M6,0 L0,2 L6,4 Z" fill="#000"/></marker>
+    <pattern id="nh-hatch" width="1.1" height="1.1" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.1" stroke="#000" stroke-width="0.2"/></pattern>
+    <pattern id="nh-bp" width="1.4" height="1.4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="0.7" height="1.4" fill="#000"/></pattern>
+    <pattern id="nh-dots" width="1.3" height="1.3" patternUnits="userSpaceOnUse"><circle cx="0.32" cy="0.32" r="0.15" fill="#000"/><circle cx="0.97" cy="0.97" r="0.15" fill="#000"/></pattern>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <header class="head">
+    <div class="doc">FD2A-03-BLOCK I-(1)</div>
+    <div class="title">MANUALE OPERATIVO FOUNDER’S DILEMMA</div>
+    <div class="part">DATI DI SISTEMA</div>
+    <div class="rule"></div>
+  </header>
+
+  <div class="tab">FDL</div>
+
+  <section class="para" style="margin-top:4mm">
+    <div class="num">2.1.4</div>
+    <div>
+      <h2>EVOLUZIONE DEL PROGETTO.</h2>
+      <p>Il progetto nasce il 12 gennaio 2026 come blueprint Swift e SwiftUI per macOS, con il nome VentureSim. Il 14 ottobre 2026 il motore è riscritto in TypeScript e il gioco diventa multipiattaforma. La storia del repository conta 38 commit distribuiti in cinque giornate di lavoro (figura 2.1-3).</p>
+    </div>
+  </section>
+
+  <figure>
+    <svg viewBox="0 0 180 69.8" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cronologia dello sviluppo">
+<text class="lbl-s" x="38" y="2.2" text-anchor="middle">FASE 0 · BLUEPRINT</text>
+<text class="lbl-s" x="71.5" y="2.2" text-anchor="middle">FASE 1 · RISCRITTURA</text>
+<text class="lbl-s" x="103" y="2.2" text-anchor="middle">FASE 2</text>
+<text class="lbl-s" x="132.75" y="2.2" text-anchor="middle">FASE 3 · SITO</text>
+<text class="lbl-s" x="164.25" y="2.2" text-anchor="middle">FASE 4 · RIFINITURA</text>
+<text class="lbl" x="38" y="5.6" text-anchor="middle">12 GEN</text>
+<text class="lbl" x="71.5" y="5.6" text-anchor="middle">14 OTT</text>
+<text class="lbl" x="103" y="5.6" text-anchor="middle">15 OTT</text>
+<text class="lbl" x="132.75" y="5.6" text-anchor="middle">21 OTT</text>
+<text class="lbl" x="164.25" y="5.6" text-anchor="middle">22 OTT</text>
+<text class="lbl-s" x="2" y="11.5">MOTORE</text>
+<rect class="gap" x="29.5" y="8.4" width="17" height="4.8"/>
+<text class="lbl-s" x="38" y="11.65" text-anchor="middle">VENTURESIM</text>
+<rect class="aud" x="51.5" y="8.4" width="40" height="4.8"/>
+<text class="lbl-s" x="71.5" y="11.65" text-anchor="middle">RISCRITTURA TS, RNG PER FLUSSO</text>
+<rect class="aud" x="150" y="8.4" width="28.5" height="4.8"/>
+<text class="lbl-s" x="164.25" y="11.65" text-anchor="middle">27 DILEMMI REALISTICI</text>
+<text class="lbl-s" x="2" y="18.7">INTERFACCIA</text>
+<rect class="gap" x="29.5" y="15.6" width="17" height="4.8"/>
+<text class="lbl-s" x="38" y="18.85" text-anchor="middle">SWIFTUI, MACOS</text>
+<rect class="aud" x="51.5" y="15.6" width="40" height="4.8"/>
+<text class="lbl-s" x="71.5" y="18.85" text-anchor="middle">REACT: SOLO, HOT-SEAT, CLASSE</text>
+<rect class="aud" x="117.5" y="15.6" width="30.5" height="4.8"/>
+<text class="lbl-s" x="132.75" y="18.85" text-anchor="middle">INGLESE PREDEFINITO</text>
+<rect class="aud" x="150" y="15.6" width="28.5" height="4.8"/>
+<text class="lbl-s" x="164.25" y="18.85" text-anchor="middle">MOTION, TEMA ANTRACITE</text>
+<text class="lbl-s" x="2" y="25.9">COINVOLGIMENTO</text>
+<rect class="aud" x="51.5" y="22.8" width="40" height="4.8"/>
+<text class="lbl-s" x="71.5" y="26.05" text-anchor="middle">INTERAZIONI, CONCORRENTI</text>
+<rect class="aud" x="93.5" y="22.8" width="19" height="4.8"/>
+<text class="lbl-s" x="103" y="26.05" text-anchor="middle">AVATAR, LOGO, XP</text>
+<text class="lbl-s" x="2" y="33.1">DISTRIBUZIONE</text>
+<rect class="aud" x="51.5" y="30" width="40" height="4.8"/>
+<text class="lbl-s" x="71.5" y="33.25" text-anchor="middle">TAURI V2, CI, PAGES, FILE UNICO</text>
+<rect class="aud" x="117.5" y="30" width="30.5" height="4.8"/>
+<text class="lbl-s" x="132.75" y="33.25" text-anchor="middle">SITO / E GIOCO IN /PLAY/</text>
+<text class="lbl-s" x="2" y="40.3">SITO E HOME</text>
+<rect class="aud" x="117.5" y="37.2" width="30.5" height="4.8"/>
+<text class="lbl-s" x="132.75" y="40.45" text-anchor="middle">LANDING, HOME CON RAZZO</text>
+<rect class="aud" x="150" y="37.2" width="28.5" height="4.8"/>
+<text class="lbl-s" x="164.25" y="40.45" text-anchor="middle">HOME CON FILM DI SFONDO</text>
+<text class="lbl-s" x="2" y="47.5">CORSO E DOCUMENTI</text>
+<rect class="aud" x="51.5" y="44.4" width="40" height="4.8"/>
+<text class="lbl-s" x="71.5" y="47.65" text-anchor="middle">PACCHETTO CORSO, LICENZE</text>
+<rect class="aud" x="150" y="44.4" width="28.5" height="4.8"/>
+<text class="lbl-s" x="164.25" y="47.65" text-anchor="middle">SCREENSHOT IT/EN</text>
+<line class="w" x1="29" y1="52.2" x2="179" y2="52.2"/>
+<line class="t" x1="29" y1="52.2" x2="29" y2="53.4"/>
+<line class="t" x1="47" y1="52.2" x2="47" y2="53.4"/>
+<line class="t" x1="51" y1="52.2" x2="51" y2="53.4"/>
+<line class="t" x1="92" y1="52.2" x2="92" y2="53.4"/>
+<line class="t" x1="93" y1="52.2" x2="93" y2="53.4"/>
+<line class="t" x1="113" y1="52.2" x2="113" y2="53.4"/>
+<line class="t" x1="117" y1="52.2" x2="117" y2="53.4"/>
+<line class="t" x1="148.5" y1="52.2" x2="148.5" y2="53.4"/>
+<line class="t" x1="149.5" y1="52.2" x2="149.5" y2="53.4"/>
+<line class="t" x1="179" y1="52.2" x2="179" y2="53.4"/>
+<polyline class="t" points="48.4,7.2 49.6,8 48.4,8.8 49.6,9.6 48.4,10.4 49.6,11.2 48.4,12 49.6,12.8 48.4,13.6 49.6,14.4 48.4,15.2 49.6,16 48.4,16.8 49.6,17.6 48.4,18.4 49.6,19.2 48.4,20 49.6,20.8 48.4,21.6 49.6,22.4 48.4,23.2 49.6,24 48.4,24.8 49.6,25.6 48.4,26.4 49.6,27.2 48.4,28 49.6,28.8 48.4,29.6 49.6,30.4 48.4,31.2 49.6,32 48.4,32.8 49.6,33.6 48.4,34.4 49.6,35.2 48.4,36 49.6,36.8 48.4,37.6 49.6,38.4 48.4,39.2 49.6,40 48.4,40.8 49.6,41.6 48.4,42.4 49.6,43.2 48.4,44 49.6,44.8 48.4,45.6 49.6,46.4 48.4,47.2 49.6,48 48.4,48.8 49.6,49.6 48.4,50.4 49.6,51.2 48.4,52 49.6,52.8 48.4,53.6 49.6,54.4"/>
+<polyline class="t" points="114.4,7.2 115.6,8 114.4,8.8 115.6,9.6 114.4,10.4 115.6,11.2 114.4,12 115.6,12.8 114.4,13.6 115.6,14.4 114.4,15.2 115.6,16 114.4,16.8 115.6,17.6 114.4,18.4 115.6,19.2 114.4,20 115.6,20.8 114.4,21.6 115.6,22.4 114.4,23.2 115.6,24 114.4,24.8 115.6,25.6 114.4,26.4 115.6,27.2 114.4,28 115.6,28.8 114.4,29.6 115.6,30.4 114.4,31.2 115.6,32 114.4,32.8 115.6,33.6 114.4,34.4 115.6,35.2 114.4,36 115.6,36.8 114.4,37.6 115.6,38.4 114.4,39.2 115.6,40 114.4,40.8 115.6,41.6 114.4,42.4 115.6,43.2 114.4,44 115.6,44.8 114.4,45.6 115.6,46.4 114.4,47.2 115.6,48 114.4,48.8 115.6,49.6 114.4,50.4 115.6,51.2 114.4,52 115.6,52.8 114.4,53.6 115.6,54.4"/>
+<text class="lbl-s" x="49" y="5.6" text-anchor="middle">9 MESI</text>
+<text class="lbl-s" x="115" y="5.6" text-anchor="middle">5 GG</text>
+<text class="lbl-s" x="2" y="56.2">COMMIT</text>
+<text class="lbl-s" x="38" y="56.2" text-anchor="middle">1</text>
+<text class="lbl-s" x="71.5" y="56.2" text-anchor="middle">13</text>
+<text class="lbl-s" x="103" y="56.2" text-anchor="middle">2</text>
+<text class="lbl-s" x="132.75" y="56.2" text-anchor="middle">15</text>
+<text class="lbl-s" x="164.25" y="56.2" text-anchor="middle">7</text>
+<text class="lbl-s" x="2" y="59.6">RIGHE AGGIUNTE</text>
+<text class="lbl-s" x="38" y="59.6" text-anchor="middle">13.758</text>
+<text class="lbl-s" x="71.5" y="59.6" text-anchor="middle">30.724</text>
+<text class="lbl-s" x="103" y="59.6" text-anchor="middle">3.845</text>
+<text class="lbl-s" x="132.75" y="59.6" text-anchor="middle">3.563</text>
+<text class="lbl-s" x="164.25" y="59.6" text-anchor="middle">1.644</text>
+<text class="lbl-s" x="2" y="63.4">PULL REQUEST UNITE</text>
+<path class="dot" d="M102.3,61.3 L103.7,61.3 L103,62.5 Z"/>
+<text class="lbl-s" x="104.6" y="63.4">N. 2</text>
+<path class="dot" d="M132.05,61.3 L133.45,61.3 L132.75,62.5 Z"/>
+<text class="lbl-s" x="134.35" y="63.4">N. 3, N. 4</text>
+<path class="dot" d="M163.55,61.3 L164.95,61.3 L164.25,62.5 Z"/>
+<text class="lbl-s" x="165.85" y="63.4">N. 5</text>
+<rect class="aud" x="2" y="65" width="5" height="2.4"/>
+<text class="lbl-s" x="8.2" y="67">CODICE ATTIVO</text>
+<rect class="gap" x="40" y="65" width="5" height="2.4"/>
+<text class="lbl-s" x="46.2" y="67">CONSERVATO IN LEGACY/, NON COMPILATO</text>
+      <text class="code" x="178.6" y="69.2" text-anchor="end">FDL-503A</text>
+    </svg>
+    <figcaption><span class="n">Figura 2.1-3.</span>Cronologia dello sviluppo per area, giornate con commit</figcaption>
+  </figure>
+
+  <section class="para" style="margin-top:2.2mm">
+    <div class="num">2.1.4.1</div>
+    <div>
+      <h3>Fasi di sviluppo.</h3>
+      <p class="flush">Il 14 ottobre arrivano in 13 commit il motore, l’interfaccia React con le tre modalità, l’app desktop, la CI, il pacchetto del corso e la pubblicazione su GitHub Pages. Il 15 ottobre si aggiunge lo strato di coinvolgimento: avatar, logo, XP, sfide di squadra e rete dei fondatori. Il 21 ottobre nascono la landing alla radice del sito e la home con il lancio del razzo; il 22 ottobre il passaggio su motion e UX, i 27 dilemmi realistici e il tema antracite.</p>
+    </div>
+  </section>
+
+  <section class="para">
+    <div class="changebar" style="top:0.4mm; height:6.8mm"></div>
+    <div class="num">2.1.4.2</div>
+    <div>
+      <h3>Riscrittura del generatore casuale.</h3>
+      <p class="flush">Il blueprint usava un unico LCG condiviso: le scelte di un team cambiavano le estrazioni di tutti gli altri. Il motore TypeScript deriva ogni flusso da seed, round, scopo e azienda (figura 2.1-4).</p>
+    </div>
+  </section>
+
+  <figure>
+    <svg viewBox="0 -3 180 54" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Righe aggiunte per giornata e confronto con il blueprint">
+<text class="lbl-b" x="2" y="1.4">RIGHE AGGIUNTE PER GIORNATA</text>
+<polyline class="w" points="16,6 16,43 84,43"/>
+<line class="t" x1="16" y1="43" x2="14.8" y2="43"/>
+<text class="lbl-s" x="14.4" y="43.7" text-anchor="end">0</text>
+<line class="t" x1="16" y1="32.71" x2="14.8" y2="32.71"/>
+<text class="lbl-s" x="14.4" y="33.41" text-anchor="end">10.000</text>
+<line class="t" x1="16" y1="22.43" x2="14.8" y2="22.43"/>
+<text class="lbl-s" x="14.4" y="23.13" text-anchor="end">20.000</text>
+<line class="t" x1="16" y1="12.14" x2="14.8" y2="12.14"/>
+<text class="lbl-s" x="14.4" y="12.84" text-anchor="end">30.000</text>
+<line class="t" x1="16" y1="37.86" x2="15.2" y2="37.86"/>
+<line class="t" x1="16" y1="27.57" x2="15.2" y2="27.57"/>
+<line class="t" x1="16" y1="17.29" x2="15.2" y2="17.29"/>
+<line class="t" x1="16" y1="7" x2="15.2" y2="7"/>
+<rect class="gap" x="19" y="28.85" width="8" height="14.15"/>
+<text class="lbl-s" x="23" y="27.95" text-anchor="middle">13.758</text>
+<text class="lbl-s" x="23" y="46.2" text-anchor="middle">12 GEN</text>
+<rect class="aud" x="32.4" y="11.4" width="8" height="31.6"/>
+<text class="lbl-s" x="36.4" y="10.5" text-anchor="middle">30.724</text>
+<text class="lbl-s" x="36.4" y="46.2" text-anchor="middle">14 OTT</text>
+<rect class="aud" x="45.8" y="39.05" width="8" height="3.95"/>
+<text class="lbl-s" x="49.8" y="38.15" text-anchor="middle">3.845</text>
+<text class="lbl-s" x="49.8" y="46.2" text-anchor="middle">15 OTT</text>
+<rect class="aud" x="59.2" y="39.34" width="8" height="3.66"/>
+<text class="lbl-s" x="63.2" y="38.44" text-anchor="middle">3.563</text>
+<text class="lbl-s" x="63.2" y="46.2" text-anchor="middle">21 OTT</text>
+<rect class="aud" x="72.6" y="41.31" width="8" height="1.69"/>
+<text class="lbl-s" x="76.6" y="40.41" text-anchor="middle">1.644</text>
+<text class="lbl-s" x="76.6" y="46.2" text-anchor="middle">22 OTT</text>
+<text class="lbl-s" x="50" y="49.6" text-anchor="middle">GIORNATA CON COMMIT, 2026</text>
+<line class="t" x1="90" y1="-2.6" x2="90" y2="50"/>
+<text class="lbl-b" x="93" y="1.4">DETTAGLIO A: DAL BLUEPRINT ALLA 2.1.0</text>
+<text class="lbl-s" x="117" y="8">SWIFT, GEN 2026</text>
+<text class="lbl-s" x="146" y="8">TYPESCRIPT, OTT 2026</text>
+<line class="t" x1="93" y1="9.4" x2="179" y2="9.4"/>
+<text class="lbl-s" x="93" y="14">PIATTAFORME</text>
+<text class="lbl-s" x="117" y="14">SOLO MACOS</text>
+<line class="ld" x1="135" y1="13.3" x2="144.6" y2="13.3"/>
+<text class="lbl-s" x="146" y="14">MACOS, WINDOWS, LINUX, WEB</text>
+<text class="lbl-s" x="93" y="19.3">SETTORI</text>
+<text class="lbl-s" x="117" y="19.3">4</text>
+<line class="ld" x1="135" y1="18.6" x2="144.6" y2="18.6"/>
+<text class="lbl-s" x="146" y="19.3">8</text>
+<text class="lbl-s" x="93" y="24.6">ROUND</text>
+<text class="lbl-s" x="117" y="24.6">10 FISSI, 5 ANNI</text>
+<line class="ld" x1="135" y1="23.9" x2="144.6" y2="23.9"/>
+<text class="lbl-s" x="146" y="24.6">DA 4 A 16, TRE PIANI</text>
+<text class="lbl-s" x="93" y="29.9">PARTECIPANTI</text>
+<text class="lbl-s" x="117" y="29.9">2–10 GIOCATORI</text>
+<line class="ld" x1="135" y1="29.2" x2="144.6" y2="29.2"/>
+<text class="lbl-s" x="146" y="29.9">FINO A 12 TEAM, 4 FONDATORI</text>
+<text class="lbl-s" x="93" y="35.2">CASUALITÀ</text>
+<text class="lbl-s" x="117" y="35.2">LCG CONDIVISO</text>
+<line class="ld" x1="135" y1="34.5" x2="144.6" y2="34.5"/>
+<text class="lbl-s" x="146" y="35.2">SFC32, UN FLUSSO PER SCOPO</text>
+<text class="lbl-s" x="93" y="40.5">MODALITÀ</text>
+<text class="lbl-s" x="117" y="40.5">BOT, HOT-SEAT</text>
+<line class="ld" x1="135" y1="39.8" x2="144.6" y2="39.8"/>
+<text class="lbl-s" x="146" y="40.5">+ CLASSE CON FILE, SENZA SERVER</text>
+<text class="lbl-s" x="93" y="45.8">TEST</text>
+<text class="lbl-s" x="117" y="45.8">XCTEST</text>
+<line class="ld" x1="135" y1="45.1" x2="144.6" y2="45.1"/>
+<text class="lbl-s" x="146" y="45.8">VITEST, PLAYWRIGHT, CARGO</text>
+      <text class="code" x="178.6" y="50.4" text-anchor="end">FDL-504A</text>
+    </svg>
+    <figcaption><span class="n">Figura 2.1-4.</span>Volume di lavoro per giornata e confronto tra blueprint e versione attuale</figcaption>
+  </figure>
+
+  <div class="lower">
+    <div>
+      <section class="para">
+        <div class="num">2.1.5</div>
+        <div><h2>DATI STORICI.</h2></div>
+      </section>
+      <div class="tcap">Tabella 2.1-2. Cronologia del repository</div>
+      <table>
+        <thead><tr><th>Parametro</th><th>Valore</th></tr></thead>
+        <tbody>
+          <tr><td>Primo commit, blueprint Swift</td><td class="v">12 gen 2026, 72 file</td></tr>
+          <tr><td>Sorgenti Swift del blueprint</td><td class="v">45 file, 5.864 righe</td></tr>
+          <tr><td>Riscrittura TypeScript</td><td class="v">14 ott 2026, 117 file</td></tr>
+          <tr><td>Commit totali, di cui merge</td><td class="v">38, 6</td></tr>
+          <tr><td>Pull request unite</td><td class="v">4 (n. 2–5)</td></tr>
+          <tr><td>Giornate con commit</td><td class="v">5</td></tr>
+          <tr><td>Righe aggiunte / rimosse</td><td class="v">53.534 / 2.415</td></tr>
+          <tr><td>Versione corrente</td><td class="v">2.1.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="notice">
+        <span class="tag">NOTA</span>
+        <p>La cartella legacy/ conserva il blueprint Swift e i video del mockup. La CI non la compila né la testa: è solo un riferimento storico.</p>
+      </div>
+      <div class="card">
+        <div class="bar"><span>AMBIENTE DI SVILUPPO</span><span>SVILUPPATORE</span></div>
+        <ol>
+          <li><span>1</span><span>NODE.JS - 22 o successivo</span></li>
+          <li><span>2</span><span>npm ci - eseguire</span></li>
+          <li><span>3</span><span>npm run dev - eseguire</span></li>
+          <li><span></span><span>√ localhost:1420 - risponde</span></li>
+          <li><span>4</span><span>npm test - eseguire</span></li>
+          <li><span></span><span>√ VITEST - 39 test superati</span></li>
+          <li><span>5</span><span>npm run desktop:dev - con Rust</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <div class="rule"></div>
+    <div class="sub">ARCHITETTURA, STACK ED EVOLUZIONE</div>
+    <div class="line">
+      <span>Missione <span class="fill" style="width:18mm">&nbsp;</span></span>
+      <span>Data emissione <span class="fill" style="width:28mm">12 gennaio 2026</span></span>
+      <span>Data revisione <span class="fill" style="width:28mm">22 ottobre 2026</span></span>
+      <span>Pagina <span class="fill" style="width:16mm">2.1-2</span></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Fit check: room left between the last content block and the footer.
+  // .page hides overflow, so without this an overfull page fails silently.
+  // render.sh prints the result from <html data-fit>.
+  document.fonts.ready.then(() => {
+    const page = document.querySelector('.page')
+    const foot = page.querySelector('.foot')
+    let bottom = 0
+    for (const el of page.children) {
+      if (el === foot || el.classList.contains('tab')) continue
+      bottom = Math.max(bottom, el.getBoundingClientRect().bottom)
+    }
+    const free = (foot.getBoundingClientRect().top - bottom) * 25.4 / 96
+    document.documentElement.dataset.fit = free >= 0 ? `ok, ${free.toFixed(1)} mm free above the footer` : `OVERFLOW by ${(-free).toFixed(1)} mm`
+  })
+</script>
+</body>
+</html>
