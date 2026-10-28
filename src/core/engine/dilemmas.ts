@@ -149,7 +149,7 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
         c.totalRaised += amount;
         c.fundingHistory.push({ id: nextId(state, "fr"), round, investorId: "bridge", investorName: "Bridge (existing investors)", type: "seed", instrument: "safe", amount, preMoney: null, postMoney: cap, equityPct: amount / cap, boardSeat: false });
         c.reputation.investors = Math.max(0, c.reputation.investors - 3);
-        report.lines.push({ kind: "finance", text: fill(lt("Bridge closed: +{a} (convertible, cap {c}).", "Ponte chiuso: +{a} (convertibile, cap {c})."), { a: moneyL(amount), c: moneyL(cap) }) });
+        report.lines.push({ kind: "finance", text: fill(lt("Bridge round closed: +{a} (SAFE, cap {c}).", "Round ponte chiuso: +{a} (SAFE, cap {c})."), { a: moneyL(amount), c: moneyL(cap) }) });
       }
       return false;
     }

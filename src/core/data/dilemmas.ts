@@ -313,8 +313,8 @@ export const DILEMMAS: DilemmaTemplate[] = [
     id: "bridge_offer",
     title: lt("Bridge round from your investors", "Round ponte dai tuoi investitori"),
     description: lt(
-      "Runway is short. Your existing investors offer {amount} as a convertible note capped at {cap}, about half of your current valuation.",
-      "La runway è corta. I tuoi investitori attuali offrono {amount} con una nota convertibile con cap a {cap}, circa metà della valutazione attuale.",
+      "Runway is short. Your existing investors offer {amount} as a SAFE capped at {cap}, about half of your current valuation.",
+      "La runway è corta. I tuoi investitori attuali offrono {amount} con un SAFE con cap a {cap}, circa metà della valutazione attuale.",
     ),
     concept: "downRound",
     weight: ({ company, runway }) =>
@@ -329,7 +329,7 @@ export const DILEMMAS: DilemmaTemplate[] = [
         id: "accept",
         label: lt("Accept the bridge", "Accetta il ponte"),
         description: lt("Survive, at the cost of heavy dilution later.", "Sopravvivi, al prezzo di una forte diluizione futura."),
-        outcome: lt("The bridge closed. You bought time.", "Il ponte è chiuso. Hai comprato tempo."),
+        outcome: lt("The bridge round closed. You bought time.", "Il round ponte è stato chiuso. Hai comprato tempo."),
         special: { kind: "bridge" },
       },
       {

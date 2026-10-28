@@ -109,10 +109,10 @@ export const TOUR: TourStep[] = [
     view: "decisions",
     tab: "finance",
     target: "grants",
-    title: ["Money that does not dilute", "Denaro che non diluisce"],
+    title: ["Cheap money first", "Prima il denaro che costa poco"],
     body: [
-      "Grants and the accelerator are the cheapest money at the start. Investors arrive later, when you have traction: every euro of equity costs ownership.",
-      "Bandi e acceleratore sono il denaro più economico all'inizio. Gli investitori arrivano dopo, quando hai trazione: ogni euro di equity costa quote.",
+      "Grants do not dilute and the accelerator takes only a small stake: they are the cheapest money at the start. Investors arrive later, when you have traction: every euro of equity costs ownership.",
+      "I bandi non diluiscono e l'acceleratore prende una piccola quota: sono il denaro più economico all'inizio. Gli investitori arrivano dopo, quando hai trazione: ogni euro di equity costa quote.",
     ],
   },
   {
@@ -121,8 +121,8 @@ export const TOUR: TourStep[] = [
     target: "submit",
     title: ["Submit", "Invia"],
     body: [
-      "Check the warnings and submit. Then advance to the next period from the top bar and read the round report.",
-      "Controlla gli avvisi e invia. Poi avanza al periodo successivo dalla barra in alto e leggi il report del round.",
+      "Check the warnings and submit. In a solo game you then advance to the next period from the top bar; in class the instructor advances the round. Then read the round report.",
+      "Controlla gli avvisi e invia. Da soli poi avanzi al periodo successivo dalla barra in alto; in classe è il docente ad avanzare il round. Poi leggi il report del round.",
     ],
   },
   {
