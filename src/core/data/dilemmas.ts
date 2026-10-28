@@ -1,4 +1,4 @@
-import { lt, type LText } from "../text";
+import { lt, moneyL, type LText, type LTextParams } from "../text";
 import type { Company, EffectBundle, GameState, SectorId } from "../types";
 import { SECTORS } from "./sectors";
 
@@ -60,7 +60,8 @@ export interface DilemmaTemplate {
   concept: string;
   /** 0 = not eligible. */
   weight: (ctx: DilemmaContext) => number;
-  prepare?: (ctx: DilemmaContext) => Record<string, string | number> | null;
+  /** Values for the texts; numbers and strings are also kept on the instance for the resolution. */
+  prepare?: (ctx: DilemmaContext) => LTextParams | null;
   options: DilemmaOptionDef[];
 }
 
@@ -70,7 +71,8 @@ function investorSeats(c: Company): number {
   return c.board.investors + c.board.independents;
 }
 
-const euro = (v: number) => `€${Math.round(v).toLocaleString("en-US")}`;
+/** Money in each language's format ("€12k" / "12 k €"). */
+const euro = (v: number) => moneyL(Math.round(v));
 
 /** A share of the current customers as a new contract (at least one customer). */
 function contractOf(c: Company, share: number) {
@@ -107,7 +109,7 @@ export const DILEMMAS: DilemmaTemplate[] = [
     weight: ({ company }) => (company.product.launched && B2B.includes(company.sector) ? 1 : 0),
     prepare: ({ company }) => {
       const n = Math.max(1, Math.round(company.customers * 0.12));
-      return { customers: n, mrr: `€${Math.round(n * company.price).toLocaleString("en-US")}` };
+      return { customers: n, mrr: moneyL(Math.round(n * company.price)) };
     },
     options: [
       {
@@ -328,23 +330,24 @@ export const DILEMMAS: DilemmaTemplate[] = [
     id: "bridge_offer",
     title: lt("Bridge round from your investors", "Round ponte dai tuoi investitori"),
     description: lt(
-      "Runway is short. Your existing investors offer {amount} as a convertible note capped at {cap}, about half of your current valuation.",
-      "La runway è corta. I tuoi investitori attuali offrono {amount} con una nota convertibile con cap a {cap}, circa metà della valutazione attuale.",
+      "Runway is short. Your existing investors offer {amount} as a SAFE capped at {cap}, while your company is valued at about {val}: a cheap price for them.",
+      "La runway è corta. I tuoi investitori attuali offrono {amount} con un SAFE con cap a {cap}, mentre l'azienda vale circa {val}: un prezzo conveniente per loro.",
     ),
     concept: "downRound",
     weight: ({ company, runway }) =>
       runway < 4.5 && company.capTable.holders.some((h) => h.kind === "investor") ? 2 : 0,
     prepare: ({ company, netBurn }) => {
       const amount = Math.max(50_000, Math.round((Math.max(netBurn, 10_000) * 6) / 10_000) * 10_000);
-      const cap = Math.max(500_000, Math.round((company.valuation * 0.5) / 10_000) * 10_000);
-      return { amountValue: amount, capValue: cap, amount: `€${amount.toLocaleString("en-US")}`, cap: `€${cap.toLocaleString("en-US")}` };
+      // about half of the valuation, but never a bridge that buys more than 30% of the company
+      const cap = Math.max(500_000, Math.round((company.valuation * 0.5) / 10_000) * 10_000, Math.ceil(amount / 0.3 / 10_000) * 10_000);
+      return { amountValue: amount, capValue: cap, amount: moneyL(amount), cap: moneyL(cap), val: moneyL(company.valuation) };
     },
     options: [
       {
         id: "accept",
         label: lt("Accept the bridge", "Accetta il ponte"),
         description: lt("Survive, at the cost of heavy dilution later.", "Sopravvivi, al prezzo di una forte diluizione futura."),
-        outcome: lt("The bridge closed. You bought time.", "Il ponte è chiuso. Hai comprato tempo."),
+        outcome: lt("The bridge round closed. You bought time.", "Il round ponte è stato chiuso. Hai comprato tempo."),
         special: { kind: "bridge" },
       },
       {
@@ -593,7 +596,7 @@ export const DILEMMAS: DilemmaTemplate[] = [
       state.round >= 3 && state.round < state.config.totalRounds && company.team.length >= 2 && (company.pmf.score < 35 || runway < 5) ? 1 : 0,
     prepare: ({ company }) => {
       const value = (company.team.length + company.founders.filter((f) => f.active).length) * 250_000;
-      return { valueAmount: value, value: `€${value.toLocaleString("en-US")}` };
+      return { valueAmount: value, value: moneyL(value) };
     },
     options: [
       {
@@ -623,18 +626,18 @@ export const DILEMMAS: DilemmaTemplate[] = [
     weight: ({ company }) => (company.product.launched && B2B.includes(company.sector) && company.mrr > 5_000 ? 0.8 : 0),
     prepare: ({ company }) => {
       const cash = Math.round((company.mrr * 0.25 * 12 * 0.8) / 1_000) * 1_000;
-      return { cashValue: cash, cash: `€${cash.toLocaleString("en-US")}` };
+      return { cashValue: cash, cash: moneyL(cash) };
     },
     options: [
       {
         id: "offer",
         label: lt("Offer the discount", "Offri lo sconto"),
         description: lt(
-          "About a quarter of customers prepay: ~{cash} now, lower margin for a while, but they will not churn.",
-          "Circa un quarto dei clienti paga in anticipo: ~{cash} subito, margine più basso per un po', ma non abbandoneranno.",
+          "About a quarter of customers prepay: ~{cash} now, then no payments from them for 12 months (you gave up 20% of that revenue), but they will not churn.",
+          "Circa un quarto dei clienti paga in anticipo: ~{cash} subito, poi per 12 mesi nessun pagamento da loro (hai rinunciato al 20% di quei ricavi), ma non abbandoneranno.",
         ),
-        outcome: lt("Prepaid contracts boosted your cash.", "I contratti prepagati hanno rinforzato la cassa."),
-        effects: { modifier: { rounds: 2, effects: { gm: -0.05, churn: 0.85 } } },
+        outcome: lt("Prepaid contracts boosted your cash today; the next 12 months will bring in less.", "I contratti prepagati hanno rinforzato la cassa oggi; i prossimi 12 mesi incasserai meno."),
+        effects: { modifier: { rounds: 2, effects: { churn: 0.85 } } },
         special: { kind: "annualPrepay" },
       },
       {

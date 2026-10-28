@@ -7,15 +7,27 @@ import {
   historyCsv,
   previewDecision,
   draftFor,
+  saveDraft,
   standings,
   startGame,
   submitDecision,
   waterfall,
   totalShares,
+  estimateWtp,
+  SECTORS,
+  computeValuation,
+  sectorPenetration,
+  segmentFor,
 } from "../src/core";
 import type { CompanySetup, GameState } from "../src/core";
 import { createRng } from "../src/core/rng";
 import { applyEquityRound, createCapTable, departHolder, grantOptions, vestedShares } from "../src/core/engine/captable";
+import { botDecision } from "../src/core/engine/bots";
+import { resolveDilemma } from "../src/core/engine/dilemmas";
+import { acceptTermSheet, loanLimit } from "../src/core/engine/finance";
+import { deferredRevenue } from "../src/core/engine/util";
+import { DILEMMAS, LENDERS } from "../src/core";
+import { priceConversion } from "../src/core/engine/market";
 
 function human(name = "Team Alpha", sector: CompanySetup["sector"] = "saas"): CompanySetup {
   return {
@@ -117,6 +129,24 @@ describe("cap table", () => {
 });
 
 describe("liquidation waterfall", () => {
+  it("lets each preferred holder convert only when it pays off (stable outcome)", () => {
+    const state = newGame();
+    const c = state.companies[0];
+    const founders = c.capTable.holders.filter((h) => h.kind === "founder");
+    founders.forEach((h, i) => (h.shares = i === 0 ? 1_000_000 : 0));
+    c.capTable.holders = c.capTable.holders.filter((h) => h.shares > 0);
+    const pref = (name: string, shares: number, preference: number) =>
+      c.capTable.holders.push({ id: name, kind: "investor", name, shares, vesting: null, preference, investorId: name, roundLabel: "A" });
+    pref("A", 4_000_000, 4_000_000);
+    pref("B", 1_000_000, 500_000);
+    pref("C", 500_000, 100_000);
+    const out = waterfall(c, 6_450_000);
+    const get = (n: string) => out.find((p) => p.holderId === n)!.amount;
+    expect(get("A")).toBeCloseTo(4_000_000, 0);
+    expect(get("B")).toBeCloseTo(980_000, 0);
+    expect(get("C")).toBeCloseTo(490_000, 0);
+    expect(out.reduce((s, p) => s + p.amount, 0)).toBeCloseTo(6_450_000, 0);
+  });
   it("pays 1x preference before common in a small exit", () => {
     const state = newGame();
     const c = state.companies[0];
@@ -208,5 +238,197 @@ describe("simulation", () => {
     }
     expect(c.product.launched).toBe(true);
     expect(c.customers).toBeGreaterThan(0);
+  });
+});
+
+describe("pricing", () => {
+  it("has a revenue-maximising price near the willingness to pay, even for inelastic sectors", () => {
+    for (const elasticity of [0.36, 0.6, 0.9, 1.4]) {
+      const revenue = (r: number) => r * priceConversion(100, 100 * r, elasticity);
+      let best = 0.2;
+      for (let r = 0.2; r <= 10; r += 0.01) if (revenue(r) > revenue(best)) best = r;
+      expect(best).toBeLessThan(1.5);
+      expect(revenue(3)).toBeLessThan(revenue(1) * 0.5);
+      expect(revenue(10)).toBeLessThan(revenue(1) * 0.2);
+    }
+  });
+
+  it("does not reward the maximum price over pricing at the willingness to pay", () => {
+    for (const sector of ["saas", "deeptech", "aiinfra", "healthtech"] as const) {
+      const wealth = (priceAt: "wtp" | "max") => {
+        const state = createGame({ ...defaultConfig(), seed: `PRICE-${sector}` }, [human("Pricer", sector)], 2);
+        startGame(state);
+        const c = state.companies[0];
+        while (!state.finished && c.status === "active") {
+          // a sensible plan (the steady bot's), only the price changes
+          c.botStyle = "steady";
+          const d = botDecision(state, c, createRng("PRICE", state.round));
+          c.botStyle = null;
+          d.price = priceAt === "max" ? SECTORS[sector].priceMax : estimateWtp(state, c);
+          submitDecision(state, c.id, d);
+          advanceRound(state);
+        }
+        playToEnd(state);
+        return standings(state).find((s) => s.companyId === c.id)!.founderWealth;
+      };
+      expect(wealth("max")).toBeLessThan(wealth("wtp"));
+    }
+  });
+});
+
+describe("cash accounting", () => {
+  function launched(seed: string) {
+    const state = newGame(seed, 1);
+    const c = state.companies[0];
+    c.product.launched = true;
+    c.customers = 200;
+    c.price = 300;
+    c.mrr = 60_000;
+    return { state, c };
+  }
+
+  it("annual prepayment brings cash forward instead of creating it", () => {
+    const { state, c } = launched("PREPAY-1");
+    const t = DILEMMAS.find((d) => d.id === "annual_prepay")!;
+    const context = t.prepare!({ company: c, state, netBurn: 0, runway: 99 })!;
+    c.dilemma = {
+      id: "d1", templateId: t.id, round: state.round, title: t.title, description: t.description,
+      options: t.options.map((o) => ({ id: o.id, label: o.label, description: o.description })), concept: t.concept,
+      context: { cashValue: context.cashValue as number }, chosen: null, outcome: null,
+    };
+    const cash = c.cash;
+    resolveDilemma(state, c, "offer", state.round, createRng("x"), { round: 1, companyId: c.id, lines: [], pitchResults: [], hiringResults: [], eventIds: [], insights: [], decision: null });
+    const received = c.cash - cash;
+    expect(received).toBeGreaterThan(0);
+    // 20% discount: what was collected now is 80% of the revenue owed over the next 12 months
+    expect(received).toBeCloseTo(0.8 * deferredRevenue(c), 0);
+  });
+
+  it("customers who prepaid do not pay again while the prepayment lasts", () => {
+    const a = launched("PREPAY-2");
+    const b = launched("PREPAY-2");
+    b.c.prepayments = [{ monthly: 1_000, monthsLeft: 12 }];
+    advanceRound(a.state);
+    advanceRound(b.state);
+    expect(a.c.cash - b.c.cash).toBeCloseTo(3_000, 0);
+    expect(b.c.prepayments[0].monthsLeft).toBe(9);
+  });
+
+  it("bank loans cannot be stacked beyond the limit", () => {
+    const { state, c } = launched("LOAN-1");
+    const bank = LENDERS.find((l) => l.id === "loan_bank")!;
+    expect(loanLimit(c, bank, state.round).max).toBe(250_000);
+    c.loans.push({ id: "l1", lenderId: bank.id, lenderName: bank.name, principal: 200_000, remaining: 200_000, annualRate: 0.075, monthlyPayment: 9_000, monthsLeft: 24, personalGuarantee: true, startRound: 1 });
+    expect(loanLimit(c, bank, state.round).max).toBe(50_000);
+  });
+
+  it("venture debt needs a recent VC round and is sized on it", () => {
+    const { c } = launched("LOAN-2");
+    const vd = LENDERS.find((l) => l.id === "loan_venture")!;
+    c.fundingHistory.push({ id: "f1", round: 1, investorId: "seed_x", investorName: "Seed", type: "seed", instrument: "equity", amount: 300_000, preMoney: 1_200_000, postMoney: 1_500_000, equityPct: 0.2, boardSeat: true });
+    expect(loanLimit(c, vd, 2).max).toBe(105_000);
+    expect(loanLimit(c, vd, 2).checks.every((ch) => ch.met)).toBe(true);
+    expect(loanLimit(c, vd, 6).checks.every((ch) => ch.met)).toBe(false);
+  });
+});
+
+describe("ownership, control and valuation", () => {
+  it("counts outstanding SAFEs in the founders' fully diluted ownership", () => {
+    const state = newGame("SAFE-OWN");
+    const c = state.companies[0];
+    c.safes.push({ id: "s1", investorId: "a", investorName: "Angel", amount: 300_000, cap: 1_000_000, round: 1 });
+    c.safes.push({ id: "s2", investorId: "b", investorName: "Angel 2", amount: 200_000, cap: 1_000_000, round: 1 });
+    expect(foundersOwnership(c)).toBeCloseTo(0.5, 5);
+  });
+
+  it("refuses a SAFE that would take the outstanding SAFEs above 60% of the company", () => {
+    const state = newGame("SAFE-STACK");
+    const c = state.companies[0];
+    c.safes.push({ id: "s1", investorId: "a", investorName: "Angel", amount: 500_000, cap: 1_000_000, round: 1 });
+    c.termSheets.push({ id: "ts1", investorId: "angel_mark", investorName: "Mark", amount: 200_000, valuation: 1_000_000, instrument: "safe", validRound: state.round, boardSeat: false, poolTopUp: 0, liquidationPref: 1, note: { en: "", it: "" } });
+    const cash = c.cash;
+    acceptTermSheet(state, c, "ts1", state.round, { round: state.round, companyId: c.id, lines: [], pitchResults: [], hiringResults: [], eventIds: [], insights: [], decision: null });
+    expect(c.safes).toHaveLength(1);
+    expect(c.cash).toBe(cash);
+    expect(c.termSheets).toHaveLength(0);
+  });
+
+  it("gives at most two board seats to the founders", () => {
+    const setup = human("Four");
+    setup.founders = [
+      { name: "A", archetype: "hacker" },
+      { name: "B", archetype: "hustler" },
+      { name: "C", archetype: "designer" },
+      { name: "D", archetype: "hacker" },
+    ];
+    const state = createGame({ ...defaultConfig(), seed: "BOARD" }, [setup], 1);
+    expect(state.companies[0].board.founders).toBe(2);
+  });
+
+  it("does not crown a company that was sold", () => {
+    const state = newGame("KING-EXIT");
+    const c = state.companies[0];
+    c.status = "exited";
+    c.exit = { round: 2, value: 5_000_000, acquirer: "X", kind: "strategic", payouts: [], founderPayout: 5_000_000 };
+    expect(standings(state).find((s) => s.companyId === c.id)!.king).toBe(false);
+  });
+
+  it("first revenue never lowers the valuation", () => {
+    const state = newGame("VAL-REV", 1);
+    const c = state.companies[0];
+    c.sector = "ecommerce";
+    c.product.launched = true;
+    c.pmf.score = 50;
+    let last = 0;
+    for (const mrr of [0, 5_000, 10_000, 20_000, 35_000, 60_000]) {
+      c.mrr = mrr;
+      c.monthly = [{ month: 1, cash: c.cash, mrr, customers: 0 }, { month: 7, cash: c.cash, mrr, customers: 0 }];
+      const v = computeValuation(state, c).total;
+      expect(v).toBeGreaterThanOrEqual(last);
+      last = v;
+    }
+  });
+});
+
+describe("adoption curve", () => {
+  it("reaches the early majority (the chasm) during a standard game, not at the start", () => {
+    const state = newGame("CHASM-1");
+    const s = SECTORS[state.companies[0].sector];
+    expect(segmentFor(sectorPenetration(state, s))).toBe("innovators");
+    state.round = Math.ceil(state.config.totalRounds * 0.4);
+    expect(segmentFor(sectorPenetration(state, s))).toBe("earlyAdopters");
+    state.round = state.config.totalRounds;
+    expect(segmentFor(sectorPenetration(state, s))).toBe("earlyMajority");
+  });
+});
+
+describe("teams that take no decision", () => {
+  it("lose ground, more with every missed round, while a draft counts as a decision", () => {
+    const state = newGame("IDLE-1");
+    const c = state.companies[0];
+    const morale = c.morale;
+    advanceRound(state);
+    expect(c.missedRounds).toBe(1);
+    expect(c.morale).toBeLessThan(morale);
+    expect(state.reports.find((r) => r.companyId === c.id && r.round === 1)!.lines.some((l) => l.kind === "bad" && l.text.en.includes("autopilot"))).toBe(true);
+    advanceRound(state);
+    expect(c.missedRounds).toBe(2);
+    saveDraft(state, c.id, draftFor(state, c));
+    advanceRound(state);
+    expect(c.missedRounds).toBe(0);
+  });
+
+  it("never deciding ends worse than deciding the minimum", () => {
+    const wealth = (decide: boolean) => {
+      const state = newGame("IDLE-2", 2);
+      const c = state.companies[0];
+      while (!state.finished && c.status === "active") {
+        if (decide) submitDecision(state, c.id, draftFor(state, c));
+        advanceRound(state);
+      }
+      playToEnd(state);
+      return standings(state).find((s) => s.companyId === c.id)!.founderWealth;
+    };
+    expect(wealth(false)).toBeLessThan(wealth(true));
   });
 });

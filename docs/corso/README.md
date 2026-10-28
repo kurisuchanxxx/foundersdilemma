@@ -16,4 +16,4 @@ Materiali per proporre e condurre **Founder's Dilemma** come modulo esperienzial
 - **Formato consigliato**: 6 incontri da 3 ore (18 ore d'aula), circa 3 ECTS con lo studio individuale. Varianti da 1 giornata intensiva e da 2 settimane sono nel piano delle sessioni.
 - **Gruppi**: 4-8 team da 3-5 studenti; i bot completano il mercato se i team sono pochi.
 - **Tecnologia**: app gratuita per macOS e Windows oppure un file HTML che si apre in qualsiasi browser. Nessun server, nessun account, funziona offline. I dati restano sui computer della classe.
-- **Riproducibilità**: con lo stesso seed classi diverse giocano lo stesso mercato e gli stessi eventi, quindi i risultati sono confrontabili tra edizioni.
+- **Riproducibilità**: con lo stesso seed (e gli stessi settori) classi diverse partono dallo stesso mercato e vedono gli stessi eventi macroeconomici, quindi i risultati sono confrontabili tra edizioni; con le stesse decisioni la partita si ripete identica.

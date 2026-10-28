@@ -1,8 +1,8 @@
 import { DILEMMAS, dilemmaTemplate, type DilemmaContext, type DilemmaOptionDef, type DilemmaSpecial } from "../data/dilemmas";
 import type { Rng } from "../rng";
-import { fill, lt, moneyL } from "../text";
+import { fill, lt, moneyL, type LText } from "../text";
 import type { Company, DilemmaInstance, GameState, RoundReport } from "../types";
-import { addGrant, grantOptions } from "./captable";
+import { addGrant, grantOptions, safeRoom } from "./captable";
 import { applyBundle } from "./effects";
 import { executeExit } from "./exit";
 import { addProfessionalCeo, cofounderLeaves, fireEmployee, resignEmployee } from "./people";
@@ -27,17 +27,21 @@ export function generateDilemma(state: GameState, c: Company, round: number, net
   const pick = rng.weighted(weights, (x) => x.w);
   if (!pick) return null;
   const t = pick.t;
-  const context = t.prepare ? t.prepare(ctx) : {};
-  if (context === null) return null;
+  const params = t.prepare ? t.prepare(ctx) : {};
+  if (params === null) return null;
+  // bilingual values (money in each language's format) only go into the texts
+  const context = Object.fromEntries(Object.entries(params).filter((e): e is [string, string | number] => typeof e[1] !== "object"));
+  const labels = Object.fromEntries(Object.entries(params).filter((e): e is [string, LText] => typeof e[1] === "object"));
   return {
     id: nextId(state, "dil"),
     templateId: t.id,
     round,
     title: t.title,
-    description: fill(t.description, context),
-    options: t.options.map((o) => ({ id: o.id, label: fill(o.label, context), description: fill(o.description, context) })),
+    description: fill(t.description, params),
+    options: t.options.map((o) => ({ id: o.id, label: fill(o.label, params), description: fill(o.description, params) })),
     concept: t.concept,
     context,
+    labels,
     chosen: null,
     outcome: null,
   };
@@ -62,12 +66,12 @@ export function resolveDilemma(state: GameState, c: Company, choice: string | nu
   const optionId = choice && t.options.some((o) => o.id === choice) ? choice : defaultOption(d);
   const opt = t.options.find((o) => o.id === optionId)!;
   d.chosen = optionId;
-  let outcome = fill(opt.outcome, d.context);
+  let outcome = fill(opt.outcome, { ...d.context, ...(d.labels ?? {}) });
   if (opt.effects) applyBundle(state, c, opt.effects, d.title, round);
   if (opt.gamble) {
     const branch = rng.chance(opt.gamble.probability) ? opt.gamble.success : opt.gamble.failure;
     applyBundle(state, c, branch.effects, d.title, round);
-    const text = fill(branch.text, d.context);
+    const text = fill(branch.text, { ...d.context, ...(d.labels ?? {}) });
     outcome = lt(`${outcome.en} ${text.en}`, `${outcome.it} ${text.it}`);
     if (branch.special) applySpecial(state, c, d, opt, branch.special, round, rng, report);
   }
@@ -144,15 +148,17 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
       return false;
     }
     case "bridge": {
-      const amount = Number(d.context.amountValue ?? 0);
       const cap = Number(d.context.capValue ?? 1_000_000);
+      // the existing investors never take the SAFE stack above its limit
+      const amount = Math.min(Number(d.context.amountValue ?? 0), Math.floor((safeRoom(c) * cap) / 1_000) * 1_000);
+      if (amount <= 0) report.lines.push({ kind: "finance", text: lt("The bridge could not close: your SAFEs already cover most of the company.", "Il round ponte non è potuto partire: i vostri SAFE coprono già la maggior parte dell'azienda.") });
       if (amount > 0) {
-        c.safes.push({ id: nextId(state, "safe"), investorId: "bridge", investorName: "Bridge (existing investors)", amount, cap, round });
+        c.safes.push({ id: nextId(state, "safe"), investorId: "bridge", investorName: "Bridge SAFE", amount, cap, round });
         c.cash += amount;
         c.totalRaised += amount;
-        c.fundingHistory.push({ id: nextId(state, "fr"), round, investorId: "bridge", investorName: "Bridge (existing investors)", type: "seed", instrument: "safe", amount, preMoney: null, postMoney: cap, equityPct: amount / cap, boardSeat: false });
+        c.fundingHistory.push({ id: nextId(state, "fr"), round, investorId: "bridge", investorName: "Bridge SAFE", type: "seed", instrument: "safe", amount, preMoney: null, postMoney: cap, equityPct: amount / cap, boardSeat: false });
         c.reputation.investors = Math.max(0, c.reputation.investors - 3);
-        report.lines.push({ kind: "finance", text: fill(lt("Bridge closed: +{a} (convertible, cap {c}).", "Ponte chiuso: +{a} (convertibile, cap {c})."), { a: moneyL(amount), c: moneyL(cap) }) });
+        report.lines.push({ kind: "finance", text: fill(lt("Bridge round closed: +{a} (SAFE, cap {c}).", "Round ponte chiuso: +{a} (SAFE, cap {c})."), { a: moneyL(amount), c: moneyL(cap) }) });
       }
       return false;
     }
@@ -212,9 +218,13 @@ function applySpecial(state: GameState, c: Company, d: DilemmaInstance, _opt: Di
       c.mrr = c.customers * c.price;
       return false;
     }
-    case "annualPrepay":
-      c.cash += Number(d.context.cashValue ?? 0);
+    case "annualPrepay": {
+      // a quarter of customers pay 12 months upfront at a 20% discount: no further payments from them for a year
+      const cash = Number(d.context.cashValue ?? 0);
+      c.cash += cash;
+      c.prepayments = [...(c.prepayments ?? []), { monthly: cash / (12 * 0.8), monthsLeft: 12 }];
       return false;
+    }
     case "scaled": {
       if (sp.addCustomers) {
         c.customers += Number(d.context.customers ?? 0);

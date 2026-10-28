@@ -266,11 +266,16 @@ export function resolveShowdown(state: GameState, round: number, reportOf: (comp
     rows.push({ c, value: v });
   }
   rows.sort((a, b) => (def.higherIsBetter ? b.value - a.value : a.value - b.value));
-  sd.results = rows.map((r, i) => ({ companyId: r.c.id, value: r.value, rank: i + 1, xp: rows.length > 1 ? SHOWDOWN_XP[i] ?? 0 : 0 }));
+  // equal values share the place (and the XP): 1, 1, 3...
+  let rank = 0;
+  sd.results = rows.map((r, i) => {
+    if (i === 0 || Math.abs(r.value - rows[i - 1].value) > 1e-9 * Math.max(1, Math.abs(r.value))) rank = i + 1;
+    return { companyId: r.c.id, value: r.value, rank, xp: rows.length > 1 ? SHOWDOWN_XP[rank - 1] ?? 0 : 0 };
+  });
   sd.resolved = true;
   if (rows.length > 1) {
-    for (const res of sd.results) {
-      const c = rows[res.rank - 1].c;
+    for (const [i, res] of sd.results.entries()) {
+      const c = rows[i].c;
       if (res.rank === 1) c.cups = (c.cups || 0) + 1;
       if (res.xp > 0) awardXp(c, res.xp, round, "showdown", fill(lt("{t}: {r}{s} place", "{t}: {r}{s} posto"), { t: def.title, r: res.rank, s: ordinal(res.rank) }));
       reportOf(c.id)?.lines.push({

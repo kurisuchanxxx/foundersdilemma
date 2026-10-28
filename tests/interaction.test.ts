@@ -98,6 +98,8 @@ describe("deals between teams", () => {
     submitDecision(state, b.id, db);
     const people = b.team.length + a.team.length;
     const cashBefore = a.cash;
+    const targetCash = b.cash;
+    b.loans.push({ id: "test_loan", lenderId: "loan_bank", lenderName: "Bank", principal: 50_000, remaining: 50_000, annualRate: 0.075, monthlyPayment: 2_250, monthsLeft: 24, personalGuarantee: true, startRound: 1 });
     advanceRound(state);
 
     expect(b.status).toBe("exited");
@@ -105,7 +107,13 @@ describe("deals between teams", () => {
     expect(b.exit?.value).toBe(800_000);
     expect(a.status).toBe("active");
     expect(a.team.length).toBeGreaterThanOrEqual(people);
-    expect(cashBefore - a.cash).toBeGreaterThanOrEqual(800_000);
+    // the buyer pays the price and takes over the target's cash and debts
+    expect(targetCash).toBeGreaterThan(0);
+    expect(b.cash).toBe(0);
+    expect(b.loans).toHaveLength(0);
+    expect(a.loans.some((l) => l.id === "test_loan")).toBe(true);
+    expect(cashBefore - a.cash).toBeGreaterThanOrEqual(800_000 - targetCash);
+    expect(cashBefore - a.cash).toBeLessThan(800_000);
   });
 
   it("a bid larger than the buyer's cash is not sent", () => {

@@ -2,15 +2,15 @@ import { combinedMultipliers } from "../data/founders";
 import { GRANTS, INVESTORS, LENDERS, grantDef, investorDef, lenderDef, type InvestorDef, type LenderDef } from "../data/investors";
 import { SECTORS } from "../data/sectors";
 import type { Rng } from "../rng";
-import { fill, lt, moneyShort, type LText, moneyL, decL } from "../text";
+import { fill, lt, type LText, moneyL, decL } from "../text";
 import type { Company, Decision, GameState, Instrument, Pitch, PitchResult, RequirementCheck, RoundReport } from "../types";
-import { applyEquityRound, issueWarrants, totalShares } from "./captable";
+import { applyEquityRound, issueWarrants, safeRoom, totalShares } from "./captable";
 import type { SimCtx } from "./context";
 import { applyBundle } from "./effects";
 import { DISCOVERY } from "./product";
 import { monthlySalaries } from "./team";
 import { annualGrowth, computeValuation, teamStrength } from "./valuation";
-import { activeFounders, clamp, effectiveModifiers, headcount, nextId } from "./util";
+import { activeFounders, clamp, effectiveModifiers, headcount, nextId, prepaidMonthly } from "./util";
 
 // ---------------------------------------------------------------------------------------
 // Costs
@@ -40,19 +40,6 @@ export function monthlyExpenses(state: GameState, c: Company, d: Decision, round
   return { salaries, rd: d.rdBudget, marketing: d.marketingBudget, ops: d.opsBudget, discovery, overhead, compliance, office, total };
 }
 
-export function debtService(c: Company, extraRate: number): { interest: number; principal: number } {
-  let interest = 0;
-  let principal = 0;
-  for (const l of c.loans) {
-    if (l.remaining <= 0) continue;
-    const i = (l.remaining * (l.annualRate + extraRate)) / 12;
-    const p = Math.min(l.remaining, Math.max(0, l.monthlyPayment - (l.remaining * l.annualRate) / 12));
-    interest += i;
-    principal += p;
-  }
-  return { interest, principal };
-}
-
 /** One month of cash flow. Returns the operating cash flow of the month. */
 export function financeMonth(state: GameState, x: SimCtx, round: number, monthIndex: number): number {
   const c = x.c;
@@ -60,11 +47,17 @@ export function financeMonth(state: GameState, x: SimCtx, round: number, monthIn
   const q = clamp(SECTORS[c.sector].grossMargin + Math.min(0.05, x.cap.opsPts * 0.002) + x.mods.gm, 0.05, 0.95);
   const revenue = c.product.launched ? c.mrr : 0;
   const cogs = revenue * (1 - q);
+  // customers who prepaid a year upfront are served without paying again
+  const collected = Math.max(0, revenue - prepaidMonthly(c));
+  if (c.prepayments) {
+    for (const p of c.prepayments) p.monthsLeft -= 1;
+    c.prepayments = c.prepayments.filter((p) => p.monthsLeft > 0);
+  }
   let debt = 0;
   for (const l of c.loans) {
     if (l.remaining <= 0) continue;
-    const rate = l.annualRate + x.mods.debtRate;
-    const interest = (l.remaining * rate) / 12;
+    // fixed rate, set when the loan was signed (a rate rise only affects new loans)
+    const interest = (l.remaining * l.annualRate) / 12;
     const principal = Math.min(l.remaining, Math.max(0, l.monthlyPayment - (l.remaining * l.annualRate) / 12));
     l.remaining -= principal;
     l.monthsLeft = Math.max(0, l.monthsLeft - 1);
@@ -72,7 +65,7 @@ export function financeMonth(state: GameState, x: SimCtx, round: number, monthIn
   }
   c.loans = c.loans.filter((l) => l.remaining > 1);
   const oneOff = monthIndex === 0 ? x.oneOffCosts : 0;
-  const flow = revenue - cogs - exp.total - debt - oneOff;
+  const flow = collected - cogs - exp.total - debt - oneOff;
   c.cash += flow;
   x.revenue += revenue;
   x.grossProfit += revenue - cogs;
@@ -104,10 +97,16 @@ export function investorChecks(state: GameState, c: Company, inv: InvestorDef, f
     const met = r.anyOf.some(
       (a) => (a.minMrr === undefined || c.mrr >= a.minMrr) && (a.minPmf === undefined || c.pmf.score >= a.minPmf) && (a.minCustomers === undefined || c.customers >= a.minCustomers),
     );
-    const parts = r.anyOf.map((a) =>
-      a.minMrr !== undefined ? `MRR ≥ ${moneyShort(a.minMrr)}` : a.minPmf !== undefined ? `PMF ≥ ${a.minPmf}` : `${a.minCustomers}+`,
-    );
-    checks.push({ label: fill(lt("Traction: {v}", "Trazione: {v}"), { v: parts.join(" / ") }), met, hard: true });
+    const part = (a: (typeof r.anyOf)[number], lang: "en" | "it") =>
+      a.minMrr !== undefined
+        ? `MRR ≥ ${moneyL(a.minMrr)[lang]}`
+        : a.minPmf !== undefined
+          ? `PMF ≥ ${a.minPmf}`
+          : lang === "it"
+            ? `${a.minCustomers} clienti`
+            : `${a.minCustomers} customers`;
+    const v = { en: r.anyOf.map((a) => part(a, "en")).join(" or "), it: r.anyOf.map((a) => part(a, "it")).join(" o ") };
+    checks.push({ label: fill(lt("Traction: {v}", "Trazione: {v}"), { v }), met, hard: true });
   }
   if (r.maxValuation !== undefined)
     checks.push({ label: fill(lt("Valuation below {v}", "Valutazione sotto {v}"), { v: moneyL(r.maxValuation) }), met: c.valuation <= r.maxValuation, hard: true });
@@ -144,7 +143,7 @@ export function investorChecks(state: GameState, c: Company, inv: InvestorDef, f
 export function fairValuation(state: GameState, c: Company, inv: InvestorDef): number {
   const b = computeValuation(state, c);
   const mods = effectiveModifiers(state, c, c.sector, state.round);
-  const base = Math.max(300_000, b.total - b.netCash);
+  const base = Math.max(300_000, b.anchored);
   return base * inv.valuationBias * Math.sqrt(mods.climate) * (1 + 0.003 * (c.reputation.investors - 50));
 }
 
@@ -155,6 +154,11 @@ function amountInRange(inv: InvestorDef, amount: number): boolean {
 export function equityPctFor(p: Pitch): number {
   return p.instrument === "safe" ? p.amount / Math.max(1, p.valuation) : p.amount / Math.max(1, p.valuation + p.amount);
 }
+
+const SAFE_STACK_REASON = lt(
+  "Your SAFEs would already convert into most of the company: raise a priced round first.",
+  "I vostri SAFE si convertirebbero già nella maggior parte dell'azienda: fate prima un round con prezzo.",
+);
 
 function rejection(inv: InvestorDef, reason: LText, checks: RequirementCheck[], fair: number, p: Pitch): PitchResult {
   return { investorId: inv.id, investorName: inv.name, outcome: "rejected", reason, amount: p.amount, valuation: p.valuation, fairValuation: fair, checks };
@@ -211,6 +215,11 @@ export function assessPitch(state: GameState, c: Company, p: Pitch, rng: Rng, _r
   const askRatio = ask / Math.max(1, fair);
   const dilution = equityPctFor(p);
 
+  if (dilution > 0.4) {
+    return done(rejection(inv, lt("Selling that much of the company would demotivate the founders. Ask for less money or a higher valuation.", "Cedere così tanto dell'azienda demotiverebbe i fondatori. Chiedi meno soldi o una valutazione più alta."), checks, fair, p));
+  }
+  if (p.instrument === "safe" && dilution > safeRoom(c)) return done(rejection(inv, SAFE_STACK_REASON, checks, fair, p));
+
   // Equity crowdfunding: the crowd decides.
   if (inv.type === "crowdfunding") {
     const community = Math.min(1, c.customers / 2_000);
@@ -242,9 +251,6 @@ export function assessPitch(state: GameState, c: Company, p: Pitch, rng: Rng, _r
     (runway < 3 ? 0.08 : 0) +
     noise;
 
-  if (dilution > 0.4) {
-    return done(rejection(inv, lt("Selling that much of the company would demotivate the founders. Ask for less money or a higher valuation.", "Cedere così tanto dell'azienda demotiverebbe i fondatori. Chiedi meno soldi o una valutazione più alta."), checks, fair, p));
-  }
   if (interest >= 0.55 && askRatio <= 1.15 && rangePenalty === 0) {
     return done({ investorId: inv.id, investorName: inv.name, outcome: "closed", reason: lt("Deal! The money is in your account.", "Affare fatto! I soldi sono sul tuo conto."), amount: p.amount, valuation: p.valuation, fairValuation: fair, checks }, p, interest);
   }
@@ -337,6 +343,12 @@ export function allocateDeals(state: GameState, candidates: PitchCandidate[], ro
     for (const k of list) {
       const deal = k.assessment.close!;
       const cap = investorCapacity(state, inv, round);
+      // several SAFEs can be pitched in the same round: the stack is checked again when each one closes
+      if (deal.instrument === "safe" && deal.amount / Math.max(1, deal.valuation) > safeRoom(k.c)) {
+        k.assessment.result.outcome = "rejected";
+        k.assessment.result.reason = SAFE_STACK_REASON;
+        continue;
+      }
       if (cap.slotsLeft >= 1 && deal.amount <= cap.capitalLeft) {
         closeDeal(state, k.c, inv, deal, round, k.report);
         recordDeal(state, inv, k.c.id, deal.amount, round);
@@ -436,6 +448,11 @@ export function acceptTermSheet(state: GameState, c: Company, tsId: string, roun
   if (!ts || ts.validRound < round) return;
   const inv = investorDef(ts.investorId);
   if (!inv) return;
+  if (ts.instrument === "safe" && ts.amount / Math.max(1, ts.valuation) > safeRoom(c)) {
+    report.lines.push({ kind: "finance", text: fill(lt("The SAFE from {n} lapsed: your SAFEs would convert into most of the company.", "Il SAFE di {n} è decaduto: i vostri SAFE si convertirebbero nella maggior parte dell'azienda."), { n: inv.name }) });
+    c.termSheets = c.termSheets.filter((t) => t.id !== tsId);
+    return;
+  }
   if (investorCapacity(state, inv, round).capitalLeft < ts.amount) {
     report.lines.push({ kind: "finance", text: fill(lt("{n} has no capital left: the term sheet lapsed.", "{n} non ha più capitale: il term sheet è decaduto."), { n: inv.name }) });
     c.termSheets = c.termSheets.filter((t) => t.id !== tsId);
@@ -498,22 +515,23 @@ export function payPendingGrants(c: Company, round: number, report: RoundReport)
   c.pendingGrants = c.pendingGrants.filter((x) => x.round > round);
 }
 
-export function loanLimit(c: Company, lender: LenderDef): { max: number; checks: RequirementCheck[] } {
+export function loanLimit(c: Company, lender: LenderDef, round: number): { max: number; checks: RequirementCheck[] } {
   const checks: RequirementCheck[] = [];
   let max = 0;
+  const owed = c.loans.filter((l) => l.lenderId === lender.id).reduce((sum, l) => sum + l.remaining, 0);
   if (lender.id === "loan_public") {
     checks.push({ label: lt("MVP at least 50% or launched", "MVP almeno al 50% o lanciato"), met: c.product.launched || c.product.mvpProgress >= 0.5, hard: true });
     checks.push({ label: lt("Only once per company", "Una sola volta per azienda"), met: !c.loans.some((l) => l.lenderId === lender.id) && !c.fundingHistory.some((f) => f.investorId === lender.id), hard: true });
     max = 150_000;
   } else if (lender.id === "loan_bank") {
     checks.push({ label: lt("Monthly revenue ≥ €8k", "Fatturato mensile ≥ 8k€"), met: c.mrr >= 8_000, hard: true });
-    max = Math.min(250_000, c.mrr * 8);
+    max = Math.min(250_000, c.mrr * 8) - owed;
   } else if (lender.id === "loan_venture") {
     const last = [...c.fundingHistory].reverse().find((f) => f.instrument === "equity" && ["seed", "seriesA", "growth", "corporate"].includes(f.type));
-    checks.push({ label: lt("A VC round in the last 3 rounds", "Un round VC negli ultimi 3 round"), met: !!last && c.lastPricedRound !== null, hard: true });
-    max = last ? Math.max(250_000, last.amount * 0.35) : 0;
+    checks.push({ label: lt("A VC round in the last 3 rounds", "Un round VC negli ultimi 3 round"), met: !!last && round - last.round <= 3, hard: true });
+    max = last ? last.amount * 0.35 - owed : 0;
   }
-  return { max: Math.round(max / 1_000) * 1_000, checks };
+  return { max: Math.max(0, Math.floor(max / 1_000) * 1_000), checks };
 }
 
 export function processLoanRequest(state: GameState, x: SimCtx, round: number): void {
@@ -522,16 +540,20 @@ export function processLoanRequest(state: GameState, x: SimCtx, round: number): 
   if (!req || req.amount <= 0) return;
   const lender = lenderDef(req.lenderId);
   if (!lender) return;
-  const { max, checks } = loanLimit(c, lender);
+  const { max, checks } = loanLimit(c, lender, round);
   const unmet = checks.find((ch) => !ch.met);
-  if (unmet || req.amount > max) {
+  if (unmet || max <= 0) {
     x.report.lines.push({
       kind: "bad",
       text: unmet
         ? fill(lt("{l} declined the loan: {r}.", "{l} ha rifiutato il prestito: {r}."), { l: lender.name, r: unmet.label })
-        : fill(lt("{l} declined: the maximum they can lend you is {m}.", "{l} ha rifiutato: il massimo che può prestarti è {m}."), { l: lender.name, m: moneyL(max) }),
+        : fill(lt("{l} declined: you already owe them as much as they can lend you.", "{l} ha rifiutato: le devi già quanto può prestarti."), { l: lender.name }),
     });
     return;
+  }
+  if (req.amount > max) {
+    x.report.lines.push({ kind: "finance", text: fill(lt("{l} lends at most {m}: you asked for {a}.", "{l} presta al massimo {m}: avevi chiesto {a}."), { l: lender.name, m: moneyL(max), a: moneyL(req.amount) }) });
+    req.amount = max;
   }
   const mods = effectiveModifiers(state, c, c.sector, round);
   const rate = lender.annualRate + (lender.annualRate > 0 ? mods.debtRate : 0);
@@ -589,6 +611,7 @@ export function handleInsolvency(state: GameState, c: Company, round: number, mo
     });
     c.cash += amount;
     c.totalRaised += amount;
+    c.flags.everRaisedEquity = true;
     c.rescues += 1;
     c.board.investors += 1;
     c.lastPostMoney = res.postMoney;

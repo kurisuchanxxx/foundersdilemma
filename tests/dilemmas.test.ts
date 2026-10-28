@@ -77,17 +77,20 @@ describe("founder dilemmas", () => {
         const state = grownGame(sector, `DIL-${t.id}-${o.id}`);
         const c = state.companies[0];
         const ctx = { company: c, state, netBurn: 20_000, runway: 3 };
-        const context = t.prepare ? t.prepare(ctx) : {};
-        if (context === null) continue;
+        const params = t.prepare ? t.prepare(ctx) : {};
+        if (params === null) continue;
+        // as in generateDilemma: bilingual values fill the texts, plain values stay on the instance
+        const context = Object.fromEntries(Object.entries(params).filter((e): e is [string, string | number] => typeof e[1] !== "object"));
         const inst: DilemmaInstance = {
           id: `test-${t.id}`,
           templateId: t.id,
           round: state.round,
           title: t.title,
-          description: fill(t.description, context),
-          options: t.options.map((x) => ({ id: x.id, label: fill(x.label, context), description: fill(x.description, context) })),
+          description: fill(t.description, params),
+          options: t.options.map((x) => ({ id: x.id, label: fill(x.label, params), description: fill(x.description, params) })),
           concept: t.concept,
           context,
+          labels: Object.fromEntries(Object.entries(params).filter((e): e is [string, { en: string; it: string }] => typeof e[1] === "object")),
           chosen: null,
           outcome: null,
         };

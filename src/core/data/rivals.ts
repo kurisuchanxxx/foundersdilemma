@@ -38,7 +38,7 @@ export const RIVAL_MOVES: RivalMoveTemplate[] = [
     title: lt("{r} cuts prices by 20%", "{r} taglia i prezzi del 20%"),
     description: lt(
       "A price war in the sector: customers expect to pay less (willingness to pay -10% for two rounds). Compete on value, not only on price.",
-      "Guerra dei prezzi nel settore: i clienti si aspettano di pagare meno (disponibilità a pagare -10% per due round). Compete sul valore, non solo sul prezzo.",
+      "Guerra dei prezzi nel settore: i clienti si aspettano di pagare meno (disponibilità a pagare -10% per due round). Competete sul valore, non solo sul prezzo.",
     ),
   },
   {

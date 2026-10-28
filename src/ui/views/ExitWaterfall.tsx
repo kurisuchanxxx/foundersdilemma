@@ -9,7 +9,8 @@ const MULTIPLES = [0.25, 0.5, 1, 2, 4] as const;
 
 function byGroup(c: Company, payouts: Payout[]) {
   const founders = founderPayout(c, payouts);
-  const employees = payouts.filter((p) => p.kind === "employee").reduce((s, p) => s + p.amount, 0);
+  // employees and co-founders who left keep their vested shares: they are paid with the team
+  const employees = payouts.filter((p) => p.kind === "employee" || p.kind === "founder").reduce((s, p) => s + p.amount, 0) - founders;
   const investors = payouts.filter((p) => p.kind === "investor" || p.kind === "crowd").reduce((s, p) => s + p.amount, 0);
   return { founders, employees, investors };
 }
@@ -62,7 +63,7 @@ export function ExitWaterfall({ c }: { c: Company }) {
           series={[
             { id: "founders", label: f.tx("Founders", "Fondatori"), color: "var(--s1)", points: curve.map((p) => ({ x: p.x, y: p.founders })) },
             { id: "investors", label: f.tx("Investors", "Investitori"), color: "var(--s2)", points: curve.map((p) => ({ x: p.x, y: p.investors })) },
-            { id: "employees", label: f.tx("Employees", "Dipendenti"), color: "var(--s3)", points: curve.map((p) => ({ x: p.x, y: p.employees })) },
+            { id: "employees", label: f.tx("Employees and former founders", "Dipendenti ed ex fondatori"), color: "var(--s3)", points: curve.map((p) => ({ x: p.x, y: p.employees })) },
           ]}
           xFormat={(x) => f.money(x)}
           yFormat={(y) => f.money(y)}

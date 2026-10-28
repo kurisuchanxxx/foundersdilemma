@@ -9,7 +9,7 @@ Formato di riferimento: **6 incontri da 3 ore**, partita in modalità **Classe**
 | Round di gioco | 2 × 35-40' | Timer proiettato; il docente gira tra i team |
 | Chiusura | 15' | Report del round, consegna del decision memo |
 
-Le domande guida qui sotto compaiono anche, adattate allo stato della partita, nella sezione *Spunti per la discussione* della console del docente.
+Le domande guida qui sotto compaiono anche nella sezione *Spunti per la discussione* della console del docente, incontro per incontro (in proporzione al numero di round della partita), insieme a domande legate agli eventi del round.
 
 ---
 
@@ -39,7 +39,7 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 
 **Mini-lezione** (40'): build-measure-learn (Ries); MVP come esperimento, non come prodotto ridotto; il test di Sean Ellis (almeno il 40% di utenti molto delusi senza il prodotto); debito tecnico come prestito ad alto interesse.
 
-**Round 2 e 3.** In gioco: clienti obiettivo (nicchia, mercato ampio, premium), livello di discovery (nessuna, leggera, profonda), approccio allo sviluppo (veloce, bilanciato, qualità), lancio, gestione del debito tecnico.
+**Round 2 e 3.** In gioco: clienti obiettivo (nicchia, mercato ampio, premium), livello di discovery (nessuna, leggera, profonda), approccio allo sviluppo (corsa, bilanciato, prima la qualità), lancio, gestione del debito tecnico.
 
 **Debriefing**
 - Lanciare ora o rifinire l'MVP? Cosa si perde e cosa si guadagna aspettando un round?
@@ -47,7 +47,7 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 - Il primo dilemma: chi lo ha affrontato lo racconta alla classe.
 - Nicchia o mercato ampio? Chi ha scelto una testa di ponte sa descrivere il proprio cliente in una frase?
 
-**Spunto di confronto**: nelle simulazioni di bilanciamento i bot *lean* (discovery, lancio presto, spesa contenuta) raggiungono il PMF molto più spesso dei bot *blitz* (spesa alta da subito). Chiedete ai team perché.
+**Spunto di confronto**: nelle simulazioni di bilanciamento i bot *lean* (discovery profonda, sviluppo orientato alla qualità, spesa contenuta) raggiungono il PMF molto più spesso dei bot *blitz* (lancio anticipato, spesa alta da subito), e quando il mercato arriva al chasm i *blitz* senza PMF perdono gran parte del valore. Chiedete ai team perché.
 
 ---
 
@@ -55,9 +55,9 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 
 **Obiettivi**: fissare il prezzo rispetto alla disponibilità a pagare; scegliere il canale; leggere CAC, LTV, churn e payback; riconoscere il chasm.
 
-**Mini-lezione** (45'): pricing e disponibilità a pagare; modelli di prezzo (abbonamento, freemium, a consumo); canali (performance, brand e contenuti, partnership, vendita diretta) e loro effetti su CAC e churn; LTV/CAC almeno 3 come regola pratica; la curva di adozione di Rogers e il chasm di Moore. Nel gioco, quando la penetrazione del settore supera la quota degli early adopter, servono almeno 55 punti di PMF per evitare la penalità sul CAC.
+**Mini-lezione** (45'): pricing e disponibilità a pagare; modelli di prezzo (abbonamento, freemium, a consumo); canali (performance, brand e contenuti, partnership, vendita diretta) e loro effetti su CAC e churn; LTV/CAC almeno 3 come regola pratica; la curva di adozione di Rogers e il chasm di Moore. Nel gioco l'adozione del mercato cresce round dopo round (concorrenti e sostituti più i clienti dei team) e di solito supera la quota degli early adopter (16%) verso metà partita: da lì servono almeno 55 punti di PMF per evitare la penalità sul CAC. Il mentor avvisa quando il chasm si avvicina: è il momento giusto per discuterne.
 
-**Round 4 e 5** (fine del primo anno).
+**Round 4 e 5** (fine del primo anno e primo semestre del secondo).
 
 **Debriefing**
 - Avete il product-market fit? Quali numeri lo dimostrano (retention, % di Sean Ellis, LTV/CAC)?
@@ -66,7 +66,7 @@ Le domande guida qui sotto compaiono anche, adattate allo stato della partita, n
 - I concorrenti esterni hanno fatto una mossa nel vostro settore (guerra dei prezzi, campagna, nuova versione)? Come avete risposto?
 - Coopetizione: una partnership con un altro team conviene di più con chi sta nel vostro settore o con chi ha clienti simili in un altro?
 
-**Attività breve** (15'): ogni team calcola a mano il payback del CAC con i propri numeri e lo confronta con quello mostrato nella pagina Mercato.
+**Attività breve** (15'): ogni team calcola a mano il payback del CAC (CAC ÷ (prezzo × margine lordo), con i valori della pagina Mercato) e lo confronta con quello mostrato nella stessa pagina.
 
 ---
 
@@ -136,4 +136,4 @@ Gli incontri 2-5 si alternano a round giocati a casa: il docente condivide il fi
 Complessità **Avanzata**: nella pagina Finanziamenti compare il simulatore del waterfall di uscita (stack delle preferenze e incasso di ogni socio a diversi valori di exit). Più tempo all'incontro 5, con un esercizio di confronto tra term sheet e la ricerca del valore di exit sotto il quale i fondatori non incassano nulla.
 
 ### Classe numerosa (oltre 60 studenti)
-Due partite parallele con lo **stesso seed**: stessi eventi e stesso mercato, quindi le classifiche sono confrontabili e il debriefing finale può mettere a confronto le strategie delle due classi.
+Due partite parallele con lo **stesso seed** e, possibilmente, gli stessi settori: partono dallo stesso mercato e vedono gli stessi eventi macroeconomici, quindi le classifiche sono confrontabili e il debriefing finale può mettere a confronto le strategie delle due classi. Le partite poi divergono con le decisioni dei team (candidati assunti, reazioni dei concorrenti esterni, eventi che toccano un settore a caso): è proprio questo il confronto interessante.

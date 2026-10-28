@@ -47,7 +47,14 @@ export function evaluateOffer(state: GameState, c: Company, cand: Candidate, off
   if (runwayMonths < prefs.minRunwayMonths) {
     const p = 0.12 + 0.015 * (prefs.minRunwayMonths - runwayMonths);
     penalties += p;
-    reasons.push({ text: fill(lt("I'm worried about your runway: about {r} months, I need at least {m}.", "Mi preoccupa la vostra runway: circa {r} mesi, me ne servono almeno {m}."), { r: Math.max(0, Math.round(runwayMonths)), m: prefs.minRunwayMonths }), weight: p });
+    const r = Math.max(0, Math.round(runwayMonths));
+    reasons.push({
+      text: fill(lt("I'm worried about your runway: about {r}, I need at least {m} months.", "Mi preoccupa la vostra runway: circa {r}, me ne servono almeno {m}."), {
+        r: r === 1 ? lt("1 month", "1 mese") : lt(`${r} months`, `${r} mesi`),
+        m: prefs.minRunwayMonths,
+      }),
+      weight: p,
+    });
   }
   if (c.morale < 0.5) {
     penalties += 0.08;

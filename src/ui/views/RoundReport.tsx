@@ -164,7 +164,7 @@ export function RoundRecap({ c, round }: { c: Company; round: number }) {
             <div className="small mt-8 row gap-4">
               <Icon name="Flame" size={13} className="warn" />
               <span className="muted">
-                {f.tx("Streak", "Serie")}: {c.challengeStreak} {f.tx("rounds with at least one challenge completed (+50 XP every 3).", "round con almeno una sfida completata (+50 XP ogni 3).")}
+                {f.tx("Streak", "Serie")}: {f.count(c.challengeStreak, ["round", "rounds"], ["round", "round"])} {f.tx("with at least one challenge completed (+50 XP every 3).", "con almeno una sfida completata (+50 XP ogni 3).")}
               </span>
             </div>
           )}

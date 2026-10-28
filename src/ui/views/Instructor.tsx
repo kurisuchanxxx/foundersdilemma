@@ -10,6 +10,7 @@ import { stateForSave, useStore } from "../store";
 import { StandingsTable } from "./Leaderboard";
 import { EventCard } from "./News";
 import { discussionPrompts } from "../content/prompts";
+import { describeEffect } from "./Market";
 
 export function Instructor() {
   const f = useFmt();
@@ -91,7 +92,7 @@ export function Instructor() {
             <div className="stat-value">
               {humans.filter((c) => c.submitted || c.status !== "active").length} / {humans.length}
             </div>
-            <p className="small faint">{allReady ? f.tx("Everyone submitted: you can advance.", "Tutti hanno inviato: puoi avanzare.") : f.tx("Missing teams will keep last round's settings.", "I team mancanti terranno le impostazioni del round precedente.")}</p>
+            <p className="small faint">{allReady ? f.tx("Everyone submitted: you can advance.", "Tutti hanno inviato: puoi avanzare.") : f.tx("Missing teams run on autopilot and lose ground.", "I team mancanti vanno col pilota automatico e perdono terreno.")}</p>
           </Card>
           <Card title={f.tx("Surprise event", "Evento a sorpresa")} icon="Zap">
             <button className="btn primary" onClick={() => setEventOpen(true)}>
@@ -248,7 +249,10 @@ export function Instructor() {
           <p>
             {f.tx("Missing teams:", "Team mancanti:")} {humans.filter((c) => c.status === "active" && !c.submitted).map((c) => c.name).join(", ")}
           </p>
-          <p className="small muted mt-8">{f.tx("They will play with their drafts or last round's settings.", "Giocheranno con le bozze o con le impostazioni del round precedente.")}</p>
+          <p className="small muted mt-8">{f.tx(
+            "Without a decision file they run on autopilot and lose ground (slower development and sales, lower morale and investors' trust), more with every missed round.",
+            "Senza file di decisioni vanno col pilota automatico e perdono terreno (sviluppo e vendite più lenti, morale e fiducia degli investitori in calo), sempre di più a ogni round saltato.",
+          )}</p>
         </Modal>
       )}
       {eventOpen && <InjectEventModal onClose={() => setEventOpen(false)} />}
@@ -289,6 +293,8 @@ const PRESETS: Preset[] = [
   { id: "costs", en: "Cost shock", it: "Shock dei costi", impact: "negative", effects: { gm: -0.08 }, cash: -15_000, descEn: "Energy and supplier prices jump.", descIt: "I prezzi dell'energia e dei fornitori schizzano in alto." },
   { id: "talent", en: "Talent crunch", it: "Carenza di talenti", impact: "negative", effects: { hiringBar: 0.08, salaryAsk: 1.15 }, cash: 0, descEn: "A tech giant opens an office in town and hires everyone.", descIt: "Un colosso tecnologico apre un ufficio in città e assume tutti." },
   { id: "regulation", en: "New regulation", it: "Nuova regolamentazione", impact: "negative", effects: { compliance: 2_000, dev: 0.92 }, cash: 0, descEn: "A new law requires certifications and audits.", descIt: "Una nuova legge richiede certificazioni e audit." },
+  { id: "recession", en: "Recession", it: "Recessione", impact: "negative", effects: { demand: 0.85, churn: 1.15, climate: 0.85 }, cash: 0, descEn: "Customers cut budgets: fewer purchases, more cancellations, cautious investors.", descIt: "I clienti tagliano i budget: meno acquisti, più disdette, investitori prudenti." },
+  { id: "entrant", en: "New competitor", it: "Nuovo concorrente", impact: "negative", effects: { cac: 1.2, wtp: 0.92, churn: 1.1 }, cash: 0, descEn: "A well-funded newcomer enters the market with aggressive prices and ads.", descIt: "Un nuovo arrivato ben finanziato entra nel mercato con prezzi e pubblicità aggressivi." },
   { id: "grant", en: "Government stimulus", it: "Stimolo governativo", impact: "positive", effects: { climate: 1.2 }, cash: 20_000, descEn: "A public program gives every startup a small grant.", descIt: "Un programma pubblico dà a ogni startup un piccolo contributo." },
 ];
 
@@ -340,7 +346,7 @@ function InjectEventModal({ onClose }: { onClose: () => void }) {
           <button className="btn" onClick={onClose}>
             {f.tx("Cancel", "Annulla")}
           </button>
-          <button className="btn primary" onClick={submit}>
+          <button className="btn primary" onClick={submit} disabled={!title.trim()}>
             <Icon name="Zap" size={16} />
             {f.tx("Publish event", "Pubblica l'evento")}
           </button>
@@ -394,6 +400,11 @@ function InjectEventModal({ onClose }: { onClose: () => void }) {
           )}
         </div>
         <SliderField label={f.tx("Strength", "Intensità")} value={strength} min={0.5} max={2} step={0.25} onChange={setStrength} format={(v) => `×${v}`} />
+        <p className="small muted">
+          {f.tx("Effects", "Effetti")}: {Object.entries(scaled()).map(([k, v]) => describeEffect(f, k, v as number)).join(", ")}
+          {preset.cash !== 0 && `, ${f.tx("cash", "cassa")} ${f.money(Math.round(preset.cash * strength), { sign: true })} ${f.tx("for each company hit", "per ogni azienda colpita")}`}
+          {` · ${f.count(rounds, ["round", "rounds"], ["round", "round"])}`}
+        </p>
         <SliderField label={f.tx("Duration (rounds)", "Durata (round)")} value={rounds} min={1} max={4} onChange={setRounds} format={(v) => String(v)} />
       </div>
     </Modal>

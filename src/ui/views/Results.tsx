@@ -48,7 +48,7 @@ export function Results() {
                 <Icon name="FileSpreadsheet" size={16} />
                 {f.tx("History CSV", "CSV storico")}
               </button>
-              <button className="btn" onClick={() => saveTextFile(`${game.config.seed}_decisions.csv`, decisionsCsv(game), [{ name: "CSV", extensions: ["csv"] }], "text/csv")}>
+              <button className="btn" onClick={() => saveTextFile(`${game.config.seed}_decisions.csv`, decisionsCsv(game, lang), [{ name: "CSV", extensions: ["csv"] }], "text/csv")}>
                 <Icon name="FileSpreadsheet" size={16} />
                 {f.tx("Decisions CSV", "CSV decisioni")}
               </button>

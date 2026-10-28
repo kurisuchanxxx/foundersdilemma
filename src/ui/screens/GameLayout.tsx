@@ -121,7 +121,7 @@ export function GameLayout() {
         </div>
       </aside>
       <main className="main">
-        <TopBar company={company} label={label} onAdvance={advance} draftsPending={Object.keys(drafts).length > 0} />
+        <TopBar company={company} label={label} onAdvance={advance} draftsPending={Object.keys(drafts).length > 0} needsPin={!!game.config.instructorPin && !pinOk} />
         <div className="content">
           <div className="content-inner">
             {instructorLocked ? (
@@ -162,6 +162,7 @@ export function GameLayout() {
 
 function CompanySwitcher({ company, humans, onPick, locked }: { company: Company; humans: Company[]; onPick: (id: string) => void; locked: boolean }) {
   const f = useFmt();
+  const game = useGame();
   const [open, setOpen] = useState(false);
   return (
     <div style={{ position: "relative" }}>
@@ -174,9 +175,11 @@ function CompanySwitcher({ company, humans, onPick, locked }: { company: Company
               ? company.status === "exited"
                 ? f.tx("Exited", "Venduta")
                 : f.tx("Bankrupt", "Fallita")
-              : company.submitted
-                ? f.tx("Decisions sent", "Decisioni inviate")
-                : f.tx("Deciding…", "In decisione…")}
+              : game.finished
+                ? f.tx("Game over", "Partita conclusa")
+                : company.submitted
+                  ? f.tx("Decisions sent", "Decisioni inviate")
+                  : f.tx("Deciding…", "In decisione…")}
           </div>
         </div>
         {!locked && <Icon name="ChevronRight" size={14} />}
@@ -205,7 +208,7 @@ function CompanySwitcher({ company, humans, onPick, locked }: { company: Company
   );
 }
 
-function TopBar({ company, label, onAdvance, draftsPending }: { company: Company | null; label: string; onAdvance: () => void; draftsPending: boolean }) {
+function TopBar({ company, label, onAdvance, draftsPending, needsPin }: { company: Company | null; label: string; onAdvance: () => void; draftsPending: boolean; needsPin: boolean }) {
   const f = useFmt();
   const game = useGame();
   const role = useStore((s) => s.classroomRole);
@@ -268,9 +271,10 @@ function TopBar({ company, label, onAdvance, draftsPending }: { company: Company
       {!game.finished && mode === "hotseat" && role !== "team" && (
         <button
           className={`btn ${allHumansSubmitted(game) ? "primary" : ""}`}
-          onClick={() => (allHumansSubmitted(game) ? onAdvance() : setConfirmAdvance(true))}
+          onClick={() => (needsPin ? setView("instructor") : allHumansSubmitted(game) ? onAdvance() : setConfirmAdvance(true))}
+          title={needsPin ? f.tx("The instructor PIN is required", "Serve il PIN del docente") : undefined}
         >
-          <Icon name="FastForward" size={16} />
+          <Icon name={needsPin ? "KeyRound" : "FastForward"} size={16} />
           {f.tx("Advance round", "Avanza il round")}
         </button>
       )}
@@ -303,8 +307,8 @@ function TopBar({ company, label, onAdvance, draftsPending }: { company: Company
         >
           <p>
             {f.tx(
-              "Teams that did not submit will play with last round's settings (drafts are used if present).",
-              "I team che non hanno inviato giocheranno con le impostazioni del round precedente (se presenti, si usano le bozze).",
+              "Teams with a draft will play it. Teams that took no decision at all run on autopilot and lose ground: development and sales slow down, morale and investors' trust fall, more with every missed round.",
+              "I team con una bozza giocheranno quella. I team che non hanno preso nessuna decisione vanno col pilota automatico e perdono terreno: sviluppo e vendite rallentano, morale e fiducia degli investitori calano, sempre di più a ogni round saltato.",
             )}
           </p>
         </Modal>

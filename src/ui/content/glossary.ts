@@ -84,8 +84,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     ),
     formula: "CAC = Paid marketing spend / New paid customers",
     inGame: lt(
-      "CAC depends on sector, channel fit, competitors in your sector, PMF, brand, media reputation, your growth team and your price.",
-      "Il CAC dipende da settore, canale, concorrenti nel settore, PMF, brand, reputazione mediatica, team growth e prezzo.",
+      "CAC depends on sector, channel fit, competitors in your sector, PMF, brand, media reputation, your growth team and your price. The game shows the paid CAC: marketing budget divided by the customers it brought in. Salespeople's salaries are in payroll and deals they close are not counted, so in sales-heavy sectors the full CAC is higher.",
+      "Il CAC dipende da settore, canale, concorrenti nel settore, PMF, brand, reputazione mediatica, team growth e prezzo. Il gioco mostra il CAC del marketing a pagamento: budget di marketing diviso per i clienti che ha portato. Gli stipendi dei venditori sono tra le retribuzioni e i contratti che chiudono non sono contati, quindi nei settori trainati dalle vendite il CAC completo è più alto.",
     ),
   },
   {
@@ -195,7 +195,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     ),
     formula: "PMF score = f(problem clarity, solution fit, market pull, learning velocity, retention)",
     inGame: lt("A score of 60 corresponds to 40% 'very disappointed' users.", "Un punteggio di 60 corrisponde al 40% di utenti 'molto delusi'."),
-    refs: ["M. Andreessen, \"The only thing that matters\" (2007)", "S. Ellis, Hacking Growth (2017)"],
+    refs: ["M. Andreessen, \"The only thing that matters\" (2007)", "S. Ellis and M. Brown, Hacking Growth (2017)"],
   },
   {
     id: "pivot",
@@ -218,7 +218,7 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Moving fast creates debt that slows every future change and generates bugs and outages. Like financial debt, it is a tool: useful when taken consciously and repaid.",
       "Andare veloci crea debito che rallenta ogni modifica futura e genera bug e disservizi. Come il debito finanziario, è uno strumento: utile se preso consapevolmente e ripagato.",
     ),
-    inGame: lt("'Rush' and 'ship fast' build debt; 'pay down' spends 25% of development on refactoring. High debt slows development by up to 60%.", "'Rush' e 'spedisci veloce' accumulano debito; 'ripaga' dedica il 25% dello sviluppo al refactoring. Un debito alto rallenta lo sviluppo fino al 60%."),
+    inGame: lt("'Rush' and 'ship fast' build debt; 'pay down' spends 25% of development on refactoring. High debt slows development by up to 60%.", "'Corsa' e 'spedisci veloce' accumulano debito; 'ripaga' dedica il 25% dello sviluppo al refactoring. Un debito alto rallenta lo sviluppo fino al 60%."),
     refs: ["W. Cunningham (1992)"],
   },
   {
@@ -239,10 +239,13 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "market",
     short: lt("Innovators, early adopters, early majority, late majority, laggards.", "Innovatori, early adopter, maggioranza anticipatrice, maggioranza ritardataria, ritardatari."),
     body: lt(
-      "Everett Rogers showed that markets adopt new products in segments with different needs. Each new segment is harder and more expensive to win, but more loyal.",
-      "Everett Rogers ha mostrato che i mercati adottano i nuovi prodotti per segmenti con bisogni diversi. Ogni nuovo segmento è più difficile e costoso da conquistare, ma più fedele.",
+      "Everett Rogers showed that a new product spreads through a market in segments with different attitudes to novelty: innovators (2.5%), early adopters (13.5%), early majority (34%), late majority (34%) and laggards (16%). Geoffrey Moore added that the step from visionary early adopters to the pragmatic early majority is the hardest one: the chasm.",
+      "Everett Rogers ha mostrato che un nuovo prodotto si diffonde in un mercato per segmenti con atteggiamenti diversi verso la novità: innovatori (2,5%), early adopter (13,5%), maggioranza anticipatrice (34%), maggioranza ritardataria (34%) e ritardatari (16%). Geoffrey Moore ha aggiunto che il passaggio dagli early adopter visionari alla maggioranza pragmatica è il più difficile: il chasm.",
     ),
-    inGame: lt("Penetration of your sector (all players together) defines the current segment: CAC rises, churn falls.", "La penetrazione del settore (tutti i giocatori insieme) definisce il segmento attuale: il CAC sale, il churn scende."),
+    inGame: lt(
+      "The adoption of your sector grows during the game (competitors and substitutes) and with the customers of all teams; it decides which segment you are selling to. In the game, later segments cost more to win (CAC up) but leave less (churn down): a simplifying assumption.",
+      "L'adozione del settore cresce durante la partita (concorrenti e sostituti) e con i clienti di tutti i team; decide a quale segmento stai vendendo. Nel gioco i segmenti successivi costano di più da conquistare (CAC più alto) ma abbandonano meno (churn più basso): un'ipotesi semplificativa.",
+    ),
     refs: ["E. Rogers, Diffusion of Innovations (1962)"],
   },
   {
@@ -254,7 +257,10 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Geoffrey Moore: the early majority buys proven, complete solutions. Products without strong fit get stuck when the visionaries are exhausted.",
       "Geoffrey Moore: la maggioranza anticipatrice compra soluzioni provate e complete. I prodotti senza un fit forte si bloccano quando i visionari sono esauriti.",
     ),
-    inGame: lt("Entering the early majority with PMF below 55 multiplies CAC by 1.5.", "Entrare nella maggioranza anticipatrice con PMF sotto 55 moltiplica il CAC per 1,5."),
+    inGame: lt(
+      "The market usually reaches the early majority around the middle of the game. From then on, a PMF below 55 multiplies CAC by 1.5 (by 1.2 if you started from a niche beachhead). The mentor warns you when the chasm is near.",
+      "Di solito il mercato arriva alla maggioranza anticipatrice verso metà partita. Da lì in poi, con PMF sotto 55 il CAC è moltiplicato per 1,5 (per 1,2 se siete partiti da una nicchia testa di ponte). Il mentor vi avvisa quando il chasm si avvicina.",
+    ),
     refs: ["G. Moore, Crossing the Chasm (1991)"],
   },
   {
@@ -267,8 +273,8 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Moore suggerisce di superare il chasm dominando una nicchia con un problema urgente: i clienti si parlano, le referenze sono credibili e il prodotto può essere completo per loro. Andare sul mercato ampio troppo presto disperde un piccolo team su bisogni troppo diversi. I clienti premium pagano molto di più, ma pretendono qualità e richiedono venditori.",
     ),
     inGame: lt(
-      "Niche: about 30% of the sector is reachable, PMF learning +30%, CAC -15%, churn -10%, a softer chasm. Broad: the whole market. Premium: 40% of the market, willingness to pay up to +100% with high quality, churn -25%, CAC +50% and more need for salespeople. Changing target after launch costs 12% of customers and some PMF.",
-      "Nicchia: è raggiungibile circa il 30% del settore, apprendimento del PMF +30%, CAC -15%, churn -10%, chasm più morbido. Ampio: tutto il mercato. Premium: 40% del mercato, disponibilità a pagare fino a +100% con qualità alta, churn -25%, CAC +50% e più bisogno di venditori. Cambiare obiettivo dopo il lancio costa il 12% dei clienti e un po' di PMF.",
+      "Niche: about 30% of the sector is reachable, PMF learning +30%, CAC -15%, churn -10%, a softer chasm. Broad: the whole market. Premium: 40% of the market, willingness to pay up to about +110% with high quality, churn -25%, CAC +50% and more need for salespeople. Changing target after launch costs 12% of customers and some PMF.",
+      "Nicchia: è raggiungibile circa il 30% del settore, apprendimento del PMF +30%, CAC -15%, churn -10%, chasm più morbido. Ampio: tutto il mercato. Premium: 40% del mercato, disponibilità a pagare fino a circa +110% con qualità alta, churn -25%, CAC +50% e più bisogno di venditori. Cambiare obiettivo dopo il lancio costa il 12% dei clienti e un po' di PMF.",
     ),
     refs: ["G. Moore, Crossing the Chasm (1991)", "B. Aulet, Disciplined Entrepreneurship (2013)"],
   },
@@ -392,7 +398,7 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Le valutazioni iniziali si negoziano, non si calcolano. Più avanti dominano i multipli sui ricavi: crescita, margini e retention elevati giustificano multipli più alti.",
     ),
     formula: "Valuation ≈ ARR × sector multiple × growth × margin × PMF × market climate",
-    inGame: lt("Pre-revenue companies are valued with a scorecard (team, progress, PMF, reputation); the last round anchors the valuation for two rounds.", "Le aziende senza ricavi sono valutate con una scorecard (team, progressi, PMF, reputazione); l'ultimo round ancora la valutazione per due round."),
+    inGame: lt("Pre-revenue companies are valued with a scorecard (team, progress, PMF, reputation) that fades out as revenue grows; the last priced round anchors the valuation, less and less over four rounds.", "Le aziende senza ricavi sono valutate con una scorecard (team, progressi, PMF, reputazione) che sfuma man mano che crescono i ricavi; l'ultimo round con prezzo ancora la valutazione, sempre meno nell'arco di quattro round."),
   },
   {
     id: "preMoney",
@@ -422,7 +428,10 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Un Simple Agreement for Future Equity si converte al successivo round con prezzo, al minore tra il cap di valutazione e il prezzo del round. Molti SAFE accumulati possono sorprendere i fondatori con una forte diluizione.",
     ),
     formula: "SAFE ownership ≈ Amount / Post-money cap",
-    inGame: lt("Angels can invest with SAFEs; they convert automatically in your next equity round.", "Gli angel possono investire con SAFE; si convertono automaticamente al tuo prossimo round equity."),
+    inGame: lt(
+      "Angels and some seed funds accept SAFEs; they convert automatically in your next equity round, and the founders' ownership you see already counts them at their caps.",
+      "Gli angel e alcuni fondi seed accettano SAFE; si convertono automaticamente al prossimo round equity, e la quota dei fondatori che vedi li conta già ai loro cap.",
+    ),
   },
   {
     id: "optionPool",
@@ -430,8 +439,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "finance",
     short: lt("Shares reserved for employees.", "Azioni riservate ai dipendenti."),
     body: lt(
-      "VCs usually require a pool to be created before they invest (the 'option pool shuffle'): it is carved out of the pre-money, so founders bear the dilution.",
-      "I VC di solito chiedono di creare un pool prima di investire (l'option pool shuffle'): viene ricavato dalla pre-money, quindi la diluizione ricade sui fondatori.",
+      "VCs usually require a pool to be created before they invest (the 'option pool shuffle'): it is carved out of the pre-money, so the dilution falls on the existing shareholders (founders, employees, earlier investors and converting SAFEs), not on the new investor.",
+      "I VC di solito chiedono di creare un pool prima di investire (l'option pool shuffle): viene ricavato dalla pre-money, quindi la diluizione ricade sui soci esistenti (fondatori, dipendenti, investitori precedenti e SAFE che si convertono), non sul nuovo investitore.",
     ),
     inGame: lt("Seed and Series A investors require a 5-10% pool; employees' equity grants come from it.", "Gli investitori seed e Series A richiedono un pool del 5-10%; le quote dei dipendenti vengono da lì."),
   },
@@ -518,7 +527,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     term: lt("Down round & bridge", "Down round e ponte"),
     category: "finance",
     short: lt("Raising at a lower valuation than before.", "Raccogliere a una valutazione più bassa di prima."),
-    body: lt("Down rounds and bridge notes buy survival at the cost of heavy dilution and morale.", "Down round e note ponte comprano la sopravvivenza al prezzo di forte diluizione e morale."),
+    body: lt("Down rounds and bridge financing (convertible notes or SAFEs) buy survival at the cost of heavy dilution and morale.", "Down round e finanziamenti ponte (note convertibili o SAFE) comprano la sopravvivenza al prezzo di forte diluizione e morale."),
     inGame: lt("Existing investors may offer a bridge when runway is short.", "Gli investitori esistenti possono offrire un ponte quando la runway è corta."),
   },
   {
@@ -547,7 +556,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     id: "cashVsRevenue",
     term: lt("Cash vs revenue", "Cassa contro ricavi"),
     category: "finance",
-    short: lt("Revenue is an opinion, cash is a fact.", "I ricavi sono un'opinione, la cassa è un fatto."),
+    short: lt("Profit is an opinion, cash is a fact.", "L'utile è un'opinione, la cassa è un fatto."),
     body: lt("Annual prepayments improve cash today at the cost of discounts; working capital can kill growing companies.", "I pagamenti annuali anticipati migliorano la cassa oggi al prezzo di sconti; il capitale circolante può uccidere aziende in crescita."),
     inGame: lt("The prepayment dilemma trades margin for cash and retention.", "Il dilemma del prepagato scambia margine con cassa e retention."),
   },
@@ -566,7 +575,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "team",
     short: lt("How the team feels drives how the team performs.", "Come si sente il team determina come lavora."),
     body: lt("Morale falls with short runway, overwork and layoffs, and rises with growth, ownership and care.", "Il morale scende con runway corta, troppo lavoro e licenziamenti, e sale con crescita, partecipazione e attenzione."),
-    inGame: lt("Morale multiplies employees' productivity; below 0.5, people may resign.", "Il morale moltiplica la produttività dei dipendenti; sotto 0,5 qualcuno può dimettersi."),
+    inGame: lt("Morale multiplies employees' productivity; below 55%, people may resign.", "Il morale moltiplica la produttività dei dipendenti; sotto il 55% qualcuno può dimettersi."),
   },
   {
     id: "founderWellbeing",
@@ -574,7 +583,10 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "team",
     short: lt("Stress degrades decisions; burnout stops companies.", "Lo stress peggiora le decisioni; il burnout ferma le aziende."),
     body: lt("Working 80 hours a week raises output in the short run and stress in the long run.", "Lavorare 80 ore a settimana aumenta la produzione nel breve e lo stress nel lungo."),
-    inGame: lt("Founder stress reduces founders' output above 0.6; two months above 0.85 cause burnout.", "Lo stress riduce la produzione dei fondatori sopra 0,6; due mesi sopra 0,85 causano burnout."),
+    inGame: lt(
+      "Hours raise the founders' output (×1.15 at 60h, ×1.3 at 80h), but every consecutive month at 60-80 hours adds fatigue and stress. Above 60% stress output falls, above 85% for two months comes burnout: three months at half speed. Rest (50h or less) and vacations reset the fatigue.",
+      "Le ore aumentano la produttività dei fondatori (×1,15 a 60h, ×1,3 a 80h), ma ogni mese consecutivo a 60-80 ore aggiunge fatica e stress. Sopra il 60% di stress la produttività cala, sopra l'85% per due mesi arriva il burnout: tre mesi a metà velocità. Il riposo (50 ore o meno) e le vacanze azzerano la fatica.",
+    ),
   },
   {
     id: "richVsKing",
@@ -621,7 +633,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "strategy",
     short: lt("Rules that protect customers and shape markets.", "Regole che proteggono i clienti e plasmano i mercati."),
     body: lt("Financial and health products must comply with strict rules: a cost, but also a barrier to entry.", "I prodotti finanziari e sanitari devono rispettare regole severe: un costo, ma anche una barriera all'ingresso."),
-    inGame: lt("Fintech and HealthTech pay monthly compliance costs and face audits.", "Fintech e HealthTech pagano costi mensili di compliance e subiscono ispezioni."),
+    inGame: lt("Fintech, HealthTech and DeepTech pay monthly compliance costs once launched, and regulated sectors face audits.", "Fintech, HealthTech e DeepTech pagano costi mensili di compliance dopo il lancio, e i settori regolati subiscono ispezioni."),
   },
   {
     id: "blackSwan",

@@ -60,10 +60,10 @@ Per firmare le app (niente avvisi al primo avvio) servono un certificato Apple D
 | Modalità | Per chi | Come funziona |
 |---|---|---|
 | **Solo contro bot** | Studio individuale, compiti a casa | Un team contro concorrenti AI con tre stili (lean, steady, blitz). |
-| **Hot-seat** | Aula con un solo computer o un proiettore | I team si alternano sullo stesso computer. Una schermata di privacy nasconde i dati finché il team non li apre; il docente avanza i round dalla console (protetta da PIN). |
+| **Hot-seat** | Aula con un solo computer o un proiettore | I team si alternano sullo stesso computer. Una schermata di privacy nasconde i dati finché il team non li apre; con il PIN del docente solo il docente apre la console e avanza i round. |
 | **Classe (file)** | Ogni team con il proprio portatile | Nessun server: il docente condivide il file di partita, ogni team rimanda un piccolo file di decisioni, il docente li importa, avanza il round e condivide il nuovo file. |
 
-La console docente offre timer del round, vista proiettore, eventi a sorpresa, spunti di discussione ed esportazioni CSV (storico, classifica, decisioni) per la valutazione. Con lo stesso **seed** due classi giocano esattamente lo stesso mercato.
+La console docente offre timer del round, vista proiettore, eventi a sorpresa e spunti di discussione; da *Impostazioni e salvataggio* e dai *Risultati finali* si esportano i CSV (storico, classifica, decisioni) per la valutazione. Con lo stesso **seed** e gli stessi settori due classi partono dallo stesso mercato e vedono gli stessi eventi macroeconomici; con le stesse decisioni la partita si ripete identica.
 
 ## Coinvolgimento degli studenti
 

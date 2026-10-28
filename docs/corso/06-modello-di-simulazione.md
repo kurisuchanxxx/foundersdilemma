@@ -17,7 +17,9 @@ Questo capitolo descrive come il motore calcola i risultati, con i parametri eff
 | Trimestri | 3 mesi | 30 mesi |
 | Semestri | 6 mesi | 60 mesi |
 
-I round possono essere da 4 a 16. Sequenza di un round (`engine/round.ts`): decisioni una tantum (acquisizione, dilemma, licenziamenti, reputazione, bandi, term sheet, pitch, prestiti, prezzo), poi le aste per le assunzioni di tutti i team insieme, poi i mesi simulati (capacità del team, prodotto, mercato per settore con tutti i team, finanza, brand, team, eventi aziendali), infine controllo di solvibilità, valutazione, obiettivi e commenti del mentor.
+I round possono essere da 4 a 14.
+
+**Chi non decide perde terreno.** Un team umano che non invia decisioni e non ha nemmeno una bozza va col pilota automatico (le impostazioni del round precedente, senza azioni una tantum) e paga l'inerzia: per k round consecutivi senza decisioni (fino a 3), sviluppo e vendite al (100 − 25 × k)% della capacità, passaparola −20% × k, CAC +15% × k, morale −0,06 × k, reputazione verso gli investitori −5 × k e chiarezza del problema −0,03 × k. Basta un invio, anche senza modifiche, per azzerare il contatore. Nelle simulazioni un team che non decide mai fallisce in tutti i settori; saltare un solo round costa poco, saltarne uno sì e uno no costa molto. I bot decidono sempre. Sequenza di un round (`engine/round.ts`): decisioni una tantum (acquisizione, dilemma, licenziamenti, reputazione, bandi, term sheet, pitch, prestiti, prezzo), poi le aste per le assunzioni di tutti i team insieme, poi i mesi simulati (capacità del team, prodotto, mercato per settore con tutti i team, finanza, brand, team, eventi aziendali), infine controllo di solvibilità, valutazione, obiettivi e commenti del mentor.
 
 ## 3. Fondazione
 
@@ -49,7 +51,7 @@ Moltiplicatori su R&S / marketing / vendite / operations / qualità / fundraisin
 | Visionario | 1,2 / 1,1 / 1,0 / 0,7 / 1,3 / 1,5 |
 | Operativo | 1,0 / 1,0 / 1,2 / 1,5 / 1,0 / 0,9 |
 
-Con due fondatori vale, per ogni dimensione, il **migliore dei due**: è la ragione economica per cercare co-fondatori complementari (Wasserman). La società nasce con 10 milioni di azioni divise secondo la scelta del team; il vesting dei fondatori (facoltativo) dura 48 mesi con cliff di 12: chi lascia prima perde le azioni non maturate.
+Con più fondatori vale, per ogni dimensione, il **migliore** tra loro: è la ragione economica per cercare co-fondatori complementari (Wasserman). I team possono avere da 1 a 4 fondatori: il terzo e il quarto aggiungono solo il 35% della capacità di lavoro di un fondatore, così i team numerosi non sono avvantaggiati, e i fondatori occupano al massimo due seggi nel CdA qualunque sia il loro numero. La società nasce con 10 milioni di azioni divise secondo la scelta del team; il vesting dei fondatori (facoltativo) dura 48 mesi con cliff di 12: chi lascia prima perde le azioni non maturate.
 
 ## 4. Prodotto e product-market fit
 
@@ -59,9 +61,9 @@ Con due fondatori vale, per ogni dimensione, il **migliore dei due**: è la ragi
 
 | Approccio | Velocità | Debito tecnico | Bug | Qualità al lancio |
 |---|---|---|---|---|
-| Veloce | 1,35 | alto | molti | −0,05 |
+| Corsa | 1,35 | alto | molti | −0,05 |
 | Bilanciato | 1,0 | medio | medi | 0 |
-| Qualità | 0,8 | basso | pochi | +0,08 |
+| Prima la qualità | 0,8 | basso | pochi | +0,08 |
 
 Il lancio avviene al 100% dell'MVP oppure, su decisione, dal 50%: lanciare presto aumenta la velocità di apprendimento. Il debito tecnico rallenta lo sviluppo e genera bug, che aumentano il churn; si riduce dedicando il 10% (manutenzione) o il 25% (rientro) del tempo al refactoring.
 
@@ -83,7 +85,12 @@ dopo il lancio: PMF = 0,85 × PMF + 15 × qualità della retention
 
 ## 5. Mercato e clienti
 
-**Curva di adozione** (Rogers). La penetrazione del settore è la somma dei clienti di *tutti* i team diviso il mercato (`engine/market.ts`):
+**Curva di adozione** (Rogers). L'adozione del mercato è la somma di due parti (`engine/market.ts`):
+
+- l'**adozione della categoria** da parte di concorrenti esterni e sostituti, che cresce con il tempo trascorso indipendentemente dai team: 1% + 44% × (avanzamento della partita)^1,17, cioè circa 1% all'inizio, il 16% del chasm poco prima di metà partita e circa 45% alla fine, qualunque sia la durata;
+- i clienti di *tutti* i team del settore diviso il mercato.
+
+Nella partita standard il mercato passa agli early adopter al round 2 e alla maggioranza anticipatrice intorno ai round 6-7. Il segmento decide i moltiplicatori:
 
 | Segmento | Penetrazione fino a | CAC | Churn | Disponibilità a pagare |
 |---|---|---|---|---|
@@ -93,13 +100,15 @@ dopo il lancio: PMF = 0,85 × PMF + 15 × qualità della retention
 | Maggioranza ritardataria | 84% | × 1,6 | × 0,8 | × 0,9 |
 | Ritardatari | 100% | × 2,0 | × 0,75 | × 0,85 |
 
-**Chasm** (Moore): nelle due maggioranze, con PMF sotto 55, il CAC è moltiplicato per 1,5.
+**Chasm** (Moore): nelle due maggioranze, con PMF sotto 55, il CAC è moltiplicato per 1,5 (per 1,2 con la nicchia come testa di ponte). Quando l'adozione supera l'11% e il PMF è sotto 55, il mentor avvisa il team che il chasm è vicino.
 
-**Disponibilità a pagare** = prezzo di riferimento × (0,6 + 0,8 × (metà qualità + metà PMF)) × (1 + 0,1 × brand) × eventi × segmento. La **conversione al prezzo** è (WTP / prezzo)^elasticità: sotto la WTP le vendite aumentano fino a +60%, sopra crollano rapidamente.
+**Disponibilità a pagare** = prezzo di riferimento × (0,6 + 0,8 × (metà qualità + metà PMF)) × (1 + 0,1 × brand) × eventi × segmento di adozione × strategia (nicchia, premium, freemium, a consumo). È la stessa stima che il gioco mostra nelle decisioni e nella vista Mercato. La **conversione al prezzo** dipende dal rapporto r = prezzo / WTP: sotto la WTP vale 1 + ((1/r)^elasticità − 1) / 2, cioè le vendite aumentano al massimo del 60%; sopra la WTP vale r^−(elasticità + 1,5 × (r − 1)), cioè l'elasticità cresce con lo scarto. Anche nei settori poco sensibili al prezzo (B2B, DeepTech) esiste quindi un prezzo che massimizza i ricavi poco sopra la WTP: chi chiede il doppio perde gran parte dei clienti, chi chiede il massimo quasi tutti. La conversione al prezzo frena allo stesso modo marketing a pagamento, inbound, passaparola e lista d'attesa; nella vendita diretta i venditori possono scontare, ma non chiudere contratti molto sopra la WTP.
 
 **CAC** = CAC base × segmento × chasm × adeguatezza del canale × concorrenza × (1,3 − 0,5 × PMF/100) × (1 − 0,25 × brand) × reputazione media × eventi ÷ (efficacia del marketing × conversione al prezzo × effetti di rete). La concorrenza aumenta del 6% per ogni altro team lanciato nel settore e del 2% per ogni concorrente esterno.
 
-**Churn** = churn base × (1,6 − PMF/100) × segmento × canale × prezzo rispetto alla WTP × bug × qualità × customer success × reputazione, tra 0,3% e 45% al mese.
+**Churn** = churn base × (1,6 − PMF/100) × segmento × canale × prezzo rispetto alla WTP × bug × qualità × customer success × reputazione, tra 0,3% e 45% al mese. Sopra la WTP il fattore di prezzo vale 1 + 0,6 × scarto + 1,2 × scarto² (scarto = prezzo / WTP − 1): chi paga molto più del valore percepito se ne va sempre più in fretta.
+
+**Aumenti di prezzo**: quando il prezzo sale, i clienti attuali decidono di nuovo come farebbe un nuovo cliente, ma sono più fedeli perché hanno già adottato il prodotto: resta la radice quadrata del calo della conversione al prezzo. Salire fino alla WTP non costa quasi nessun cliente; decuplicare il prezzo li fa disdire quasi tutti.
 
 **Nuovi clienti ogni mese** = (marketing a pagamento + vendita diretta + passaparola organico + inbound da brand) × domanda:
 
@@ -110,7 +119,7 @@ dopo il lancio: PMF = 0,85 × PMF + 15 × qualità della retention
 
 **Mercato condiviso**: ogni azienda può conquistare al massimo il 4% del mercato residuo al mese; se il settore nel suo insieme chiede più del 10%, tutti vengono ridimensionati in proporzione.
 
-**Unit economics**: LTV = prezzo × margine lordo × min(1/churn, 60 mesi); CAC mostrato = budget marketing ÷ clienti acquisiti a pagamento.
+**Unit economics**: LTV = prezzo × margine lordo × min(1/churn, 60 mesi); CAC mostrato = budget marketing ÷ clienti acquisiti con il marketing a pagamento (gli stipendi dei venditori sono tra i costi del personale e i clienti chiusi dai venditori non entrano nel calcolo: nei settori trainati dalle vendite il CAC completo è più alto); payback del CAC = CAC ÷ (prezzo × margine lordo). Il margine lordo usato per LTV e payback è quello realizzato nel round (settore, strategia, eventi e un piccolo bonus delle operations), lo stesso mostrato nella vista Mercato.
 
 ### Clienti obiettivo e modello di prezzo
 
@@ -143,15 +152,15 @@ Ogni settore parte con due **concorrenti con un nome** (aziende di fantasia, `da
 ## 6. Team e assunzioni
 
 - **Ruoli**: ingegnere, prodotto, design, growth, vendite, operations, customer success, finanza. Stipendi annui da 30-40k (junior) a 130-155k (principal).
-- **Equity attesa**: da 0,1% (junior) a 2,5% (principal), × 1,3 prima del lancio e × 0,6 dopo un round sopra 20 M€.
+- **Equity attesa**: da 0,1% (junior) a 2,5% (principal), × 1,3 prima del lancio, × 1 dopo il lancio con PMF sotto 60, × 0,8 con PMF raggiunto e × 0,6 dopo un round con valutazione sopra 20 M€.
 - **Come scelgono i candidati** (`engine/hiring.ts`): punteggio = peso × stipendio offerto rispetto alla richiesta + peso × equity offerta rispetto all'attesa + 0,12 × compatibilità con il rischio della fase + 0,15 × reputazione verso i talenti + 0,18 × interesse per il settore − penalità (runway troppo breve, morale basso, fondatori stressati) + rumore. I candidati più propensi all'equity pesano di più le quote.
 - **Asta**: tutte le offerte per lo stesso candidato, anche di team diversi, si confrontano; vince il punteggio migliore sopra la soglia. Chi arriva vicino alla soglia riceve un **rilancio** (più stipendio e più equity) valido per il round successivo.
-- **Morale** e **stress dei fondatori** tendono ogni mese a un obiettivo che dipende da runway, crescita, ore lavorate, offsite, vacanza, equity diffusa. Stress sopra 0,85 per due mesi provoca **burnout**: fondatori a metà rendimento per 3 mesi. Le ore rendono 0,8 (40h), 1,0 (50h), 1,15 (60h), 1,3 (80h), ma con stress alto il rendimento cala.
+- **Morale** e **stress dei fondatori** tendono ogni mese a un obiettivo che dipende da runway, crescita, ore lavorate, offsite, vacanza, equity diffusa. Stress sopra 0,85 per due mesi provoca **burnout**: fondatori a metà rendimento per 3 mesi. Le ore rendono 0,8 (40h), 1,0 (50h), 1,15 (60h), 1,3 (80h), ma con stress sopra 0,6 il rendimento cala. Ogni mese consecutivo a 60 ore o più accumula **fatica**: lo stress obiettivo sale di 0,01 al mese a 60h e di 0,035 al mese a 80h (fino a 12 mesi); a 50 ore o meno la fatica scende di 2 mesi al mese, una vacanza la azzera. Le 80 ore rendono nel breve ma, mantenute per un anno, portano quasi sempre al burnout: nelle simulazioni non battono le 60 ore.
 - Con morale sotto 0,55 i dipendenti iniziano a dimettersi; chi ha equity non ancora maturata resta più volentieri.
 
 ## 7. Finanza
 
-**Costi mensili** = stipendi + budget di R&S, marketing e operations + discovery + spese generali (1.000 € + 250 € a persona) + compliance + ufficio. **Runway** = cassa ÷ burn netto; con burn netto nullo o negativo l'azienda è *default alive* (Graham).
+**Costi mensili** = stipendi + budget di R&S, marketing e operations + discovery + spese generali (1.000 € + 250 € a persona) + compliance + ufficio. **Runway** = cassa ÷ burn netto (il burn include le rate dei prestiti e gli incassi mancanti dei clienti che hanno prepagato). Con burn netto nullo o negativo l'azienda è già in pareggio: è il caso più semplice di *default alive* (Graham), che in generale chiede se, alla crescita attuale, si arriva al pareggio prima di finire la cassa.
 
 ### Investitori
 
@@ -165,40 +174,43 @@ Ogni settore parte con due **concorrenti con un nome** (aziende di fantasia, `da
 | Growth | 10-40 M€ | MRR 300k, PMF 62, un round precedente | Seggio più un indipendente | 1 · 120 M€ |
 | Crowdfunding | 0,1-1,5 M€ | Lancio, B2C, fintech o health | Tutto o niente, nessuna preferenza | Nessun limite |
 
-**Decisione dell'investitore** (`engine/finance.ts`): valutazione pre-money equa = max(300k, valutazione − cassa netta) × propensione dell'investitore × √clima. L'interesse cresce con PMF, crescita, reputazione, forza del team, abilità di fundraising dei fondatori e clima; cala se si chiede una valutazione sopra quella equa, se l'importo è fuori dal taglio, se la runway è sotto 3 mesi. Il deal si chiude con interesse almeno 0,55 e richiesta entro il 115% della valutazione equa; con interesse tra 0,4 e 0,55 arriva un term sheet alternativo. Una diluizione oltre il 40% è sempre rifiutata. Massimo 2 pitch per round.
+**Decisione dell'investitore** (`engine/finance.ts`): valutazione pre-money equa = max(300k, valore del modello ancorato all'ultimo round, senza la cassa) × propensione dell'investitore × √clima × (1 + 0,003 × (reputazione verso gli investitori − 50)). L'interesse cresce con PMF, crescita, reputazione, forza del team, abilità di fundraising dei fondatori e clima; cala se si chiede una valutazione sopra quella equa, se l'importo è fuori dal taglio, se la runway è sotto 3 mesi. Il deal si chiude con interesse almeno 0,55 e richiesta entro il 115% della valutazione equa; con interesse tra 0,4 e 0,55 arriva un term sheet alternativo. Una diluizione oltre il 40% è sempre rifiutata, anche nel crowdfunding, e un nuovo SAFE che porterebbe i SAFE in essere oltre il 60% dell'azienda viene rifiutato (prima serve un round con prezzo). Massimo 2 pitch per round.
 
 **Capacità degli investitori** (*dry powder*): ogni investitore chiude al massimo un certo numero di nuovi investimenti per round e ha un capitale totale per la partita (tabella sopra). Tutti i pitch del round, di tutti i team e dei bot, vengono valutati insieme: l'investitore ordina quelli che vorrebbe chiudere per punteggio di interesse e firma i migliori finché ha posti e capitale. Gli altri ricevono un rifiuto che nomina chi ha ottenuto i soldi (o, se manca il capitale, quanto ne resta).
 
 ### Cap table
 
-- **SAFE**: si convertono al primo round con prezzo al minore tra cap e pre-money.
+- **SAFE**: si convertono al primo round con prezzo al minore tra cap e pre-money. Prima della conversione la quota dei fondatori mostrata nel gioco li conta già come convertiti ai loro cap (quota *fully diluted*), così l'accumulo di SAFE non è una sorpresa.
 - **Option pool shuffle**: il pool viene portato alla percentuale chiesta dall'investitore *prima* del round, quindi diluisce solo i soci esistenti.
 - **Stock option ai dipendenti**: dal pool se capiente, altrimenti con nuove azioni che diluiscono tutti; vesting 48 mesi con cliff di 12.
 - **Bandi**: voucher regionale 40k (probabilità base 50%) e bando europeo deep-tech 300k (30%, solo deeptech, health e AI); la probabilità cresce con la chiarezza del problema e il team. Denaro non diluitivo, una sola domanda per bando.
-- **Prestiti**: pubblico a tasso zero (fino a 150k, 48 mesi), bancario al 7,5% (fino a 8 × MRR, garanzia personale che aumenta lo stress), venture debt al 12% con warrant dopo un round VC.
+- **Prestiti** (valutati sui numeri visti al momento della decisione; se si chiede più del limite, il finanziatore presta il massimo): pubblico a tasso zero (fino a 150k, 48 mesi, uno per azienda), bancario al 7,5% per 24 mesi (servono almeno 8k di MRR; fino a 8 × MRR e al massimo 250k, compreso quanto si deve già alla banca; garanzia personale che aumenta lo stress), venture debt al 12% per 36 mesi con warrant dello 0,5% (fino al 35% di un round VC chiuso negli ultimi 3 round, meno il venture debt ancora da restituire). Il tasso è fisso alla firma: un rialzo dei tassi rende più cari i nuovi prestiti, non quelli in corso.
 - **Round di salvataggio**: se la cassa è negativa a fine round, l'azienda riceve un salvataggio (deficit + 3 mesi di burn) a una valutazione pari al 30% di quella corrente, con **preferenza 2x** e un seggio nel CdA. Sono possibili 3 salvataggi in difficoltà *Indulgente*, 1 in *Standard*, nessuno in *Realistica*; dopo, fallimento. È l'unico effetto della difficoltà.
-- **Waterfall** (`engine/captable.ts`): preferenze 1x non partecipanti pagate pari passu; ogni investitore converte in ordinarie se gli conviene; il pool non assegnato non riceve nulla. La **ricchezza dei fondatori** è quanto riceverebbero i fondatori attivi in un'uscita al valore attuale (o quanto hanno incassato davvero all'exit).
-- **CdA**: ogni fondatore ha un seggio; alcuni investitori e i salvataggi aggiungono un seggio, il growth anche un indipendente.
+- **Waterfall** (`engine/captable.ts`): preferenze 1x (2x nei salvataggi) non partecipanti pagate pari passu; un investitore converte in ordinarie quando il prezzo per azione ordinaria supera la sua preferenza per azione. Convertono per primi quelli con la preferenza per azione più bassa; ogni conversione abbassa il prezzo, e chi a quel punto non ci guadagna resta sulla preferenza: nessun investitore riceve meno della sua preferenza. Il pool non assegnato non riceve nulla; le opzioni non hanno prezzo di esercizio e le azioni non maturate sono pagate per intero (semplificazione). I SAFE non convertiti partecipano come preferenze convertibili ai loro cap. La **ricchezza dei fondatori** è quanto riceverebbero i fondatori attivi in un'uscita al valore attuale (o quanto hanno incassato davvero all'exit).
+- **CdA**: i fondatori hanno un seggio ciascuno, al massimo due; alcuni investitori e i salvataggi aggiungono un seggio, il growth anche un indipendente. I fondatori controllano il CdA finché hanno più seggi di investitori e indipendenti insieme.
 
 ## 8. Valutazione
 
 ```
 metodo dei ricavi   = ARR × multiplo del settore × crescita × margine × PMF × clima
 metodo scorecard    = valutazione pre-ricavi del settore × (team, avanzamento, PMF, reputazione, brand) × clima
-valore del modello  = ricavi + scorecard × peso (il peso della scorecard si azzera con l'aumentare dell'ARR)
-con un round nei 2 round precedenti: 0,6 × modello + 0,4 × ultima post-money
-valutazione         = max(50k, valore + 0,5 × (cassa − debito))
+valore del modello  = max(scorecard, ricavi + scorecard × peso)   (il peso della scorecard si azzera con l'aumentare dell'ARR)
+ancora all'ultimo round con prezzo: peso 0,4 per due round, poi 0,27, 0,13 e 0
+valore ancorato     = (1 − peso) × modello + peso × ultima post-money
+valutazione         = max(50k, valore ancorato + 0,5 × (cassa − debito − ricavi prepagati ancora da erogare))
 ```
+
+Il massimo con la scorecard evita che i primi ricavi abbassino la valutazione; l'ancora che sfuma evita salti quando il round precedente esce dal calcolo.
 
 La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 perde valore del 15% a round. Il clima dipende dagli eventi e dall'entusiasmo per il settore (`engine/valuation.ts`).
 
 ## 9. Eventi, dilemmi e feedback
 
-**Eventi di mercato** (16 modelli): recessione, boom tecnologico, inverno del funding, guerra dei talenti, hype AI, regolamentazione europea, limiti al tracciamento, aumento dei tassi, crisi della supply chain, crisi globale, ingresso di Big Tech, vento favorevole di settore, modello AI open-source, lavoro da remoto, ripresa dei consumi, fondi del Green Deal. Con probabilità 65% ogni round, più un secondo evento dal round 5. Il docente può aggiungerne di propri.
+**Eventi di mercato** (16 modelli): recessione, boom tecnologico, inverno del funding, guerra dei talenti, hype AI, regolamentazione europea, limiti al tracciamento, aumento dei tassi, crisi della supply chain, crisi globale, ingresso di Big Tech, vento favorevole di settore, modello AI open-source, lavoro da remoto, ripresa dei consumi, fondi del Green Deal. Con probabilità 65% ogni round; dal round 5, nel 25% dei casi, arriva anche un secondo evento. Il docente può aggiungerne di propri.
 
 **Eventi aziendali** (14 modelli), con probabilità legate allo stato dell'azienda e al profilo di rischio.
 
-**Dilemmi del fondatore** (dal round 2, con probabilità 45-75%; senza risposta vale l'ultima opzione):
+**Dilemmi del fondatore** (dal round 2, con probabilità 45-75%; senza risposta vale l'opzione passiva, cioè l'ultima, tranne per il CEO professionista, dove il CdA procede e il fondatore si fa da parte):
 
 | Dilemma | Scelte e conseguenze |
 |---|---|
@@ -209,7 +221,7 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 | Addestrare l'AI sui dati dei clienti | Scorciatoia: prodotto migliore, 35% di rischio di sanzione. Consenso: più lento ma reputazione |
 | Pivot o perseverare? | Pivot: nuova idea (nuovo potenziale), meno clienti e brand. Perseverare: più stress, più apprendimento |
 | Bridge round dagli investitori | SAFE immediato contro un po' di reputazione |
-| Il CdA vuole un CEO professionista | Farsi da parte (si perde lo status di Re) o combattere (si vince se i fondatori controllano il CdA o con il 30% di fortuna) |
+| Il CdA vuole un CEO professionista | Compare solo quando i fondatori hanno perso il controllo del CdA. Farsi da parte (si perde lo status di Re) o combattere (si vince con il 30% di probabilità, al prezzo di morale, stress e reputazione verso gli investitori) |
 | Ufficio o remoto? | Ufficio: costi e morale. Remoto: coordinamento più basso, assunzioni più facili |
 | Campagna con un influencer | 25k per una scommessa al 60% |
 | Rendere open-source il core? | Brand, talenti e crescita organica contro disponibilità a pagare più bassa |
@@ -217,7 +229,7 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 | Fondatori allo stremo | Riposare (sviluppo più lento) o spingere (rischio di crollo) |
 | Tagliare il team? | Licenziare il 30%, ridurre gli stipendi, o tenere tutti |
 | Offerta di acqui-hire | Exit a 250k per persona, distribuita con il waterfall |
-| Sconto per il pagamento annuale | Cassa subito contro margine più basso |
+| Sconto per il pagamento annuale | Un quarto dei clienti paga 12 mesi in anticipo con il 20% di sconto: cassa subito, poi per 12 mesi nessun incasso da loro (ricavo differito), churn più basso per due round. Nel complesso si rinuncia al 20% di quei ricavi in cambio di liquidità |
 | Gonfiare i numeri per il round? | Contare pilot e lettere d'intenti come ricavi: valutazione e interesse degli investitori +15% per 2 round, ma 50% di rischio che la due diligence se ne accorga (reputazione verso gli investitori −30, clima 0,7 per 3 round). Numeri onesti: reputazione |
 | Il cliente più grande paga a 120 giorni | Accettare: +15% clienti, ma quattro mesi dei loro ricavi anticipati di tasca propria e 15% di rischio di insolvenza. Trattare 60 giorni (55% di successo) o rifiutare |
 | Una gara d'appalto pubblica | 20k di consulenze e un round più lento per un 35% di probabilità di un contratto pubblico triennale (clienti, referenze, reputazione) |
@@ -238,7 +250,7 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 
 ## 10. Exit e fallimento
 
-- **Offerte di acquisizione** dal round 4 al penultimo, per aziende con valutazione almeno 5 M€ o ARR almeno 1 M€. Acquirenti: un corporate VC già socio, un fondo di private equity (se l'azienda è in utile) o un acquirente strategico del settore, con premio tra 0,9 e 1,8 volte la valutazione. Accettare distribuisce il prezzo con il waterfall.
+- **Offerte di acquisizione** dal round 4 all'ultimo, per aziende con valutazione almeno 5 M€ o ARR almeno 1 M€. Acquirenti: un corporate VC già socio (1,1-1,6 volte la valutazione), un fondo di private equity se l'azienda è in utile (0,9-1,3) o un acquirente strategico del settore (0,95-1,8, fino a circa 2 nei settori più ambiti). Accettare distribuisce il prezzo con il waterfall.
 - **Offerte da altri team**: vedi la sezione seguente.
 - **Fallimento**: solo se la cassa è negativa a fine round e non restano salvataggi.
 
@@ -247,13 +259,13 @@ La crescita conta tra 0,4 e 2,2 volte; un prodotto non lanciato dopo il round 7 
 Nella scheda **Accordi** delle decisioni (`engine/deals.ts`):
 
 - **Partnership**: un team propone, l'altro accetta nel round successivo. Dura 3 round e dà a entrambe le aziende CAC × 0,92 e churn × 0,95 se sono dello stesso settore (alleanza), CAC × 0,88 e passaparola × 1,15 se sono di settori diversi (co-marketing), più 0,02 di brand. Al massimo 2 partnership attive per azienda.
-- **Acquisizione**: un team offre una cifra in contanti (almeno metà della valutazione dell'altra azienda e non oltre la propria cassa); l'altro team decide nel round successivo in Finanza ed exit. Se accetta, il prezzo è distribuito ai suoi soci con il waterfall e la sua partita finisce. Chi compra paga subito, riceve tutte le persone (senza equity, con un periodo di inserimento e morale −0,03), la qualità di prodotto migliore e una parte del brand; se l'azienda acquisita è dello stesso settore anche l'85% dei clienti, metà della lista d'attesa e la chiarezza del problema. Se al momento del sì il compratore non ha più la cassa, l'offerta decade.
+- **Acquisizione**: un team offre una cifra in contanti (almeno metà della valutazione dell'altra azienda e non oltre la propria cassa); l'altro team decide nel round successivo in Finanza ed exit. Se accetta, il prezzo è distribuito ai suoi soci con il waterfall e la sua partita finisce. Chi compra paga subito, rileva la cassa, i debiti e i contratti prepagati dell'azienda acquisita, riceve tutte le persone (senza equity, con un periodo di inserimento e morale −0,03), la qualità di prodotto migliore e una parte del brand; se l'azienda acquisita è dello stesso settore anche l'85% dei clienti, metà della lista d'attesa e la chiarezza del problema. Se al momento del sì il compratore non ha più la cassa, l'offerta decade.
 
 ## 12. Bot
 
 | Stile | Runway obiettivo | Prezzo | Ore | Comportamento |
 |---|---|---|---|---|
-| Lean | 15 mesi | pieno | 50 | Discovery profonda, sviluppo di qualità, crescita prudente |
+| Lean | 15 mesi | pieno | 50 | Discovery profonda, sviluppo di qualità, crescita prudente; se a metà partita l'MVP non è finito, lanciano comunque (dal 50%) |
 | Steady | 11 mesi | −8% | 60 | Lancio all'85% dell'MVP, raccolte regolari |
 | Blitz | 7 mesi | −18% | 80 | Sviluppo veloce, lancio al 60%, raccolte grandi e frequenti, più assunzioni |
 
@@ -264,13 +276,13 @@ Strategia dei bot: i lean partono da una **nicchia** e passano al mercato ampio 
 - **Ricchezza dei fondatori** (predefinito): quanto riceverebbero i fondatori dal waterfall.
 - **Valutazione**: valore dell'azienda o prezzo di uscita.
 - **Bilanciato**: 35% ricchezza, 25% valutazione, 15% sostenibilità (runway), 10% reputazione, 10% NPS, 5% morale.
-- **Re**: fondatori con più del 50% dei voti e più seggi degli altri nel CdA, CEO non sostituito. **Ricco**: ricchezza dei fondatori di almeno 10 M€.
+- **Re**: azienda ancora attiva, fondatori con più del 50% dei voti e più seggi degli altri nel CdA, CEO non sostituito (chi vende l'azienda non è più Re). **Ricco**: ricchezza dei fondatori di almeno 10 M€.
 
 ## 14. Complessità
 
 | Livello | Dilemmi | Aste e rilanci | Debito tecnico | Simulatore del waterfall |
 |---|---|---|---|---|
-| Essenziale | no | no (assunzioni più facili) | no | no |
+| Essenziale | no | aste sì, rilanci no (assunzioni più facili) | no | no |
 | Standard | sì | sì | sì | no |
 | Avanzata | sì | sì | sì | sì, nella pagina Finanziamenti |
 
@@ -280,18 +292,19 @@ Lo script `npm run balance` gioca 60 partite con 6 aziende bot ciascuna (imposta
 
 | Gruppo | Falliti | Exit | Salvati | PMF ≥ 60 raggiunto | Valutazione mediana | Ricchezza fondatori mediana | Quota fondatori |
 |---|---|---|---|---|---|---|---|
-| Tutte (360) | 6% | 19% | 11% | 44% | 14,4 M€ | 6,9 M€ | 47% |
-| Bot lean | 6% | 21% | 11% | 86% | 10,8 M€ | 5,9 M€ | 55% |
-| Bot steady | 3% | 33% | 7% | 48% | 18,1 M€ | 10,0 M€ | 57% |
-| Bot blitz | 11% | 3% | 14% | 0% | 18,4 M€ | 5,8 M€ | 32% |
+| Tutte (360) | 5% | 19% | 12% | 53% | 13,0 M€ | 5,7 M€ | 43% |
+| Bot lean | 5% | 19% | 11% | 95% | 10,9 M€ | 5,9 M€ | 52% |
+| Bot steady | 3% | 35% | 7% | 65% | 19,6 M€ | 9,0 M€ | 51% |
+| Bot blitz | 8% | 4% | 19% | 0% | 10,2 M€ | 2,5 M€ | 30% |
 
 Letture utili in aula:
 - La strategia **lean** raggiunge il PMF molto più spesso e fallisce meno: il gioco premia la disciplina della lean startup.
-- La strategia **blitz** cresce e raccoglie di più ma non raggiunge mai il PMF, si diluisce di più e lascia meno ricchezza ai fondatori: è il costo dello *scalare prima del fit*.
+- La strategia **blitz** raccoglie di più e cresce in fretta all'inizio, ma non raggiunge mai il PMF: quando il mercato arriva alla maggioranza anticipatrice finisce nel chasm, si diluisce di più e lascia ai fondatori meno della metà della ricchezza degli steady. È il costo dello *scalare prima del fit*.
 - I settori B2B con multipli alti (DeepTech, AI, SaaS) generano più exit; consumer, e-commerce e fintech hanno più fallimenti e salvataggi per margini sottili o churn alto.
-- Con investitori dai posti limitati soffre soprattutto chi brucia molto (blitz: 11% di fallimenti e 14% di salvataggi): quando tutti chiedono soldi insieme, chi ha i numeri peggiori resta fuori.
-- La nicchia iniziale dei bot lean porta il PMF all'86%: la testa di ponte accelera l'apprendimento.
-- I fallimenti si concentrano nei round 7-8, quando i round diventano semestrali e la cassa si consuma più in fretta per round: un buon momento per discutere di runway.
+- Con investitori dai posti limitati soffre soprattutto chi brucia molto (blitz: 8% di fallimenti e 19% di salvataggi): quando tutti chiedono soldi insieme, chi ha i numeri peggiori resta fuori.
+- La nicchia iniziale dei bot lean porta il PMF al 95%: la testa di ponte accelera l'apprendimento.
+- I fallimenti si concentrano nei round 7-10, nella seconda metà della partita: i round semestrali (dal round 5) consumano più cassa per round e il mercato è passato alla maggioranza, più costosa da conquistare. Un buon momento per discutere di runway.
+- Nelle simulazioni con un team umano, il prezzo migliore resta vicino alla disponibilità a pagare in tutti i settori: chiedere il doppio o il massimo consentito fa perdere quasi sempre.
 
 Il gioco è volutamente *indulgente* (pochi fallimenti), perché una squadra fallita impara meno dei round successivi. Per aule più esperte si può scegliere la difficoltà *Realistica*.
 
@@ -322,6 +335,7 @@ Discuterli in aula è parte dell'apprendimento:
 - preferenze solo 1x o 2x non partecipanti, niente clausole anti-diluizione, drag-along o vendite secondarie;
 - concorrenti esterni con mosse a livello di settore, senza clienti e prezzi propri;
 - le partnership hanno effetti fissi e le acquisizioni si pagano solo in contanti (niente carta, earn-out o integrazioni fallite);
-- dimensione del mercato fissa, salvo eventi;
+- dimensione del mercato fissa, salvo eventi; l'adozione della categoria segue la stessa curva nel tempo in tutti i settori e non riduce i clienti disponibili per i team;
+- la valutazione conta metà della cassa netta e i prestiti non vengono rimborsati all'exit;
 - persone descritte da poche competenze numeriche; cultura e conflitti sintetizzati in morale, stress e dilemmi;
 - gli investitori decidono con regole trasparenti e un po' di rumore, senza negoziazione libera.

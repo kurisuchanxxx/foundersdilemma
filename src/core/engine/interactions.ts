@@ -90,7 +90,7 @@ export function resolveInteractions(state: GameState, ctxs: SimCtx[], round: num
             rec.success = false;
             c.morale = clamp(c.morale - 0.03, 0.05, 1);
             t.morale = clamp(t.morale + 0.02, 0.05, 1);
-            rec.text = fill(lt("{a} taunted {b}, but {b} is ahead: the jab backfired and {b}'s team rallied.", "{a} ha punzecchiato {b}, ma {b} è davanti: lo sfottò si è ritorto contro e il team di {b} si è compattato."), { a: c.name, b: t.name });
+            rec.text = fill(lt("{a} taunted {b}, but {b} is ahead: the jab backfired and the {b} team rallied.", "{a} ha punzecchiato {b}, ma {b} è davanti: lo sfottò si è ritorto contro e il team di {b} si è compattato."), { a: c.name, b: t.name });
           }
           break;
         }

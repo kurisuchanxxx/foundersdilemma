@@ -7,6 +7,7 @@ import { carryOverDecision } from "./decision";
 import { defaultOption } from "./dilemmas";
 import { fairValuation, grantChecks, investorChecks, loanLimit, monthlyExpenses } from "./finance";
 import { askSalary, expectedEquity } from "./hiring";
+import { estimateWtp } from "./market";
 import { activeFounders, clamp } from "./util";
 
 const STYLE: Record<BotStyle, { runway: number; priceFactor: number; ask: number; salary: number; equity: number; hours: 50 | 60 | 80; acquisitionPremium: number }> = {
@@ -45,11 +46,6 @@ export const DILEMMA_CHOICES: Record<string, Record<BotStyle, string>> = {
   inventory_moq: { lean: "small", steady: "bulk", blitz: "bulk" },
 };
 
-function approxWtp(c: Company): number {
-  const s = SECTORS[c.sector];
-  return s.refPrice * (0.6 + 0.8 * (0.5 * c.product.quality + (0.5 * c.pmf.score) / 100)) * (1 + 0.1 * c.brand);
-}
-
 function neededRole(c: Company): Role | null {
   const s = SECTORS[c.sector];
   const founders = activeFounders(c).map((f) => f.archetype);
@@ -87,7 +83,7 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
   const launched = c.product.launched;
 
   // Pricing
-  d.price = clamp(Math.round(approxWtp(c) * style.priceFactor * 100) / 100, s.priceMin, s.priceMax);
+  d.price = clamp(Math.round(estimateWtp(state, c) * style.priceFactor * 100) / 100, s.priceMin, s.priceMax);
   // Channel
   const fits = (Object.entries(s.gtmFit) as Array<[Decision["gtm"], number]>).filter(([g]) => g !== "salesLed" || s.salesDependence >= 0.3);
   fits.sort((a, b) => a[1] - b[1]);
@@ -97,7 +93,12 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
   d.devApproach = c.botStyle === "blitz" ? "rush" : c.botStyle === "lean" && !launched ? "quality" : "balanced";
   d.discovery = c.botStyle === "lean" ? "deep" : c.botStyle === "steady" ? (launched ? "light" : "deep") : launched ? "none" : "light";
   d.techDebtAction = c.product.techDebt > 0.5 ? "paydown" : c.product.techDebt > 0.3 ? "maintain" : c.botStyle === "blitz" ? "ship" : "maintain";
-  d.launchNow = !launched && ((c.botStyle === "blitz" && c.product.mvpProgress >= 0.6) || (c.botStyle === "steady" && c.product.mvpProgress >= 0.85));
+  // Lean bots polish the MVP, but stop polishing once half of the game has gone by.
+  d.launchNow =
+    !launched &&
+    ((c.botStyle === "blitz" && c.product.mvpProgress >= 0.6) ||
+      (c.botStyle === "steady" && c.product.mvpProgress >= 0.85) ||
+      (c.botStyle === "lean" && state.round > state.config.totalRounds / 2 && c.product.mvpProgress >= 0.5));
   d.founderHours = c.founderStress > 0.75 ? 50 : style.hours;
   d.vacation = c.founderStress > 0.85;
 
@@ -180,8 +181,8 @@ export function botDecision(state: GameState, c: Company, rng: Rng): Decision {
     if (d.pitches.length === 0 && runway < 9) {
       const grant = GRANTS.find((g) => grantChecks(c, g.id).every((ch) => ch.met));
       if (grant) d.grantApplication = grant.id;
-      const lender = LENDERS.find((l) => l.type === "bank" && loanLimit(c, l).checks.every((ch) => ch.met) && loanLimit(c, l).max > 20_000);
-      if (lender && c.botStyle !== "lean") d.loanRequest = { lenderId: lender.id, amount: loanLimit(c, lender).max };
+      const lender = LENDERS.find((l) => l.type === "bank" && loanLimit(c, l, state.round).checks.every((ch) => ch.met) && loanLimit(c, l, state.round).max > 20_000);
+      if (lender && c.botStyle !== "lean") d.loanRequest = { lenderId: lender.id, amount: loanLimit(c, lender, state.round).max };
     }
   }
 

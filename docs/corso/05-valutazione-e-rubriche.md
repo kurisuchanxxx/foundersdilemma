@@ -98,8 +98,9 @@ Per non premiare la fortuna o la ricerca del punteggio, il risultato pesa il 10%
 | Secondo terzo | 8 |
 | Ultimo terzo, azienda attiva o venduta | 7 |
 | Fallimento con post-mortem convincente | 6 |
+| Fallimento senza un post-mortem convincente | 4 |
 
-Bonus facoltativo (+1, senza superare 10): obiettivi sbloccati coerenti con la strategia dichiarata (ad esempio PMF raggiunto prima di scalare).
+Bonus facoltativo (+1, senza superare 10): obiettivi sbloccati e scelte coerenti con la strategia dichiarata (ad esempio il PMF raggiunto prima di scalare il marketing, visibile nello storico del report del team).
 
 ---
 
@@ -112,4 +113,4 @@ Modulo anonimo a fine modulo: ogni studente distribuisce 100 punti tra i membri 
 ## Integrità
 
 - Le decisioni sono del team: l'uso di strumenti di intelligenza artificiale per scrivere memo e report segue le regole del corso e va dichiarato.
-- È vietato modificare i file di partita o di decisione a mano: il gioco li valida e il docente conserva la copia ufficiale.
+- È vietato modificare i file di partita o di decisione a mano e aprire il file di partita per provare le decisioni in anticipo. Il gioco controlla solo che i file siano integri e del round giusto, non chi li ha preparati: il docente conserva la copia ufficiale e i file ricevuti (vedi la [guida per il docente](03-guida-docente.md), sezione 7).

@@ -1,4 +1,4 @@
-import { CHASM_PMF, PRICING_INFO, SECTORS, SEGMENTS, SEGMENT_INFO, competitionFactor, effectiveModifiers, estimateWtp, sectorPenetration, segmentFor, strategyEffects, type Segment } from "../../core";
+import { CHASM_PMF, PRICING_INFO, SECTORS, SEGMENTS, SEGMENT_INFO, categoryAdoption, competitionFactor, effectiveModifiers, estimateWtp, sectorPenetration, segmentFor, strategyEffects, type Segment } from "../../core";
 import { LineChart } from "../components/charts";
 import { Icon } from "../components/Icon";
 import { Badge, Callout, Card, InfoTip, Logo, Progress, Stat } from "../components/ui";
@@ -16,8 +16,11 @@ export function Market() {
   const seg = segmentFor(pen);
   const rivals = game.companies.filter((o) => o.sector === c.sector && o.id !== c.id);
   const sectorCustomers = game.companies.filter((o) => o.sector === c.sector && o.status === "active").reduce((a, o) => a + o.customers, 0);
-  const wtp = estimateWtp(c) * mods.wtp;
-  const payback = c.cac > 0 ? c.cac / Math.max(0.01, c.price * s.grossMargin) : 0;
+  const wtp = estimateWtp(game, c);
+  // the margin actually earned last round (strategy, events and operations included), the same one LTV uses
+  const lastSnap = c.history[c.history.length - 1];
+  const gm = lastSnap && lastSnap.revenue > 0 ? lastSnap.grossProfit / lastSnap.revenue : Math.min(0.95, Math.max(0.05, s.grossMargin + mods.gm));
+  const payback = c.cac > 0 ? c.cac / Math.max(0.01, c.price * gm) : 0;
   const segs = Object.keys(SEGMENTS) as Segment[];
   const fx = strategyEffects(c);
   const named = game.markets[c.sector].rivals ?? [];
@@ -45,17 +48,22 @@ export function Market() {
           <Stat
             label={f.tx("Addressable market", "Mercato indirizzabile")}
             value={f.compact(s.tam * mods.demand)}
-            sub={fx.tam < 1 ? `${f.tx("you can reach", "raggiungibili da te")} ${f.compact(reachable)} (${f.L(SEGMENT_INFO[c.segment].label)})` : f.tx("potential customers", "clienti potenziali")}
+            sub={fx.tam < 1 ? `${f.tx("you can reach", "raggiungibili da te")} ${f.compact(reachable)} · ${f.L(SEGMENT_INFO[c.segment].label)}` : f.tx("potential customers", "clienti potenziali")}
           />
         </Card>
         <Card>
-          <Stat label={f.tx("Sector penetration", "Penetrazione del settore")} value={f.pct(pen, pen < 0.1 ? 2 : 1)} sub={`${f.compact(sectorCustomers)} ${f.tx("customers, all players", "clienti, tutti i giocatori")}`} />
+          <Stat
+            label={f.tx("Market adoption", "Adozione del mercato")}
+            concept="adoptionCurve"
+            value={f.pct(pen, pen < 0.1 ? 2 : 1)}
+            sub={`${f.pct(categoryAdoption(game), 1)} ${f.tx("competitors and substitutes", "concorrenti e sostituti")} + ${f.pct(pen - categoryAdoption(game), 1)} ${f.tx("teams in play", "team in gioco")}`}
+          />
         </Card>
         <Card>
           <Stat label={f.tx("Your market share", "La tua quota di mercato")} value={sectorCustomers > 0 ? f.pct(c.customers / sectorCustomers) : "—"} sub={f.tx("of in-game customers", "dei clienti in gioco")} />
         </Card>
         <Card>
-          <Stat label={f.tx("Competition", "Concorrenza")} concept="competition" value={`×${f.num(competitionFactor(game, c), 2)}`} sub={`${rivals.length} ${f.tx("teams", "team")} + ${game.markets[c.sector].npcCompetitors} ${f.tx("others", "altri")}`} />
+          <Stat label={f.tx("Competition", "Concorrenza")} concept="competition" value={`×${f.num(competitionFactor(game, c), 2)}`} sub={`${f.count(rivals.length, ["team", "teams"], ["team", "team"])} + ${f.count(game.markets[c.sector].npcCompetitors, ["other", "others"], ["altro", "altri"])}`} />
         </Card>
       </div>
 
@@ -80,7 +88,10 @@ export function Market() {
         </div>
         {(seg === "earlyAdopters" || seg === "innovators") && (
           <p className="small faint mt-16">
-            {f.tx(`When the sector passes ${f.pct(SEGMENTS.earlyAdopters.upTo)} penetration, the early majority requires PMF ≥ ${CHASM_PMF} to avoid the chasm penalty.`, `Quando il settore supera il ${f.pct(SEGMENTS.earlyAdopters.upTo)} di penetrazione, la maggioranza anticipatrice richiede PMF ≥ ${CHASM_PMF} per evitare la penalità del chasm.`)}{" "}
+            {f.tx(
+              `Adoption grows round after round. When it passes ${f.pct(SEGMENTS.earlyAdopters.upTo)}, you sell to the early majority, which requires PMF ≥ ${CHASM_PMF} to avoid the chasm penalty.`,
+              `L'adozione cresce round dopo round. Quando supera il ${f.pct(SEGMENTS.earlyAdopters.upTo)}, vendi alla maggioranza anticipatrice, che richiede PMF ≥ ${CHASM_PMF} per evitare la penalità del chasm.`,
+            )}{" "}
             <InfoTip concept="chasm" />
           </p>
         )}
@@ -92,7 +103,7 @@ export function Market() {
           {c.product.launched ? (
             <div className="grid mini">
               <Stat label={f.tx("Price", "Prezzo")} concept="pricing" value={f.money(c.price, { decimals: c.price < 100 ? 2 : 0 })} sub={`${f.tx("WTP", "Disp. a pagare")} ≈ ${f.money(wtp, { decimals: wtp < 100 ? 2 : 0 })}`} />
-              <Stat label={f.tx("Gross margin", "Margine lordo")} concept="grossMargin" value={f.pct(s.grossMargin + mods.gm)} />
+              <Stat label={f.tx("Gross margin", "Margine lordo")} concept="grossMargin" value={f.pct(gm)} />
               <Stat label="CAC" concept="cac" value={f.money(c.cac)} />
               <Stat label="LTV" concept="ltv" value={f.money(c.ltv)} />
               <Stat label="LTV / CAC" value={c.cac > 0 ? `${f.num(c.ltv / c.cac, 1)}×` : "—"} tone={c.cac > 0 ? (c.ltv / c.cac >= 3 ? "good" : c.ltv / c.cac < 1 ? "bad" : "warn") : undefined} />

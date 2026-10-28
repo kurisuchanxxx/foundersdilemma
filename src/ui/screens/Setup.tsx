@@ -44,10 +44,10 @@ function newTeam(i: number): CompanySetup {
 }
 
 export function Setup() {
-  const f = useFmt();
   const goHome = useStore((s) => s.goHome);
   const newGame = useStore((s) => s.newGame);
   const [config, setConfig] = useState<GameConfig>(() => defaultConfig());
+  const f = useFmt(config.currency);
   const [humans, setHumans] = useState(1);
   const [bots, setBots] = useState(3);
   const [teams, setTeams] = useState<CompanySetup[]>(() => Array.from({ length: 12 }, (_, i) => newTeam(i)));
@@ -205,7 +205,7 @@ export function Setup() {
                 <div className="field">
                   <div className="field-label">{f.tx("Complexity", "Complessità")}</div>
                   <div className="grid cols-3" style={{ gap: 10 }}>
-                    <OptionCard on={config.complexity === "essential"} onClick={() => setConfig({ ...config, complexity: "essential" })} title={f.tx("Essential", "Essenziale")} desc={f.tx("No dilemmas, no tech debt, instant hiring. For a first 90-minute session.", "Niente dilemmi, niente debito tecnico, assunzioni immediate. Per una prima sessione di 90 minuti.")} />
+                    <OptionCard on={config.complexity === "essential"} onClick={() => setConfig({ ...config, complexity: "essential" })} title={f.tx("Essential", "Essenziale")} desc={f.tx("No dilemmas, no tech debt, simpler hiring (no counter-offers). For a first 90-minute session.", "Niente dilemmi, niente debito tecnico, assunzioni più semplici (senza controfferte). Per una prima sessione di 90 minuti.")} />
                     <OptionCard on={config.complexity === "standard"} onClick={() => setConfig({ ...config, complexity: "standard" })} title={f.tx("Standard", "Standard")} desc={f.tx("All systems: dilemmas, hiring auctions, tech debt.", "Tutti i sistemi: dilemmi, aste per le assunzioni, debito tecnico.")} badge={<Badge tone="accent">{f.tx("recommended", "consigliato")}</Badge>} />
                     <OptionCard on={config.complexity === "advanced"} onClick={() => setConfig({ ...config, complexity: "advanced" })} title={f.tx("Advanced", "Avanzata")} desc={f.tx("Standard plus an exit waterfall simulator: preference stack and payout of every shareholder at any exit value. For master's and finance courses.", "Standard più un simulatore del waterfall di uscita: stack delle preferenze e incasso di ogni socio a qualsiasi valore di exit. Per magistrali e corsi di finanza.")} />
                   </div>
@@ -322,7 +322,7 @@ export function Setup() {
                   );
                 })}
               </div>
-              <SectorDetails sector={team.sector} />
+              <SectorDetails sector={team.sector} currency={config.currency} />
             </Card>
 
             <Card
@@ -549,8 +549,8 @@ function ArchetypeMults({ archetype }: { archetype: Archetype }) {
   );
 }
 
-function SectorDetails({ sector }: { sector: SectorId }) {
-  const f = useFmt();
+function SectorDetails({ sector, currency }: { sector: SectorId; currency: GameConfig["currency"] }) {
+  const f = useFmt(currency);
   const s = SECTORS[sector];
   return (
     <div className="mt-16 col gap-12">

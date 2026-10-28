@@ -18,10 +18,10 @@ Ma il voto non dipende soprattutto dal piazzamento: contano la qualità delle de
 |---|---|
 | **Cruscotto** | Cassa, runway, ricavi mensili, clienti, PMF, valutazione, grafici e commenti del mentor |
 | **Decisioni** | Le scelte del round, divise in schede, con la proiezione aggiornata in tempo reale |
-| **Team e assunzioni** | Fondatori, dipendenti, candidati disponibili e aste in corso |
-| **Finanziamenti** | Cap table, investitori, bandi, prestiti, term sheet e offerte di acquisizione |
+| **Team e assunzioni** | Fondatori, dipendenti e risultati delle ultime offerte di assunzione (i candidati e le offerte sono in **Decisioni > Fondatori e team**) |
+| **Finanziamenti** | Cap table, investitori e loro requisiti, storico dei finanziamenti, esito degli ultimi pitch (pitch, bandi, prestiti, term sheet e offerte di acquisizione si gestiscono in **Decisioni > Finanza ed exit**) |
 | **Prodotto e PMF** | Avanzamento dell'MVP, test di Sean Ellis, debito tecnico e bug |
-| **Mercato** | Dimensione del mercato e parte raggiungibile con la vostra strategia, penetrazione, curva di adozione, unit economics, team e concorrenti esterni con le loro ultime mosse |
+| **Mercato** | Dimensione del mercato e parte raggiungibile con la vostra strategia, adozione del mercato e curva di adozione, unit economics, team e concorrenti esterni con le loro ultime mosse |
 | **News e reputazione** | Eventi di mercato e reputazione dell'azienda |
 | **Classifica** | Ricchezza dei fondatori, valutazione, quote e controllo (la corona indica chi controlla anche il CdA) |
 | **Report dei round** | Cosa è successo in ogni round |
@@ -47,12 +47,12 @@ Prima di inviare guardate la **proiezione** (cassa a fine round, runway, clienti
 
 - **Runway** = cassa / burn netto mensile. Sotto i 6 mesi iniziate a cercare fondi: un round richiede tempo.
 - **Product-market fit**: il gioco misura un punteggio da 0 a 100 e la quota di utenti che sarebbero *molto delusi* senza il prodotto. Il PMF è raggiunto a 60 punti, che corrispondono al 40% del test di Sean Ellis.
-- **Chasm**: quando il vostro settore supera gli early adopter, la maggioranza anticipatrice compra solo se il PMF è almeno 55; altrimenti il CAC sale del 50%.
+- **Chasm**: l'adozione del mercato cresce durante la partita e di solito verso metà supera gli early adopter (16%). Da lì vendete alla maggioranza anticipatrice, pragmatica: con un PMF sotto 55 compra lo stesso, ma conquistarla costa molto di più (CAC +50%, +20% se siete partiti da una nicchia). Il mentor vi avvisa quando il chasm si avvicina.
 - **LTV/CAC**: almeno 3 è sano; sotto 1 ogni nuovo cliente vi fa perdere denaro.
 - **Mercato condiviso**: i team nello stesso settore si dividono gli stessi clienti potenziali, e i concorrenti esterni reagiscono (guerre dei prezzi, campagne, nuove versioni): le loro mosse compaiono nelle news.
 - **Testa di ponte**: partire da una nicchia fa trovare prima il PMF; il mercato raggiungibile però è circa un terzo del settore.
-- **Diluizione**: ogni round di finanziamento riduce la vostra quota. L'option pool creato prima del round (*option pool shuffle*) pesa solo sui fondatori.
-- **Liquidation preference**: in un'exit gli investitori recuperano prima il loro capitale (1x, o 2x nei round di salvataggio); ai fondatori va il resto.
+- **Diluizione**: ogni round di finanziamento riduce la vostra quota. L'option pool creato prima del round (*option pool shuffle*) pesa sui soci esistenti (voi, i dipendenti, gli investitori precedenti, i SAFE che si convertono), non sul nuovo investitore. I SAFE non ancora convertiti sono già contati nella vostra quota, ai loro cap.
+- **Liquidation preference**: in un'exit ogni investitore sceglie tra recuperare prima il proprio capitale (1x, o 2x nei round di salvataggio) e convertire in azioni ordinarie; quello che resta va a tutti i titolari di azioni ordinarie (fondatori, dipendenti e investitori che hanno convertito) in proporzione alle quote.
 - **Ricco o Re**: mantenere la maggioranza dei voti e del CdA significa controllare l'azienda, ma spesso crescere più lentamente. Pochi team riescono in entrambe le cose.
 
 ## Il primo round, passo per passo
@@ -64,7 +64,7 @@ Alla prima partita parte un **tour guidato** di due minuti che mostra dove si tr
 3. In **Budget e prezzo** tenete il burn compatibile con almeno 9-12 mesi di runway.
 4. Valutate un **bando** o un **acceleratore** in **Finanza ed exit**: denaro non diluitivo o poco diluitivo all'inizio è prezioso.
 5. Rispondete al **dilemma**, se presente, e scrivete subito nel decision memo perché avete scelto così.
-6. **Riepilogo e invio**: leggete gli avvisi, poi inviate (in modalità Classe: consegnate il file al docente).
+6. **Riepilogo e invio**: leggete gli avvisi, poi inviate (in modalità Classe: consegnate il file al docente). **Non saltate mai l'invio**: un team che non decide va col pilota automatico mentre il mercato si muove, e perde capacità di sviluppo e vendita, morale e fiducia degli investitori, sempre di più a ogni round saltato. Se non volete cambiare nulla, inviate le decisioni così come sono.
 
 ## Consigli
 

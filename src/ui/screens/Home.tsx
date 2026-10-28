@@ -91,7 +91,7 @@ export function Home({ entranceDelay = 0 }: { entranceDelay?: number }) {
     toast(f.tx("Game loaded.", "Partita caricata."), "good");
   };
 
-  const saveLabel = (s: SaveMeta) => `${s.finished ? f.tx("Finished", "Conclusa") : `${f.tx("Round", "Round")} ${Math.min(s.round, s.totalRounds)}/${s.totalRounds}`} · ${s.companies.filter((c) => !c.isBot).length} ${f.tx("teams", "team")} · ${f.date(s.savedAt)}`;
+  const saveLabel = (s: SaveMeta) => `${s.finished ? f.tx("Finished", "Conclusa") : `${f.tx("Round", "Round")} ${Math.min(s.round, s.totalRounds)}/${s.totalRounds}`} · ${f.count(s.companies.filter((c) => !c.isBot).length, ["team", "teams"], ["team", "team"])} · ${f.date(s.savedAt)}`;
 
   return (
     <div className="home-screen enter" style={{ "--hs-delay": `${entranceDelay}ms` } as React.CSSProperties}>

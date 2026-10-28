@@ -144,10 +144,12 @@ export function Leaderboard() {
                     {i + 1}
                   </span>
                   <Logo company={co} size={24} />
-                  <span className="grow small" style={{ fontWeight: 600 }}>
+                  <span className="grow small" style={{ fontWeight: 600, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {co.name}
                   </span>
-                  <LevelChip xp={co.xp} />
+                  <span className="xp-level">
+                    <LevelChip xp={co.xp} />
+                  </span>
                   <span className="small num" style={{ width: 60, textAlign: "right" }}>
                     {co.xp} XP
                   </span>
@@ -160,7 +162,7 @@ export function Leaderboard() {
                       ""
                     )}
                   </span>
-                  <span className="tiny faint" style={{ width: 90, textAlign: "right" }}>
+                  <span className="tiny faint xp-next" style={{ width: 90, textAlign: "right" }}>
                     {lv.nextAt !== null ? `${lv.nextAt - lv.xp} ${f.tx("to next", "al prossimo")}` : f.tx("max level", "livello massimo")}
                   </span>
                 </div>

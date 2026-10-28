@@ -407,6 +407,12 @@ export interface Loan {
   startRound: number;
 }
 
+export interface Prepayment {
+  /** Monthly revenue already collected in advance. */
+  monthly: number;
+  monthsLeft: number;
+}
+
 export interface FundingRecord {
   id: string;
   round: number;
@@ -580,6 +586,8 @@ export interface DilemmaInstance {
   options: DilemmaOption[];
   concept: string | null;
   context: Record<string, string | number>;
+  /** Bilingual values (e.g. amounts in each language's format) for the outcome texts. */
+  labels?: Record<string, LText>;
   chosen: string | null;
   outcome: LText | null;
 }
@@ -730,6 +738,10 @@ export interface ValuationBreakdown {
   scorecardWeight: number;
   modelValue: number;
   anchor: number | null;
+  /** Weight of the last round's post-money in the valuation (fades out over four rounds). */
+  anchorWeight: number;
+  /** Model value blended with the anchor, before cash. */
+  anchored: number;
   netCash: number;
   total: number;
 }
@@ -868,6 +880,8 @@ export interface Company {
   lastPricedRound: number | null;
   totalRaised: number;
   rescues: number;
+  /** Annual contracts paid upfront: revenue still to be earned without new cash (deferred revenue). */
+  prepayments?: Prepayment[];
 
   // product
   product: ProductState;
@@ -893,6 +907,10 @@ export interface Company {
   founderStress: number;
   stressStreak: number;
   burnoutMonthsLeft: number;
+  /** Consecutive months at 60+ hours a week without rest: fatigue builds up. */
+  overworkMonths?: number;
+  /** Consecutive rounds in which the team took no decision at all (no submission, no draft). */
+  missedRounds?: number;
 
   modifiers: Modifier[];
 

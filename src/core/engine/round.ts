@@ -17,7 +17,7 @@ import { evaluateChallenges, generateChallenges, openShowdown, resolveShowdown }
 import { refreshCandidates, resolveHiring } from "./hiring";
 import { resolveInteractions } from "./interactions";
 import { mentorInsights } from "./insights";
-import { brandAndSentiment, convertWaitlist, marketMonth, quote } from "./market";
+import { brandAndSentiment, convertWaitlist, marketMonth, priceRiseRetention, quote } from "./market";
 import { fireEmployee, resignEmployee } from "./people";
 import { maybeLaunch, productMonth } from "./product";
 import { monthsInRound } from "./periods";
@@ -25,7 +25,7 @@ import { rivalMoves } from "./rivals";
 import { applyStrategySwitch } from "./strategy";
 import { computeCapacities, moraleTarget, resignationChance, stressTarget } from "./team";
 import { updateValuation } from "./valuation";
-import { clamp, clamp01, effectiveModifiers, featuresFor, headcount } from "./util";
+import { clamp, clamp01, effectiveModifiers, featuresFor, headcount, prepaidMonthly } from "./util";
 
 function newReport(round: number, companyId: string): RoundReport {
   return { round, companyId, lines: [], pitchResults: [], hiringResults: [], eventIds: [], insights: [], decision: null };
@@ -131,11 +131,67 @@ function applyReputationAction(x: SimCtx): void {
   }
 }
 
+/**
+ * A team that takes no decision at all stands still while the market moves on: last round's settings
+ * run on autopilot, but without direction the team works at a fraction of its capacity, learns nothing
+ * new about customers and loses morale and investors' trust. Each consecutive missed round costs more.
+ */
+function applyInaction(c: Company, round: number, report: RoundReport): void {
+  const k = Math.min(3, (c.missedRounds ?? 0) + 1);
+  c.missedRounds = k;
+  c.modifiers.push({
+    id: `inaction_${round}`,
+    source: lt("No decisions taken", "Nessuna decisione presa"),
+    fromRound: round,
+    untilRound: round,
+    sectors: null,
+    effects: { dev: 1 - 0.25 * k, sales: 1 - 0.25 * k, organic: 1 - 0.2 * k, cac: 1 + 0.15 * k },
+  });
+  c.morale = clamp(c.morale - 0.06 * k, 0.05, 1);
+  c.reputation.investors = clamp(c.reputation.investors - 5 * k, 0, 100);
+  c.pmf.problemClarity = clamp01(c.pmf.problemClarity - 0.03 * k);
+  report.lines.push({
+    kind: "bad",
+    text: fill(
+      lt(
+        "No decisions this round: the company ran on autopilot while the market moved on. Development and sales at {p}% of capacity, customers' needs drifting away, team and investors losing confidence.{again}",
+        "Nessuna decisione in questo round: l'azienda è andata avanti col pilota automatico mentre il mercato si muoveva. Sviluppo e vendite al {p}% della capacità, bisogni dei clienti che cambiano senza di voi, team e investitori che perdono fiducia.{again}",
+      ),
+      {
+        p: Math.round((1 - 0.25 * k) * 100),
+        again: k > 1 ? lt(" Another round in a row without decisions: the cost grows every time.", " Un altro round di fila senza decisioni: il costo cresce ogni volta.") : "",
+      },
+    ),
+  });
+}
+
+/** Sets this round's price; customers who no longer find it worth paying leave at once. */
+function applyPrice(state: GameState, x: SimCtx, price: number): void {
+  const c = x.c;
+  if (c.product.launched && c.customers > 0) {
+    const kept = priceRiseRetention(state, x, c.price, price);
+    if (kept < 1) {
+      const lost = c.customers * (1 - kept);
+      c.customers -= lost;
+      x.churnedCustomers += lost;
+      if (!x.preview && lost >= 0.5)
+        x.report.lines.push({
+          kind: "bad",
+          text: fill(lt("The price rise above what customers value made {n} of them cancel right away.", "L'aumento di prezzo oltre il valore percepito ha fatto disdire subito {n} clienti."), { n: Math.round(lost) }),
+        });
+    }
+  }
+  c.price = price;
+  if (c.product.launched) c.mrr = c.customers * c.price;
+}
+
 function lastMonthNet(state: GameState, x: SimCtx, round: number): number {
   const gm = clamp(x.sector.grossMargin + x.mods.gm, 0.05, 0.95);
   const exp = monthlyExpenses(state, x.c, x.d, round, x.cap.traits.burn).total;
   const debt = x.c.loans.reduce((s, l) => s + l.monthlyPayment, 0);
-  return (x.c.product.launched ? x.c.mrr * gm : 0) - exp - debt;
+  const revenue = x.c.product.launched ? x.c.mrr : 0;
+  // prepaid customers pay nothing this month (as in financeMonth, never more than the revenue itself)
+  return revenue * gm - Math.min(prepaidMonthly(x.c), revenue) - exp - debt;
 }
 
 function projectedRunway(state: GameState, x: SimCtx, round: number): number {
@@ -151,6 +207,9 @@ function teamMonth(state: GameState, x: SimCtx, month: number, round: number): v
   const ref = pts.length >= 3 ? pts[pts.length - 3].mrr : pts.length > 0 ? pts[0].mrr : 0;
   const growth = ref > 0 ? c.mrr / ref - 1 : c.mrr > 0 ? 0.3 : 0;
   c.morale = clamp(c.morale + (moraleTarget(c, x.d, runway, growth, x.mods.morale) - c.morale) * 0.25, 0.05, 1);
+  // fatigue: grows with every month at 60+ hours, rest and vacations bring it down
+  const tired = c.overworkMonths ?? 0;
+  c.overworkMonths = x.d.vacation ? 0 : x.d.founderHours >= 60 ? tired + 1 : Math.max(0, tired - 2);
   c.founderStress = clamp01(c.founderStress + (stressTarget(c, x.d, runway, round, x.mods.stress) - c.founderStress) * 0.3);
   if (c.burnoutMonthsLeft > 0) c.burnoutMonthsLeft -= 1;
   c.stressStreak = c.founderStress > 0.85 ? c.stressStreak + 1 : 0;
@@ -285,8 +344,13 @@ export function advanceRound(state: GameState): void {
   for (const c of state.companies) {
     if (c.status !== "active") continue;
     const report = reports.get(c.id)!;
+    const idle = !c.isBot && !c.submitted && !c.decision;
     const d = sanitizeDecision(state, c, c.decision ?? carryOverDecision(c));
-    if (!c.submitted && !c.isBot) report.lines.push({ kind: "info", text: lt("No decision submitted: last round's settings were applied.", "Nessuna decisione inviata: sono state applicate le impostazioni del round precedente.") });
+    if (idle) applyInaction(c, round, report);
+    else {
+      c.missedRounds = 0;
+      if (!c.submitted && !c.isBot) report.lines.push({ kind: "info", text: lt("Decisions not submitted: your saved draft was applied.", "Decisioni non inviate: è stata applicata la bozza salvata.") });
+    }
     c.decision = d;
     report.decision = structuredClone(d);
     const rng = createRng(state.config.seed, round, "company", c.id);
@@ -300,6 +364,8 @@ export function advanceRound(state: GameState): void {
         continue;
       }
     }
+    // the loan is assessed on the numbers the team saw when deciding (before switches and dilemmas)
+    processLoanRequest(state, x, round);
     if (c.dilemma) {
       const res = resolveDilemma(state, c, d.dilemmaChoice, round, rng, report);
       if (res.exited) {
@@ -324,9 +390,7 @@ export function advanceRound(state: GameState): void {
     }
     c.termSheets = c.termSheets.filter((t) => t.validRound > round);
     processGrantApplication(state, x, round);
-    processLoanRequest(state, x, round);
-    c.price = d.price;
-    if (c.product.launched) c.mrr = c.customers * c.price;
+    applyPrice(state, x, d.price);
     ctxs.push(x);
     // proposals to other teams go out after every company has acted on last round's ones
     followUps.push(() => {
@@ -445,19 +509,19 @@ export function previewDecision(state: GameState, companyId: string, decision: D
   const c = s.companies.find((x) => x.id === companyId);
   if (!c || c.status !== "active") return null;
   const d = sanitizeDecision(s, c, decision);
-  applyStrategySwitch(c, d, null);
   const rng = createPreviewRng();
   const features = featuresFor(s.config);
   const report = newReport(s.round, c.id);
   const x = buildCtx(s, c, d, rng, report, features, true);
+  // same order as the round: the loan is assessed before a strategy switch
+  processLoanRequest(s, x, s.round);
+  applyStrategySwitch(c, d, null);
   const months = monthsInRound(s.config, s.round);
   x.oneOffCosts = oneOffCosts(c, d);
   for (const id of d.fires) c.team = c.team.filter((e) => e.id !== id);
   x.distraction += REPUTATION_ACTIONS[d.reputationAction].distraction + 0.1 * d.pitches.length;
   for (const id of d.acceptTermSheetIds) acceptTermSheet(s, c, id, s.round, report);
-  processLoanRequest(s, x, s.round);
-  c.price = d.price;
-  if (c.product.launched) c.mrr = c.customers * c.price;
+  applyPrice(s, x, d.price);
   // Assume every offer (and accepted counter-offer) is accepted.
   let hiringCost = 0;
   const offers = [
