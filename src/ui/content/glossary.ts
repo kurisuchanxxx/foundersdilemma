@@ -239,10 +239,13 @@ export const GLOSSARY: GlossaryEntry[] = [
     category: "market",
     short: lt("Innovators, early adopters, early majority, late majority, laggards.", "Innovatori, early adopter, maggioranza anticipatrice, maggioranza ritardataria, ritardatari."),
     body: lt(
-      "Everett Rogers showed that markets adopt new products in segments with different needs. Each new segment is harder and more expensive to win, but more loyal.",
-      "Everett Rogers ha mostrato che i mercati adottano i nuovi prodotti per segmenti con bisogni diversi. Ogni nuovo segmento è più difficile e costoso da conquistare, ma più fedele.",
+      "Everett Rogers showed that a new product spreads through a market in segments with different attitudes to novelty: innovators (2.5%), early adopters (13.5%), early majority (34%), late majority (34%) and laggards (16%). Geoffrey Moore added that the step from visionary early adopters to the pragmatic early majority is the hardest one: the chasm.",
+      "Everett Rogers ha mostrato che un nuovo prodotto si diffonde in un mercato per segmenti con atteggiamenti diversi verso la novità: innovatori (2,5%), early adopter (13,5%), maggioranza anticipatrice (34%), maggioranza ritardataria (34%) e ritardatari (16%). Geoffrey Moore ha aggiunto che il passaggio dagli early adopter visionari alla maggioranza pragmatica è il più difficile: il chasm.",
     ),
-    inGame: lt("Penetration of your sector (all players together) defines the current segment: CAC rises, churn falls.", "La penetrazione del settore (tutti i giocatori insieme) definisce il segmento attuale: il CAC sale, il churn scende."),
+    inGame: lt(
+      "The adoption of your sector grows during the game (competitors and substitutes) and with the customers of all teams; it decides which segment you are selling to. In the game, later segments cost more to win (CAC up) but leave less (churn down): a simplifying assumption.",
+      "L'adozione del settore cresce durante la partita (concorrenti e sostituti) e con i clienti di tutti i team; decide a quale segmento stai vendendo. Nel gioco i segmenti successivi costano di più da conquistare (CAC più alto) ma abbandonano meno (churn più basso): un'ipotesi semplificativa.",
+    ),
     refs: ["E. Rogers, Diffusion of Innovations (1962)"],
   },
   {
@@ -254,7 +257,10 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Geoffrey Moore: the early majority buys proven, complete solutions. Products without strong fit get stuck when the visionaries are exhausted.",
       "Geoffrey Moore: la maggioranza anticipatrice compra soluzioni provate e complete. I prodotti senza un fit forte si bloccano quando i visionari sono esauriti.",
     ),
-    inGame: lt("Entering the early majority with PMF below 55 multiplies CAC by 1.5.", "Entrare nella maggioranza anticipatrice con PMF sotto 55 moltiplica il CAC per 1,5."),
+    inGame: lt(
+      "The market usually reaches the early majority around the middle of the game. From then on, a PMF below 55 multiplies CAC by 1.5 (by 1.2 if you started from a niche beachhead). The mentor warns you when the chasm is near.",
+      "Di solito il mercato arriva alla maggioranza anticipatrice verso metà partita. Da lì in poi, con PMF sotto 55 il CAC è moltiplicato per 1,5 (per 1,2 se siete partiti da una nicchia testa di ponte). Il mentor vi avvisa quando il chasm si avvicina.",
+    ),
     refs: ["G. Moore, Crossing the Chasm (1991)"],
   },
   {

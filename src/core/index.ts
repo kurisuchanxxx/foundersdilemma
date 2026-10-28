@@ -32,7 +32,7 @@ export { evaluateOffer, expectedEquity, askSalary } from "./engine/hiring";
 export { computeValuation, annualGrowth } from "./engine/valuation";
 export { paperFounderWealth } from "./engine/exit";
 export { pmfStage, seanEllisShare, PMF_THRESHOLD, APPROACH, DISCOVERY, REFACTOR } from "./engine/product";
-export { SEGMENTS, segmentFor, sectorPenetration, competitionFactor, CHASM_PMF, estimateWtp } from "./engine/market";
+export { SEGMENTS, segmentFor, sectorPenetration, categoryAdoption, competitionFactor, CHASM_PMF, estimateWtp } from "./engine/market";
 export type { Segment } from "./engine/market";
 export { mentorInsights } from "./engine/insights";
 export { effectiveModifiers, featuresFor, headcount, activeFounders } from "./engine/util";

@@ -4,6 +4,7 @@ import type { Company, GameState, ModifierEffects, SectorId } from "../types";
 import type { SimCtx } from "./context";
 import { strategyEffects } from "./strategy";
 import { clamp, clamp01, effectiveModifiers } from "./util";
+import { monthsBefore, totalMonths } from "./periods";
 
 // ---------------------------------------------------------------------------------------
 // Adoption curve (Rogers) and the "chasm" (Moore)
@@ -38,8 +39,20 @@ export function effectiveTam(sector: SectorDef, demandMod: number): number {
   return sector.tam * demandMod;
 }
 
+/**
+ * Share of the sector's market that has adopted the product category, outside the teams in play
+ * (competitors and substitutes): about 1% at the start, the 16% of the chasm a little before
+ * mid-game and about 45% at the end, whatever the length of the game.
+ */
+export function categoryAdoption(state: GameState): number {
+  const total = totalMonths(state.config);
+  const progress = total > 0 ? clamp01(monthsBefore(state.config, state.round) / total) : 0;
+  return 0.01 + 0.44 * Math.pow(progress, 1.17);
+}
+
+/** Position of the sector on the adoption curve: the category's adoption plus the teams' own customers. */
 export function sectorPenetration(state: GameState, sector: SectorDef, demandMod = 1): number {
-  return clamp01(sectorCustomers(state, sector.id) / Math.max(1, effectiveTam(sector, demandMod)));
+  return clamp01(categoryAdoption(state) + sectorCustomers(state, sector.id) / Math.max(1, effectiveTam(sector, demandMod)));
 }
 
 // ---------------------------------------------------------------------------------------

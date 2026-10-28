@@ -3,7 +3,7 @@ import { fill, lt, moneyL, decL } from "../text";
 import type { Company, GameState, Insight, Snapshot } from "../types";
 import { foundersOwnership } from "./captable";
 import { PMF_THRESHOLD } from "./product";
-import { CHASM_PMF, estimateWtp, segmentFor, sectorPenetration } from "./market";
+import { CHASM_PMF, SEGMENTS, estimateWtp, segmentFor, sectorPenetration } from "./market";
 
 const ORDER = { critical: 0, warn: 1, info: 2, good: 3 } as const;
 
@@ -47,9 +47,22 @@ export function mentorInsights(state: GameState, c: Company, snap: Snapshot): In
     const wtp = estimateWtp(state, c);
     if (snap.price > wtp * 1.15) add("warn", fill(lt("Your price ({p}) is above what customers value (~{w}): fewer conversions, more churn.", "Il tuo prezzo ({p}) è sopra il valore percepito (~{w}): meno conversioni, più churn."), { p: moneyL(snap.price), w: moneyL(wtp) }), "pricing");
     else if (snap.price < wtp * 0.7) add("info", fill(lt("Customers would probably pay more than {p}: you may be leaving money on the table.", "I clienti probabilmente pagherebbero più di {p}: potresti lasciare soldi sul tavolo."), { p: moneyL(snap.price) }), "pricing");
-    const seg = segmentFor(sectorPenetration(state, s));
+    const pen = sectorPenetration(state, s);
+    const seg = segmentFor(pen);
     if ((seg === "earlyMajority" || seg === "lateMajority") && c.pmf.score < CHASM_PMF)
       add("warn", lt("Your market is moving to the early majority, which only buys proven products: you are in the chasm.", "Il tuo mercato sta passando alla maggioranza anticipatrice, che compra solo prodotti provati: sei nel 'chasm'."), "chasm");
+    else if (seg === "earlyAdopters" && pen >= SEGMENTS.earlyAdopters.upTo - 0.05 && c.pmf.score < CHASM_PMF)
+      add(
+        "warn",
+        fill(
+          lt(
+            "The market is about to reach the early majority ({p}% adoption, the chasm is at 16%). Mainstream customers only buy proven products: reach PMF {t} before then, or your CAC will jump.",
+            "Il mercato sta per arrivare alla maggioranza anticipatrice ({p}% di adozione, il chasm è al 16%). I clienti mainstream comprano solo prodotti provati: raggiungi PMF {t} prima, o il CAC salirà di colpo.",
+          ),
+          { p: Math.round(pen * 100), t: CHASM_PMF },
+        ),
+        "chasm",
+      );
   }
 
   if (c.pmf.score >= PMF_THRESHOLD) add("good", lt("Product-market fit! Now scaling acquisition makes sense.", "Product-market fit! Ora ha senso scalare l'acquisizione."), "pmf");

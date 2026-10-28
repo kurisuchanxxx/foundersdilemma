@@ -15,6 +15,8 @@ import {
   estimateWtp,
   SECTORS,
   computeValuation,
+  sectorPenetration,
+  segmentFor,
 } from "../src/core";
 import type { CompanySetup, GameState } from "../src/core";
 import { createRng } from "../src/core/rng";
@@ -372,5 +374,17 @@ describe("ownership, control and valuation", () => {
       expect(v).toBeGreaterThanOrEqual(last);
       last = v;
     }
+  });
+});
+
+describe("adoption curve", () => {
+  it("reaches the early majority (the chasm) during a standard game, not at the start", () => {
+    const state = newGame("CHASM-1");
+    const s = SECTORS[state.companies[0].sector];
+    expect(segmentFor(sectorPenetration(state, s))).toBe("innovators");
+    state.round = Math.ceil(state.config.totalRounds * 0.4);
+    expect(segmentFor(sectorPenetration(state, s))).toBe("earlyAdopters");
+    state.round = state.config.totalRounds;
+    expect(segmentFor(sectorPenetration(state, s))).toBe("earlyMajority");
   });
 });

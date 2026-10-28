@@ -1,4 +1,4 @@
-import { CHASM_PMF, PRICING_INFO, SECTORS, SEGMENTS, SEGMENT_INFO, competitionFactor, effectiveModifiers, estimateWtp, sectorPenetration, segmentFor, strategyEffects, type Segment } from "../../core";
+import { CHASM_PMF, PRICING_INFO, SECTORS, SEGMENTS, SEGMENT_INFO, categoryAdoption, competitionFactor, effectiveModifiers, estimateWtp, sectorPenetration, segmentFor, strategyEffects, type Segment } from "../../core";
 import { LineChart } from "../components/charts";
 import { Icon } from "../components/Icon";
 import { Badge, Callout, Card, InfoTip, Logo, Progress, Stat } from "../components/ui";
@@ -49,7 +49,12 @@ export function Market() {
           />
         </Card>
         <Card>
-          <Stat label={f.tx("Sector penetration", "Penetrazione del settore")} value={f.pct(pen, pen < 0.1 ? 2 : 1)} sub={`${f.compact(sectorCustomers)} ${f.tx("customers, all players", "clienti, tutti i giocatori")}`} />
+          <Stat
+            label={f.tx("Market adoption", "Adozione del mercato")}
+            concept="adoptionCurve"
+            value={f.pct(pen, pen < 0.1 ? 2 : 1)}
+            sub={`${f.pct(categoryAdoption(game), 1)} ${f.tx("competitors and substitutes", "concorrenti e sostituti")} + ${f.pct(pen - categoryAdoption(game), 1)} ${f.tx("teams in play", "team in gioco")}`}
+          />
         </Card>
         <Card>
           <Stat label={f.tx("Your market share", "La tua quota di mercato")} value={sectorCustomers > 0 ? f.pct(c.customers / sectorCustomers) : "—"} sub={f.tx("of in-game customers", "dei clienti in gioco")} />
@@ -80,7 +85,10 @@ export function Market() {
         </div>
         {(seg === "earlyAdopters" || seg === "innovators") && (
           <p className="small faint mt-16">
-            {f.tx(`When the sector passes ${f.pct(SEGMENTS.earlyAdopters.upTo)} penetration, the early majority requires PMF ≥ ${CHASM_PMF} to avoid the chasm penalty.`, `Quando il settore supera il ${f.pct(SEGMENTS.earlyAdopters.upTo)} di penetrazione, la maggioranza anticipatrice richiede PMF ≥ ${CHASM_PMF} per evitare la penalità del chasm.`)}{" "}
+            {f.tx(
+              `Adoption grows round after round. When it passes ${f.pct(SEGMENTS.earlyAdopters.upTo)}, you sell to the early majority, which requires PMF ≥ ${CHASM_PMF} to avoid the chasm penalty.`,
+              `L'adozione cresce round dopo round. Quando supera il ${f.pct(SEGMENTS.earlyAdopters.upTo)}, vendi alla maggioranza anticipatrice, che richiede PMF ≥ ${CHASM_PMF} per evitare la penalità del chasm.`,
+            )}{" "}
             <InfoTip concept="chasm" />
           </p>
         )}
