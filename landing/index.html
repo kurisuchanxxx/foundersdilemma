@@ -203,13 +203,15 @@
       .line { white-space: normal; }
       .line-one, .line-two { transform: scaleX(.78); width: 128%; }
       .hero-copy { width: calc(100vw - 2 * var(--mobile-gutter)); max-width: 420px; }
-      .demo-card { bottom: auto; top: clamp(176px, 32svh, 300px); }
+      /* phones: the card sits in the free band between the header and the headline (script below centres it there and shrinks it if the band is short); this is the no-script fallback, right under the header */
+      .demo-card { bottom: auto; top: calc(var(--header-top) + 64px); }
     }
     @media (min-width: 791px) and (max-height: 640px) { .screen { --display-size: clamp(44px, 7.2vh, 60px); --display-leading: 1.1em; --copy-size: 14px; --copy-leading: 19px; } }
     @media (max-width: 790px) and (orientation: landscape) and (max-height: 480px) {
       .screen { --display-size: 34px; --display-leading: 38px; --copy-size: 13px; --copy-leading: 17px; --hero-bottom: 18px; --card-width: 110px; }
       .demo-card { top: auto; bottom: var(--hero-bottom); }
       .hero-copy br { display: none; }
+      .hero-copy { width: calc(100vw - var(--gutter-start) - var(--gutter-end) - var(--card-width) - 24px); max-width: 460px; }
     }
 
     /* ---------- buttons ---------- */
@@ -628,6 +630,27 @@
       var card = document.getElementById("demo-card");
       var settle = function () { root.classList.remove("motion-pending"); if (window.__motionFallback) clearTimeout(window.__motionFallback); };
       if (card) card.addEventListener("animationend", function (e) { if (e.target === card) settle(); });
+
+      /* phones: keep the GitHub card clear of the header and the headline. It is centred in the free band
+         between them, and shrinks (down to 92px wide) when that band is too short for its full size. */
+      var heroEl = document.getElementById("top"), titleEl = document.querySelector(".hero-title"), headEl = document.getElementById("header");
+      var phone = window.matchMedia("(max-width: 619px)"), flat = window.matchMedia("(max-width: 790px) and (orientation: landscape) and (max-height: 480px)");
+      var placeCard = function () {
+        if (!card || !heroEl || !titleEl || !headEl) return;
+        if (!phone.matches || flat.matches) { card.style.top = ""; card.style.width = ""; return; }
+        card.style.width = "";
+        var base = heroEl.getBoundingClientRect().top;
+        var bandTop = headEl.getBoundingClientRect().bottom - base + 16;
+        var bandBottom = titleEl.getBoundingClientRect().top - base - 16;
+        var band = bandBottom - bandTop, w = card.offsetWidth, h = card.offsetHeight;
+        if (h > band) { var nw = Math.max(92, Math.floor(band * w / h)); card.style.width = nw + "px"; h = card.offsetHeight; }
+        card.style.top = Math.round(bandTop + Math.max(0, (band - h) / 2)) + "px";
+      };
+      placeCard();
+      window.addEventListener("resize", placeCard);
+      window.addEventListener("load", placeCard);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeCard);
+      if ("ResizeObserver" in window && titleEl) new ResizeObserver(placeCard).observe(titleEl.parentNode);
 
       var header = document.getElementById("header");
       var toggle = document.getElementById("menu-toggle");
