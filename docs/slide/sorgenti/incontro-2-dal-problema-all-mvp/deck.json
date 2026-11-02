@@ -1,21 +1,68 @@
 {
  "v": 4,
- "createdOnFiles": {"v": 1, "at": "2026-11-02T09:45:00Z"},
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-02T09:45:00Z"
+ },
  "lists": "css",
  "title": "Founder’s Dilemma · Incontro 2 · Dal problema all’MVP",
  "cover": "cover",
- "order": ["cover", "agenda", "bml", "pmf", "debito", "oggi", "confronto", "debriefing", "consegna"],
+ "order": [
+  "cover",
+  "agenda",
+  "discovery",
+  "ipotesi",
+  "ciclo",
+  "mvp",
+  "fit",
+  "ellis",
+  "pivot",
+  "debitotecnico",
+  "checklist",
+  "oggi",
+  "confronto",
+  "debriefing",
+  "consegna"
+ ],
  "sections": {
-  "s1": {"description": "Apertura: obiettivi e scaletta delle tre ore.", "start": "cover"},
-  "s2": {"description": "Mini-lezione: build-measure-learn, product-market fit e debito tecnico.", "start": "bml"},
-  "s3": {"description": "In gioco: le decisioni dei round 2 e 3 e il confronto lean contro blitz.", "start": "oggi"},
-  "s4": {"description": "Debriefing e consegna.", "start": "debriefing"}
+  "s1": {
+   "description": "Apertura: obiettivi e scaletta delle tre ore.",
+   "start": "cover"
+  },
+  "s2": {
+   "description": "Lezione: customer development, ipotesi, lean startup e MVP.",
+   "start": "discovery"
+  },
+  "s3": {
+   "description": "Lezione: product-market fit, come misurarlo, pivot e debito tecnico.",
+   "start": "fit"
+  },
+  "s4": {
+   "description": "In gioco: le decisioni dei round 2 e 3 e il confronto lean contro blitz.",
+   "start": "oggi"
+  },
+  "s5": {
+   "description": "Debriefing e consegna.",
+   "start": "debriefing"
+  }
  },
  "faces": {
-  "geistserif": {"family": "Geist Serif", "src": "project/ds/fd/fonts/GeistSerif-Regular.woff2"},
-  "geist": {"family": "Geist", "src": "project/ds/fd/fonts/Geist-Variable.woff2"}
+  "geistserif": {
+   "family": "Geist Serif",
+   "src": "project/ds/fd/fonts/GeistSerif-Regular.woff2"
+  },
+  "geist": {
+   "family": "Geist",
+   "src": "project/ds/fd/fonts/Geist-Variable.woff2"
+  }
  },
  "designSystems": [
-  {"title": "Founder's Dilemma", "namespace": "fd", "artifact": "https://claude.ai/artifact/GgxAGvWD3a2PNSBqz9mdaG", "version": "1793636453-4a64", "copiedAt": "2026-11-02T16:45:00Z"}
+  {
+   "title": "Founder's Dilemma",
+   "namespace": "fd",
+   "artifact": "https://claude.ai/artifact/GgxAGvWD3a2PNSBqz9mdaG",
+   "version": "1793636453-4a64",
+   "copiedAt": "2026-11-02T16:45:00Z"
+  }
  ]
 }

@@ -11,7 +11,7 @@ Dodici slide per presentare il gioco a un docente, a una scuola o a un partner.
 
 ## Pacchetto docente: sei incontri da 3 ore
 
-Una lezione per incontro, più le slide per condurre l'aula: scaletta, le decisioni del giorno in gioco, le domande di debriefing e la consegna. Le note per il docente, slide per slide, sono nel file `-note.md` accanto a ogni PDF.
+Una lezione per incontro, da 25 a 45 minuti, più le slide per condurre l'aula: scaletta, le decisioni del giorno in gioco, le domande di debriefing e la consegna. Le note per il docente, slide per slide, sono nel file `-note.md` accanto a ogni PDF.
 
 | Incontro | Slide | Note |
 |---|---|---|
@@ -22,7 +22,7 @@ Una lezione per incontro, più le slide per condurre l'aula: scaletta, le decisi
 | 5 · Finanziare la crescita | [PDF](incontro-5-finanziare-la-crescita.pdf) | [note](incontro-5-finanziare-la-crescita-note.md) |
 | 6 · Exit e debriefing finale | [PDF](incontro-6-exit-e-debriefing.pdf) | [note](incontro-6-exit-e-debriefing-note.md) |
 
-Le lezioni insegnano i concetti reali di imprenditorialità e startup, con casi e ricerche (Blank, Ries, Graham, Wasserman, CB Insights e altri); il gioco compare come esempio, nella riga "Nel gioco." in fondo alle slide. L'incontro 1 è già in questa forma; gli incontri 2-6 sono in riscrittura e per ora hanno la mini-lezione della prima versione.
+Le lezioni insegnano i concetti reali di imprenditorialità e startup, con casi e ricerche (Blank, Ries, Graham, Wasserman, CB Insights e altri); il gioco compare come esempio, nella riga "Nel gioco." in fondo alle slide.
 
 Il pacchetto segue il [piano delle sessioni](../corso/02-piano-sessioni.md) e la [guida per il docente](../corso/03-guida-docente.md).
 
