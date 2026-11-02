@@ -10,6 +10,7 @@ Materiali per proporre e condurre **Founder's Dilemma** come modulo esperienzial
 | 4 | [Manuale dello studente](04-manuale-studente.md) | Studenti | Regole, decisioni, consigli, primo round passo per passo |
 | 5 | [Valutazione e rubriche](05-valutazione-e-rubriche.md) | Docente, studenti | Pesi, rubriche, modelli di decision memo e report finale |
 | 6 | [Il modello di simulazione](06-modello-di-simulazione.md) | Docente, revisori | Come funziona il motore, parametri, collegamento con la teoria |
+| 7 | [Slide](../slide/README.md) | Docente | Presentazione del gioco (IT, EN) e le lezioni dei sei incontri, in PDF con le note |
 
 ## In breve
 

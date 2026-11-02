@@ -1,0 +1,21 @@
+{
+ "v": 4,
+ "createdOnFiles": {"v": 1, "at": "2026-11-02T10:15:00Z"},
+ "lists": "css",
+ "title": "Founder’s Dilemma · Incontro 5 · Finanziare la crescita",
+ "cover": "cover",
+ "order": ["cover", "agenda", "fonti", "diluizione", "preferenze", "ricco", "oggi", "attivita", "debriefing", "consegna"],
+ "sections": {
+  "s1": {"description": "Apertura: obiettivi e scaletta delle tre ore.", "start": "cover"},
+  "s2": {"description": "Mini-lezione: fonti di finanziamento, diluizione, option pool e preferenze, ricco o re.", "start": "fonti"},
+  "s3": {"description": "In gioco: pitch, term sheet e salvataggi nei round 8 e 9, più l’attività sul term sheet.", "start": "oggi"},
+  "s4": {"description": "Debriefing e consegna.", "start": "debriefing"}
+ },
+ "faces": {
+  "geistserif": {"family": "Geist Serif", "src": "project/ds/fd/fonts/GeistSerif-Regular.woff2"},
+  "geist": {"family": "Geist", "src": "project/ds/fd/fonts/Geist-Variable.woff2"}
+ },
+ "designSystems": [
+  {"title": "Founder's Dilemma", "namespace": "fd", "artifact": "https://claude.ai/artifact/GgxAGvWD3a2PNSBqz9mdaG", "version": "1793636453-4a64", "copiedAt": "2026-11-02T16:45:00Z"}
+ ]
+}
