@@ -27,9 +27,8 @@
   <meta name="twitter:title" content="Founder's Dilemma · Startup venturing business game" />
   <meta name="twitter:description" content="Build a startup. Face the founder's dilemma. Free, in the browser, for university classrooms." />
   <meta name="twitter:image" content="https://kurisuchanxxx.github.io/foundersdilemma/og.jpg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Archivo:wdth,wght@62..125,100..900&display=swap" />
+  <link rel="preload" href="./fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="./fonts/GeistSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <script>
     (function () {
       var l = null;
@@ -57,11 +56,14 @@
   }
   </script>
   <style>
+    /* Geist and Geist Serif by Vercel, SIL Open Font License 1.1 (fonts/OFL.txt) */
+    @font-face { font-family: "Geist"; src: url("./fonts/Geist-Variable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+    @font-face { font-family: "Geist Serif"; src: url("./fonts/GeistSerif-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
     html, body { background: #000000 !important; color: #ffffff; }
     :root {
       color-scheme: dark;
       font-family: "Geist", Arial, sans-serif;
-      --display-font: "Archivo", "Geist", Arial, sans-serif;
+      --display-font: "Geist Serif", "Times New Roman", serif;
       --font: "Geist", Arial, sans-serif;
       --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       --accent: #0a84ff;
@@ -95,7 +97,7 @@
       position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background: #000;
       --gutter-start: clamp(36px, 4.177vw, 96px); --gutter-end: clamp(36px, 4.04vw, 96px);
       --header-top: clamp(20px, 2.264vh, 30px); --hero-bottom: clamp(34px, 5.19vh, 64px);
-      --display-size: clamp(58px, 7.64vh, 88px); --display-leading: clamp(72px, 9.34vh, 106px);
+      --display-size: clamp(48px, 6.2vh, 72px); --display-leading: clamp(60px, 7.7vh, 88px);
       --copy-size: clamp(14px, 1.70vh, 19px); --copy-leading: clamp(19px, 2.17vh, 24px);
       --title-copy-gap: clamp(15px, 2.08vh, 24px); --copy-cta-gap: clamp(24px, 3.11vh, 36px);
       --cta-width: clamp(142px, 15.09vh, 168px); --cta-height: clamp(38px, 3.96vh, 44px);
@@ -128,10 +130,10 @@
     .header.menu-open .menu-toggle .bar-b { transform: translateY(-3px) rotate(-45deg); }
     .hero { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
     .hero-content { position: absolute; left: var(--gutter-start); bottom: var(--hero-bottom); display: flex; flex-direction: column; align-items: flex-start; pointer-events: auto; }
-    .hero-title { font-family: var(--display-font); font-weight: 500; font-optical-sizing: auto; font-size: var(--display-size); line-height: var(--display-leading); letter-spacing: -2.1px; -webkit-text-stroke: .12px currentColor; white-space: nowrap; text-shadow: 0 2px 2px rgba(0, 0, 0, .44); }
+    .hero-title { font-family: var(--display-font); font-weight: 400; font-size: var(--display-size); line-height: var(--display-leading); letter-spacing: -1.2px; white-space: nowrap; text-shadow: 0 2px 2px rgba(0, 0, 0, .44); }
     .line { display: block; transform-origin: left center; }
-    .line-one { color: #fff; transform: scaleX(.775); }
-    .line-two { color: rgba(211, 207, 207, .78); transform: scaleX(.793); }
+    .line-one { color: #fff; }
+    .line-two { color: rgba(211, 207, 207, .78); }
     .line-reveal { display: inline-block; }
     .hero-copy { position: relative; left: 1px; top: var(--copy-optical-shift); margin-top: var(--title-copy-gap); width: clamp(390px, 31.67vw, 500px); font-size: var(--copy-size); line-height: var(--copy-leading); font-weight: 350; letter-spacing: .13px; color: var(--copy); text-shadow: 0 1px 3px rgba(0, 0, 0, .7); }
     .primary-cta { position: relative; display: block; margin-top: var(--copy-cta-gap); width: var(--cta-width); height: var(--cta-height); border-radius: 7px; background: #fff; color: #111; box-shadow: 0 1px 5px rgba(0, 0, 0, .38); }
@@ -191,24 +193,25 @@
       .hero-copy br { display: none; }
     }
     @media (min-width: 620px) and (max-width: 790px), (min-width: 620px) and (max-width: 1100px) and (orientation: portrait) {
-      .screen { --copy-size: 16px; --copy-leading: 23px; }
+      .screen { --copy-size: 16px; --copy-leading: 23px; --display-size: clamp(40px, 6.4vw, 56px); --display-leading: 1.12em; }
+      .hero-title { max-width: calc(100vw - var(--gutter-start) - var(--gutter-end) - var(--card-width) - 32px); }
+      .line { white-space: normal; }
       .hero-copy { width: min(460px, calc(100vw - var(--gutter-start) - var(--gutter-end) - var(--card-width) - 32px)); }
     }
     @media (max-width: 619px) {
-      .screen { --mobile-gutter: 20px; --gutter-start: var(--mobile-gutter); --gutter-end: var(--mobile-gutter); --header-top: max(16px, env(safe-area-inset-top)); --hero-bottom: max(28px, env(safe-area-inset-bottom)); --display-size: clamp(36px, 10.5vw, 44px); --display-leading: 1.12em; --copy-size: 15px; --copy-leading: 22px; --title-copy-gap: 14px; --copy-cta-gap: 22px; --cta-width: 160px; --cta-height: 44px; --card-width: clamp(118px, 34vw, 150px); }
+      .screen { --mobile-gutter: 20px; --gutter-start: var(--mobile-gutter); --gutter-end: var(--mobile-gutter); --header-top: max(16px, env(safe-area-inset-top)); --hero-bottom: max(28px, env(safe-area-inset-bottom)); --display-size: clamp(30px, 8.6vw, 36px); --display-leading: 1.14em; --copy-size: 15px; --copy-leading: 22px; --title-copy-gap: 14px; --copy-cta-gap: 22px; --cta-width: 160px; --cta-height: 44px; --card-width: clamp(118px, 34vw, 150px); }
       .viewport { min-height: 640px; }
       .header-actions { width: min(340px, calc(100vw - 2 * var(--mobile-gutter))); }
       .brand-name { font-size: 14px; }
-      .hero-title { letter-spacing: -1.4px; }
+      .hero-title { letter-spacing: -.6px; }
       .line { white-space: normal; }
-      .line-one, .line-two { transform: scaleX(.78); width: 128%; }
       .hero-copy { width: calc(100vw - 2 * var(--mobile-gutter)); max-width: 420px; }
       /* phones: the card sits in the free band between the header and the headline (script below centres it there and shrinks it if the band is short); this is the no-script fallback, right under the header */
       .demo-card { bottom: auto; top: calc(var(--header-top) + 64px); }
     }
-    @media (min-width: 791px) and (max-height: 640px) { .screen { --display-size: clamp(44px, 7.2vh, 60px); --display-leading: 1.1em; --copy-size: 14px; --copy-leading: 19px; } }
+    @media (min-width: 791px) and (max-height: 640px) { .screen { --display-size: clamp(36px, 5.9vh, 50px); --display-leading: 1.12em; --copy-size: 14px; --copy-leading: 19px; } }
     @media (max-width: 790px) and (orientation: landscape) and (max-height: 480px) {
-      .screen { --display-size: 34px; --display-leading: 38px; --copy-size: 13px; --copy-leading: 17px; --hero-bottom: 18px; --card-width: 110px; }
+      .screen { --display-size: 28px; --display-leading: 32px; --copy-size: 13px; --copy-leading: 17px; --hero-bottom: 18px; --card-width: 110px; }
       .demo-card { top: auto; bottom: var(--hero-bottom); }
       .hero-copy br { display: none; }
       .hero-copy { width: calc(100vw - var(--gutter-start) - var(--gutter-end) - var(--card-width) - 24px); max-width: 460px; }
@@ -243,17 +246,17 @@
     .meta-tag.big { gap: 6px; }
     .meta-tag.big .label { font-size: 15px; font-weight: 460; color: #fff; }
     .meta-tag.big .value { font-size: 14px; font-weight: 350; color: var(--copy-2); }
-    .display { font-family: var(--display-font); font-weight: 500; font-stretch: 82%; font-size: clamp(36px, 4.6vw, 60px); line-height: 1.04; letter-spacing: -1.6px; -webkit-text-stroke: .12px currentColor; text-shadow: 0 2px 2px rgba(0, 0, 0, .44); }
+    .display { font-family: var(--display-font); font-weight: 400; font-size: clamp(36px, 4.6vw, 60px); line-height: 1.06; letter-spacing: -.8px; text-shadow: 0 2px 2px rgba(0, 0, 0, .44); }
     .display .l { display: block; }
     .display .l2 { color: rgba(211, 207, 207, .78); }
-    .display-sm { font-family: var(--display-font); font-weight: 500; font-stretch: 84%; font-size: clamp(26px, 2.7vw, 34px); line-height: 1.1; letter-spacing: -1px; -webkit-text-stroke: .1px currentColor; }
+    .display-sm { font-family: var(--display-font); font-weight: 400; font-size: clamp(26px, 2.7vw, 34px); line-height: 1.12; letter-spacing: -.4px; }
     .sec-lede { margin-top: 18px; max-width: 560px; font-size: 17px; font-weight: 350; letter-spacing: .1px; line-height: 1.55; color: var(--copy); }
     .glass { border: 1px solid var(--edge); border-radius: 18px; background: linear-gradient(145deg, rgba(24, 22, 20, .80), rgba(5, 12, 14, .86)); box-shadow: 0 2px 10px rgba(0, 0, 0, .44), 0 0 0 3px rgba(255, 255, 255, .035) inset, 0 0 0 1px rgba(0, 0, 0, .9); }
     .panel { padding: 8px 32px; margin-top: 48px; }
     .learn-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px; }
     .row { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 22px 0; border-top: 1px solid var(--hair); align-items: start; }
     .learn-grid .row:nth-child(-n+2) { border-top: 0; }
-    .num { font-family: var(--display-font); font-weight: 500; font-stretch: 82%; font-size: 22px; letter-spacing: -.5px; line-height: 1; color: rgba(255, 255, 255, .5); padding-top: 2px; }
+    .num { font-family: var(--display-font); font-weight: 400; font-size: 22px; letter-spacing: 0; line-height: 1; color: rgba(255, 255, 255, .5); padding-top: 2px; }
     .row h3 { font-size: 16.5px; font-weight: 460; letter-spacing: -.25px; line-height: 1.3; }
     .row p { margin-top: 5px; font-size: 14.5px; font-weight: 350; line-height: 1.5; color: var(--copy-2); }
     .row .ref { margin-top: 8px; font-size: 12.5px; font-weight: 430; letter-spacing: .15px; color: rgba(229, 229, 230, .5); }
