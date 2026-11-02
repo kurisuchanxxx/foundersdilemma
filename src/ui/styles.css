@@ -1,8 +1,27 @@
 /* Founder's Dilemma - macOS-inspired UI that also looks native on Windows. */
 
+/* Geist (text) and Geist Serif (display) by Vercel, SIL Open Font License 1.1 (fonts/OFL.txt).
+   Bundled with the app so the desktop and single-file builds look the same offline. */
+@font-face {
+  font-family: "Geist";
+  src: url("./fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Serif";
+  src: url("./fonts/GeistSerif-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* page titles and display moments; Geist Serif has a single weight (400) */
+  --font-display: "Geist Serif", "Times New Roman", Georgia, serif;
   /* anthracite, almost black */
   --bg: #0c0c0c;
   --bg-sidebar: #0c0c0c;
@@ -155,8 +174,9 @@ h4 {
 }
 
 h1 {
-  font-size: 28px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
 }
 h2 {
   font-size: 20px;
@@ -1777,10 +1797,10 @@ table.table {
   left: 50%;
   top: 40%;
   transform: translate(-50%, -50%);
-  font-family: "Archivo", "Geist", var(--font);
+  font-family: var(--font-display);
   font-size: clamp(30px, 5.4vw, 60px);
-  font-weight: 500;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  letter-spacing: -0.015em;
   white-space: nowrap;
   opacity: 0;
   animation: intro-word-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 150ms forwards;
@@ -2952,10 +2972,10 @@ html.theme-fade * {
   }
 }
 .sim-title {
-  font-family: "Archivo", "Geist", var(--font);
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   margin-top: 10px;
 }
 .sim-sub {
