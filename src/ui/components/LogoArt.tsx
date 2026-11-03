@@ -14,10 +14,11 @@ import {
   type LogoLayer,
   type LogoShape,
 } from "../../core";
-import { fileToSquareDataUrl, imageFromTransfer, pickImageFile } from "../../platform/images";
+import { imageFromTransfer, pickImageFile } from "../../platform/images";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
 import { Icon } from "./Icon";
+import { ImageCropper } from "./ImageCropper";
 import { SliderField, Tabs } from "./ui";
 
 export interface Brand {
@@ -317,25 +318,40 @@ function LogoUpload({ brand, onChange }: { brand: Brand; onChange: (patch: Parti
   const f = useFmt();
   const toast = useStore((s) => s.toast);
   const [over, setOver] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const use = async (file: File | null) => {
+  const [crop, setCrop] = useState<File | null>(null);
+  const [source, setSource] = useState<File | null>(null);
+  const use = (file: File | null) => {
     if (!file) return;
-    setBusy(true);
-    try {
-      const png = file.type === "image/png" || file.type === "image/svg+xml" || file.type === "image/webp";
-      const data = await fileToSquareDataUrl(file, { size: 192, mime: png ? "image/png" : "image/jpeg", quality: 0.85 });
-      onChange({ logoArt: { kind: "image", data } });
-    } catch {
-      toast(f.tx("This image could not be read.", "Impossibile leggere questa immagine."), "bad");
-    } finally {
-      setBusy(false);
+    if (!file.type.startsWith("image/")) {
+      toast(f.tx("Please choose an image file.", "Scegli un file immagine."), "bad");
+      return;
     }
+    setCrop(file);
   };
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
     setOver(false);
-    void use(imageFromTransfer(e.dataTransfer));
+    use(imageFromTransfer(e.dataTransfer));
   };
+  if (crop) {
+    const png = crop.type === "image/png" || crop.type === "image/svg+xml" || crop.type === "image/webp";
+    return (
+      <ImageCropper
+        file={crop}
+        shape="rounded"
+        outputSize={192}
+        mime={png ? "image/png" : "image/jpeg"}
+        quality={0.85}
+        confirmLabel={f.tx("Use this logo", "Usa questo logo")}
+        onCancel={() => setCrop(null)}
+        onConfirm={(data) => {
+          onChange({ logoArt: { kind: "image", data } });
+          setSource(crop);
+          setCrop(null);
+        }}
+      />
+    );
+  }
   return (
     <div className="col gap-12">
       <div
@@ -348,21 +364,29 @@ function LogoUpload({ brand, onChange }: { brand: Brand; onChange: (patch: Parti
         onDrop={onDrop}
         onPaste={(e) => {
           const file = imageFromTransfer(e.clipboardData);
-          if (file) void use(file);
+          if (file) use(file);
         }}
       >
         <Icon name="ImagePlus" size={20} />
-        <span className="small">{busy ? f.tx("Processing…", "Elaborazione…") : f.tx("Drop your logo here (PNG with transparency works best). It is resized to 192 px.", "Trascina qui il tuo logo (meglio un PNG con trasparenza). Viene ridimensionato a 192 px.")}</span>
-        <button type="button" className="btn sm" disabled={busy} onClick={() => void pickImageFile().then(use)}>
+        <span className="small">{f.tx("Drop your logo here (PNG with transparency works best). You frame and zoom it before it is used.", "Trascina qui il tuo logo (meglio un PNG con trasparenza). Lo inquadri e lo ingrandisci tu prima di usarlo.")}</span>
+        <button type="button" className="btn sm" onClick={() => void pickImageFile().then(use)}>
           <Icon name="Upload" size={14} />
           {f.tx("Choose a file", "Scegli un file")}
         </button>
       </div>
       {brand.logoArt?.kind === "image" && (
-        <button type="button" className="btn sm ghost" onClick={() => onChange({ logoArt: null })}>
-          <Icon name="Eraser" size={14} />
-          {f.tx("Remove the uploaded logo", "Rimuovi il logo caricato")}
-        </button>
+        <div className="row wrap gap-4">
+          {source && (
+            <button type="button" className="btn sm" onClick={() => setCrop(source)}>
+              <Icon name="SlidersHorizontal" size={14} />
+              {f.tx("Adjust crop", "Regola ritaglio")}
+            </button>
+          )}
+          <button type="button" className="btn sm ghost" onClick={() => onChange({ logoArt: null })}>
+            <Icon name="Eraser" size={14} />
+            {f.tx("Remove the uploaded logo", "Rimuovi il logo caricato")}
+          </button>
+        </div>
       )}
     </div>
   );

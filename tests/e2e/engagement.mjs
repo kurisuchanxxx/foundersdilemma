@@ -45,6 +45,37 @@ try {
   await page.locator(".trait-pick").nth(3).click();
   await page.waitForTimeout(300);
   await shot("01-avatar-builder");
+  // drop a generated picture: the cropper opens, zoom it, confirm, the preview shows the photo
+  await page.locator(".avatar-builder .dropzone").evaluate((el) => {
+    const c = document.createElement("canvas");
+    c.width = 320;
+    c.height = 200;
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#d95926";
+    ctx.fillRect(0, 0, 320, 200);
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(160, 100, 60, 0, Math.PI * 2);
+    ctx.fill();
+    return new Promise((resolve) =>
+      c.toBlob((blob) => {
+        const dt = new DataTransfer();
+        dt.items.add(new File([blob], "face.png", { type: "image/png" }));
+        el.dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: dt }));
+        resolve();
+      }, "image/png"),
+    );
+  });
+  await page.waitForSelector("[data-testid=cropper]");
+  await page.locator("[data-testid=cropper] input[type=range]").fill("180");
+  await page.waitForTimeout(200);
+  await shot("01b-cropper");
+  await click(/Usa questa foto/);
+  await page.waitForSelector(".avatar-preview-ring img");
+  await click(/Regola ritaglio/);
+  await page.waitForSelector("[data-testid=cropper]");
+  await click(/Annulla/);
+  await page.waitForSelector(".avatar-preview-ring img");
   await click(/Usa questo avatar/);
   await click(/Aggiungi un co-fondatore/);
   await click(/Aggiungi un altro fondatore/);

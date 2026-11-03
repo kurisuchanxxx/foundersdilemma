@@ -12,10 +12,11 @@ import {
   type AvatarTraits,
   type FounderAvatar,
 } from "../../core";
-import { fileToSquareDataUrl, imageFromTransfer, pickImageFile } from "../../platform/images";
+import { imageFromTransfer, pickImageFile } from "../../platform/images";
 import { useFmt } from "../i18n";
 import { useStore } from "../store";
 import { Icon } from "./Icon";
+import { ImageCropper } from "./ImageCropper";
 import { Modal } from "./ui";
 
 const INK = "#1d1d1f";
@@ -188,23 +189,21 @@ export function AvatarBuilder({ avatar, name, onChange, onClose }: { avatar: Fou
   const [traits, setTraits] = useState<AvatarTraits>(avatar?.kind === "traits" ? avatar.traits : avatarFromSeed(name || "founder"));
   const [photo, setPhoto] = useState<string | null>(avatar?.kind === "photo" ? avatar.data : null);
   const [over, setOver] = useState(false);
-  const [busy, setBusy] = useState(false);
+  /** The picture being framed right now, and the original of the current photo (to adjust the crop again). */
+  const [crop, setCrop] = useState<File | null>(null);
+  const [source, setSource] = useState<File | null>(null);
   const set = (patch: Partial<AvatarTraits>) => {
     setPhoto(null);
     setTraits({ ...traits, ...patch });
   };
 
-  const usePhoto = async (file: File | null) => {
+  const usePhoto = (file: File | null) => {
     if (!file) return;
-    setBusy(true);
-    try {
-      const data = await fileToSquareDataUrl(file, { size: 160, mime: "image/jpeg", quality: 0.82 });
-      setPhoto(data);
-    } catch {
-      toast(f.tx("This image could not be read.", "Impossibile leggere questa immagine."), "bad");
-    } finally {
-      setBusy(false);
+    if (!file.type.startsWith("image/")) {
+      toast(f.tx("Please choose an image file.", "Scegli un file immagine."), "bad");
+      return;
     }
+    setCrop(file);
   };
 
   useEffect(() => {
@@ -231,9 +230,10 @@ export function AvatarBuilder({ avatar, name, onChange, onClose }: { avatar: Fou
   return (
     <Modal
       wide
-      title={`${f.tx("Avatar of", "Avatar di")} ${name || f.tx("the founder", "fondatore")}`}
+      title={crop ? f.tx("Frame the photo", "Inquadra la foto") : `${f.tx("Avatar of", "Avatar di")} ${name || f.tx("the founder", "fondatore")}`}
       onClose={onClose}
       footer={
+        crop ? null : (
         <>
           <button className="btn ghost" onClick={onClose}>
             {f.tx("Cancel", "Annulla")}
@@ -249,8 +249,25 @@ export function AvatarBuilder({ avatar, name, onChange, onClose }: { avatar: Fou
             {f.tx("Use this avatar", "Usa questo avatar")}
           </button>
         </>
+        )
       }
     >
+      {crop ? (
+        <ImageCropper
+          file={crop}
+          shape="circle"
+          outputSize={160}
+          mime="image/jpeg"
+          quality={0.82}
+          confirmLabel={f.tx("Use this photo", "Usa questa foto")}
+          onCancel={() => setCrop(null)}
+          onConfirm={(data) => {
+            setPhoto(data);
+            setSource(crop);
+            setCrop(null);
+          }}
+        />
+      ) : (
       <div className="avatar-builder">
         <div className="avatar-builder-preview">
           <div className="avatar-preview-ring">
@@ -261,10 +278,16 @@ export function AvatarBuilder({ avatar, name, onChange, onClose }: { avatar: Fou
               <Icon name="Shuffle" size={14} />
               {f.tx("Surprise me", "Sorprendimi")}
             </button>
-            <button className="btn sm" disabled={busy} onClick={() => void pickImageFile().then(usePhoto)}>
+            <button className="btn sm" onClick={() => void pickImageFile().then(usePhoto)}>
               <Icon name="Camera" size={14} />
               {f.tx("Upload a photo", "Carica una foto")}
             </button>
+            {photo && source && (
+              <button className="btn sm" onClick={() => setCrop(source)}>
+                <Icon name="SlidersHorizontal" size={14} />
+                {f.tx("Adjust crop", "Regola ritaglio")}
+              </button>
+            )}
             {photo && (
               <button className="btn sm ghost" onClick={() => setPhoto(null)}>
                 <Icon name="Eraser" size={14} />
@@ -282,7 +305,7 @@ export function AvatarBuilder({ avatar, name, onChange, onClose }: { avatar: Fou
             onDrop={onDrop}
           >
             <Icon name="ImagePlus" size={18} />
-            <span className="small">{busy ? f.tx("Processing…", "Elaborazione…") : f.tx("Drop a photo here or paste it (Ctrl+V). It is cropped to a square and kept small.", "Trascina qui una foto o incollala (Ctrl+V). Viene ritagliata in quadrato e tenuta piccola.")}</span>
+            <span className="small">{f.tx("Drop a photo here or paste it (Ctrl+V). You frame it before it is used.", "Trascina qui una foto o incollala (Ctrl+V). La inquadri tu prima di usarla.")}</span>
           </div>
         </div>
         <div className="avatar-builder-traits col gap-12">
@@ -295,6 +318,7 @@ export function AvatarBuilder({ avatar, name, onChange, onClose }: { avatar: Fou
           <TraitPicker label={f.tx("Accessory", "Accessorio")} count={ACCESSORIES.length} value={traits.accessory} onChange={(accessory) => set({ accessory })} render={(i) => ({ ...traits, accessory: i })} />
         </div>
       </div>
+      )}
     </Modal>
   );
 }
