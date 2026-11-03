@@ -3123,3 +3123,68 @@ html.theme-fade * {
     display: none !important;
   }
 }
+
+/* ---------- image cropper (founder photos, uploaded logos) ---------- */
+.cropper {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 640px) {
+  .cropper {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+}
+.cropper-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #0d0f14;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  box-shadow: 0 0 0 1px var(--border-strong), 0 12px 32px rgba(0, 0, 0, 0.35);
+  flex: none;
+}
+.cropper-stage:active {
+  cursor: grabbing;
+}
+.cropper-stage.rounded {
+  background: conic-gradient(#c9ccd3 25%, #e9ebef 0 50%, #c9ccd3 0 75%, #e9ebef 0) 0 0 / 18px 18px;
+}
+.cropper-img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: none;
+  max-height: none;
+  pointer-events: none;
+  transform-origin: center;
+  will-change: transform;
+}
+.cropper-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.cropper-hole {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.55);
+  outline: 1px solid rgba(255, 255, 255, 0.7);
+  outline-offset: -1px;
+}
+.cropper-stage.rounded .cropper-hole {
+  border-radius: 26%;
+}
+.cropper-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  width: 100%;
+}
