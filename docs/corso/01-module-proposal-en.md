@@ -67,7 +67,7 @@ The game makes **testable** what lectures leave abstract: the search for product
 | 5 | Financing growth | Grants and debt; angels and VCs; SAFEs and priced rounds; dilution; term sheets; liquidation preference; board control | Rounds 8-9 |
 | 6 | Exit and debrief | Acquisition offers; waterfall; Rich vs King; post-mortem | Round 10, final results, presentations |
 
-The detailed session plan (in Italian) is in [02-piano-sessioni.md](02-piano-sessioni.md).
+The detailed session plan is in the [Session plan](02-session-plan-en.md).
 
 ### 5. Teaching methods
 
@@ -87,7 +87,7 @@ The detailed session plan (in Italian) is in [02-piano-sessioni.md](02-piano-ses
 | In-game result | 10% | Summative, in bands |
 | Peer evaluation and participation | 10% | Individual |
 
-The in-game result deliberately weighs little: reasoning matters more than luck or score optimisation. Rubrics and templates (in Italian) are in [05-valutazione-e-rubriche.md](05-valutazione-e-rubriche.md).
+The in-game result deliberately weighs little: reasoning matters more than luck or score optimisation. Rubrics and templates are in [Assessment and rubrics](05-assessment-and-rubrics-en.md).
 
 ### 7. Technical and organisational requirements
 
