@@ -39,7 +39,7 @@ The same six sessions in English, with the English game screens. Each session ha
 | 5 · Financing growth | [PDF](session-5-financing-growth.pdf) | [notes](session-5-financing-growth-notes.md) |
 | 6 · Exit and final debriefing | [PDF](session-6-exit-and-debriefing.pdf) | [notes](session-6-exit-and-debriefing-notes.md) |
 
-The lessons teach real entrepreneurship and startup concepts, with cases and research; the game appears as an example, in the “In the game.” line at the bottom of the slides. The module proposal in English is [here](../corso/01-module-proposal-en.md).
+The lessons teach real entrepreneurship and startup concepts, with cases and research; the game appears as an example, in the “In the game.” line at the bottom of the slides. The pack follows the [session plan](../corso/02-session-plan-en.md) and the [instructor guide](../corso/03-instructor-guide-en.md); the decision memo template and the rubrics cited in the notes are in [Assessment and rubrics](../corso/05-assessment-and-rubrics-en.md). The module proposal in English is [here](../corso/01-module-proposal-en.md).
 
 ## Sorgenti
 

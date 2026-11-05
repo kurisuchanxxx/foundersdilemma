@@ -90,12 +90,15 @@ Uno strato di gioco che non tocca la classifica economica ma tiene alta l'attenz
 
 La cartella [`docs/corso`](docs/corso/README.md) contiene il pacchetto da presentare all'università:
 
-1. [Proposta di modulo](docs/corso/01-proposta-modulo.md): obiettivi formativi (descrittori di Dublino), CFU, struttura e valutazione.
-2. [Piano delle sessioni](docs/corso/02-piano-sessioni.md): sei incontri, con teoria, round di gioco e debriefing.
-3. [Guida per il docente](docs/corso/03-guida-docente.md): preparazione, conduzione e problemi frequenti.
-4. [Manuale dello studente](docs/corso/04-manuale-studente.md).
-5. [Valutazione e rubriche](docs/corso/05-valutazione-e-rubriche.md), con i modelli di decision memo e report finale.
-6. [Il modello di simulazione](docs/corso/06-modello-di-simulazione.md): formule, parametri e collegamento con la teoria.
+1. [Proposta di modulo](docs/corso/01-proposta-modulo.md) ([English](docs/corso/01-module-proposal-en.md)): obiettivi formativi (descrittori di Dublino), CFU, struttura e valutazione.
+2. [Piano delle sessioni](docs/corso/02-piano-sessioni.md) ([English](docs/corso/02-session-plan-en.md)): sei incontri, con teoria, round di gioco e debriefing.
+3. [Guida per il docente](docs/corso/03-guida-docente.md) ([English](docs/corso/03-instructor-guide-en.md)): preparazione, conduzione e problemi frequenti.
+4. [Manuale dello studente](docs/corso/04-manuale-studente.md) ([English](docs/corso/04-student-manual-en.md)).
+5. [Valutazione e rubriche](docs/corso/05-valutazione-e-rubriche.md) ([English](docs/corso/05-assessment-and-rubrics-en.md)), con i modelli di decision memo e report finale.
+6. [Il modello di simulazione](docs/corso/06-modello-di-simulazione.md): formule, parametri e collegamento con la teoria (solo in italiano).
+7. [Slide](docs/slide/README.md): la presentazione del gioco e le lezioni dei sei incontri con le note per il docente, in italiano e in inglese.
+
+Tutto il pacchetto, tranne il modello di simulazione, è disponibile anche in inglese: il modulo si può proporre e tenere in un corso in lingua inglese.
 
 ## Sviluppo
 
@@ -151,7 +154,7 @@ Per usi commerciali (ad esempio corsi a pagamento tenuti da altri) contattare l'
 - **Download**: see the repository Releases (unsigned builds: on macOS right click > Open; on Windows SmartScreen > More info > Run anyway).
 - **Engagement layer**: teams of one to four founders with cartoon or photo avatars, a logo gallery and studio, three XP challenges per round, a showdown between teams every round, a founder network (shout-outs, mentorship, taunts, poaching) and an animated round recap. XP never changes the economic ranking.
 - **Develop**: `npm ci`, `npm run dev` (web) or `npm run desktop:dev` (Tauri, needs Rust), `npm test`, `npm run e2e`.
-- **Teach**: the course package (Italian) is in [`docs/corso`](docs/corso/README.md): module proposal, session plan, instructor guide, student manual, assessment rubrics and the simulation model.
+- **Teach**: the course package is in [`docs/corso`](docs/corso/README.md#in-english), in English and Italian: [module proposal](docs/corso/01-module-proposal-en.md), [session plan](docs/corso/02-session-plan-en.md), [instructor guide](docs/corso/03-instructor-guide-en.md), [student manual](docs/corso/04-student-manual-en.md) and [assessment and rubrics](docs/corso/05-assessment-and-rubrics-en.md). The [slides](docs/slide/README.md#teaching-pack-in-english-six-3-hour-sessions) for the six sessions, with teacher notes, are in both languages too. The simulation model is documented in Italian only for now.
 
 The deterministic TypeScript engine (`src/core`) is a rewrite and expansion of the original Swift/SwiftUI blueprint kept in `legacy/`.
 
