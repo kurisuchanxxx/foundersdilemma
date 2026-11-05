@@ -26,6 +26,21 @@ Le lezioni insegnano i concetti reali di imprenditorialità e startup, con casi 
 
 Il pacchetto segue il [piano delle sessioni](../corso/02-piano-sessioni.md) e la [guida per il docente](../corso/03-guida-docente.md).
 
+## Teaching pack in English: six 3-hour sessions
+
+The same six sessions in English, with the English game screens. Each session has one lesson (25 to 45 minutes) plus the slides to run the room: agenda, the day’s decisions in the game, debriefing questions and the assignment. Teacher notes, slide by slide, are in the `-notes.md` file next to each PDF.
+
+| Session | Slides | Notes |
+|---|---|---|
+| 1 · The founding team and the idea | [PDF](session-1-founding-team-and-idea.pdf) | [notes](session-1-founding-team-and-idea-notes.md) |
+| 2 · From problem to MVP | [PDF](session-2-from-problem-to-mvp.pdf) | [notes](session-2-from-problem-to-mvp-notes.md) |
+| 3 · Go-to-market and unit economics | [PDF](session-3-go-to-market.pdf) | [notes](session-3-go-to-market-notes.md) |
+| 4 · People and organization | [PDF](session-4-people-and-organization.pdf) | [notes](session-4-people-and-organization-notes.md) |
+| 5 · Financing growth | [PDF](session-5-financing-growth.pdf) | [notes](session-5-financing-growth-notes.md) |
+| 6 · Exit and final debriefing | [PDF](session-6-exit-and-debriefing.pdf) | [notes](session-6-exit-and-debriefing-notes.md) |
+
+The lessons teach real entrepreneurship and startup concepts, with cases and research; the game appears as an example, in the “In the game.” line at the bottom of the slides. The module proposal in English is [here](../corso/01-module-proposal-en.md).
+
 ## Sorgenti
 
 In [`sorgenti/`](sorgenti) ogni deck ha un `deck.json` (ordine, sezioni, font) e una cartella `slides/` con una sezione HTML per slide, con le note del docente nel tag `<aside>`. È il formato delle slide su claude.ai, dove stanno gli originali modificabili. Le immagini sono indicate come `/_blob/...` e si vedono solo lì: i PDF le hanno già incorporate.
