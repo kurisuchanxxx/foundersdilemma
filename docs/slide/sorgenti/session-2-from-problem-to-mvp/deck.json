@@ -1,0 +1,68 @@
+{
+ "v": 4,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-05T10:00:00Z"
+ },
+ "lists": "css",
+ "title": "Founder’s Dilemma · Session 2 · From problem to MVP",
+ "cover": "cover",
+ "order": [
+  "cover",
+  "agenda",
+  "discovery",
+  "ipotesi",
+  "ciclo",
+  "mvp",
+  "fit",
+  "ellis",
+  "pivot",
+  "debitotecnico",
+  "checklist",
+  "oggi",
+  "confronto",
+  "debriefing",
+  "consegna"
+ ],
+ "sections": {
+  "s1": {
+   "description": "Opening: goals and agenda for the three hours.",
+   "start": "cover"
+  },
+  "s2": {
+   "description": "Lesson: customer development, hypotheses, lean startup and the MVP.",
+   "start": "discovery"
+  },
+  "s3": {
+   "description": "Lesson: product-market fit, how to measure it, pivots and technical debt.",
+   "start": "fit"
+  },
+  "s4": {
+   "description": "In the game: the decisions of rounds 2 and 3 and the lean versus blitz comparison.",
+   "start": "oggi"
+  },
+  "s5": {
+   "description": "Debriefing and assignment.",
+   "start": "debriefing"
+  }
+ },
+ "faces": {
+  "geistserif": {
+   "family": "Geist Serif",
+   "src": "project/ds/fd/fonts/GeistSerif-Regular.woff2"
+  },
+  "geist": {
+   "family": "Geist",
+   "src": "project/ds/fd/fonts/Geist-Variable.woff2"
+  }
+ },
+ "designSystems": [
+  {
+   "title": "Founder's Dilemma",
+   "namespace": "fd",
+   "artifact": "https://claude.ai/artifact/GgxAGvWD3a2PNSBqz9mdaG",
+   "version": "1793636453-4a64",
+   "copiedAt": "2026-11-02T16:45:00Z"
+  }
+ ]
+}

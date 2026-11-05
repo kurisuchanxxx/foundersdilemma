@@ -1,0 +1,68 @@
+{
+ "v": 4,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-05T10:00:00Z"
+ },
+ "lists": "css",
+ "title": "Founder’s Dilemma · Session 5 · Financing growth",
+ "cover": "cover",
+ "order": [
+  "cover",
+  "agenda",
+  "scala",
+  "mailchimp",
+  "powerlaw",
+  "safe",
+  "diluizione",
+  "preferenze",
+  "ricco",
+  "controllo",
+  "domande",
+  "oggi",
+  "attivita",
+  "debriefing",
+  "consegna"
+ ],
+ "sections": {
+  "s1": {
+   "description": "Opening: goals and agenda for the three hours.",
+   "start": "cover"
+  },
+  "s2": {
+   "description": "Lesson: sources of capital, bootstrapping, how venture capital works.",
+   "start": "scala"
+  },
+  "s3": {
+   "description": "Lesson: SAFEs, dilution, term sheets, rich or king, and board control.",
+   "start": "safe"
+  },
+  "s4": {
+   "description": "In the game: pitches, term sheets and rescue rounds in rounds 8 and 9, plus the term sheet activity.",
+   "start": "oggi"
+  },
+  "s5": {
+   "description": "Debriefing and assignment.",
+   "start": "debriefing"
+  }
+ },
+ "faces": {
+  "geistserif": {
+   "family": "Geist Serif",
+   "src": "project/ds/fd/fonts/GeistSerif-Regular.woff2"
+  },
+  "geist": {
+   "family": "Geist",
+   "src": "project/ds/fd/fonts/Geist-Variable.woff2"
+  }
+ },
+ "designSystems": [
+  {
+   "title": "Founder's Dilemma",
+   "namespace": "fd",
+   "artifact": "https://claude.ai/artifact/GgxAGvWD3a2PNSBqz9mdaG",
+   "version": "1793636453-4a64",
+   "copiedAt": "2026-11-02T16:45:00Z"
+  }
+ ]
+}
